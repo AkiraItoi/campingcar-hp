@@ -1,0 +1,355 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #7b6858;
+  font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+}
+
+.page {
+  width: min(100%, 640px);
+  margin: 0 auto;
+  background: #f7f2ec;
+  padding: 18px;
+}
+
+.hero {
+  background: #fffaf4;
+  text-align: center;
+}
+
+.top-copy {
+  margin: 0 0 8px;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+}
+
+.hero-image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-text {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  z-index: 2;
+  color: #fff36a;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.45;
+  text-align: right;
+  text-shadow: 0 3px 8px rgba(0,0,0,0.6);
+}
+
+.hero-text p {
+  margin: 0;
+}
+
+.hero h1 {
+  margin: 18px 0 24px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.reservation {
+  text-align: center;
+  background: #fff8f1;
+  padding: 22px 16px;
+}
+
+.reservation h2,
+.memory h2,
+.voice h2,
+.free h2 {
+  margin: 0 0 18px;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 12px 14px;
+  text-decoration: none;
+  border-radius: 14px;
+  font-weight: bold;
+}
+
+.brown {
+  background: #5a351f;
+  color: #ffffff;
+  font-size: 24px;
+}
+
+.carstay {
+  background: #dcecf6;
+  border: 2px solid #99c7df;
+  color: #10a8d4;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.carstay img {
+  width: 70px;
+  max-width: 45%;
+  height: auto;
+  display: block;
+}
+
+.carstay-label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #10a8d4;
+  line-height: 1;
+}
+
+.access {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.access h3 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.access-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.access-grid img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.access-grid p {
+  margin: 4px 0 0;
+  font-size: 11px;
+}
+
+.memory {
+  background: #fff;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.menu-mark {
+  margin: 0;
+  text-align: left;
+  font-size: 24px;
+  color: #3a1f12;
+}
+
+.spot-area {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.main-photo {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.spot-text p {
+  margin: 0 0 14px;
+  font-size: 17px;
+}
+
+.mini-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mini-photos img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.voice {
+  background: #fff;
+  padding: 10px 16px 20px;
+}
+
+.voice-box {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.circle {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #3f79d8;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+}
+
+.voice-box p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.equipment {
+  background: #f1f1f1;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.equipment p {
+  margin: 0 0 12px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.equipment-photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.equipment-photos img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+}
+
+.free {
+  background: #fffaf4;
+  border: 1px solid #eadfd4;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.free-content {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  align-items: center;
+  text-align: left;
+}
+
+.free-content img {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.free-content p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.sns-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.sns-row a {
+  display: block;
+  padding: 10px 6px;
+  border: 1px solid #e6cdb8;
+  border-radius: 6px;
+  color: #9b6a45;
+  text-decoration: none;
+  font-size: 12px;
+  background: #fff;
+}
+
+.contact {
+  display: block;
+  background: #5a351f;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 10px;
+  }
+
+  .top-copy {
+    font-size: 18px;
+  }
+
+  .hero-text {
+    top: 20px;
+    right: 18px;
+    font-size: 34px;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .btn {
+    min-height: 52px;
+    border-radius: 12px;
+  }
+
+  .brown {
+    font-size: 18px;
+  }
+
+  .carstay img {
+    width: 86px;
+  }
+
+  .carstay-label {
+    font-size: 16px;
+  }
+
+  .spot-area,
+  .voice-box,
+  .free-content {
+    grid-template-columns: 1fr;
+  }
+
+  .access-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reservation h2,
+  .memory h2,
+  .voice h2,
+  .free h2 {
+    font-size: 26px;
+  }
+}
