@@ -353,3 +353,9 @@ body {
     font-size: 26px;
   }
 }
+.free-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+}
