@@ -58,8 +58,9 @@ body {
 
 .hero h1 {
   margin: 18px 0 24px;
-  font-size: 26px;
+  font-size: 30px;
   font-weight: bold;
+  line-height: 1.5;
 }
 
 .reservation {
@@ -148,7 +149,9 @@ body {
 
 .access-grid p {
   margin: 4px 0 0;
-  font-size: 11px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #5a351f;
 }
 
 .memory {
@@ -272,6 +275,13 @@ body {
   line-height: 1.8;
 }
 
+.free-sub {
+  display: block;
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: normal;
+}
+
 .sns-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -301,7 +311,7 @@ body {
 
 @media (max-width: 600px) {
   .page {
-    padding: 10px;
+    padding: 12px;
   }
 
   .top-copy {
@@ -312,6 +322,11 @@ body {
     top: 20px;
     right: 18px;
     font-size: 34px;
+  }
+
+  .hero h1 {
+    font-size: 26px;
+    line-height: 1.4;
   }
 
   .button-row {
@@ -352,10 +367,78 @@ body {
   .free h2 {
     font-size: 26px;
   }
+
+  .equipment p {
+    font-size: clamp(16px, 5vw, 22px);
+    line-height: 1.5;
+  }
+
+  .rental-options {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .free-sub {
+    font-size: 15px;
+  }
+
+  .mini-photos img {
+    height: 90px;
+  }
+
+  .equipment-photos img {
+    height: 72px;
+  }
+}
+
+/* PC（画面幅901px以上）でゆったり表示するレイアウト */
+@media (min-width: 901px) {
+  .page {
+    width: min(100%, 1080px);
+    padding: 32px 40px;
+  }
+
+  .hero-text {
+    font-size: 56px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .spot-area {
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+  }
+
+  .mini-photos img {
+    height: 110px;
+  }
+
+  .free-content {
+    grid-template-columns: 360px 1fr;
+    gap: 32px;
+  }
+
+  .equipment-photos img {
+    height: 140px;
+  }
 }
 .free-content img {
   display: block;
   width: 100%;
   height: auto;
   margin-bottom: 16px;
+}
+
+/* 各セクションのフェードイン（JS非対応時は常に表示） */
+.js-fade .page > section {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.js-fade .page > section.is-visible {
+  opacity: 1;
+  transform: none;
 }

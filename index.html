@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <h1>最高の安全装備で、最高の思い出を</h1>
+      <h1>最高の安全装備で<br>最高の思い出を</h1>
     </section>
 
     <section class="reservation">
@@ -107,9 +107,12 @@
 
     <section class="equipment">
       <p>
-        安全：エアサス・強化ブレーキ・バックモニター・居眠りセンサー<br>
-        安心：ドラレコ・コーナーセンサー・冷蔵庫・簡易トイレ<br>
-        快適：家庭用エアコン・FFヒーター・電子レンジ・強化バッテリー・TV
+        安全：エアサス・強化ブレーキ<br>
+        　　　バックモニター・居眠りセンサー<br>
+        安心：ドラレコ・コーナーセンサー<br>
+        　　　冷蔵庫・簡易トイレ<br>
+        快適：家庭用エアコン・FFヒーター<br>
+        　　　電子レンジ・強化バッテリー・TV
       </p>
 
       <div class="equipment-photos">
@@ -121,13 +124,13 @@
     </section>
 
     <section class="free">
-      <h2>借りかたは自由に</h2>
+      <h2>明日から！/定期で借りたい/安くして！<br><span class="free-sub">いろいろな借り方に対応します</span></h2>
 
       <div class="free-content">
         <img src="img/parking-kids.jpg" alt="子供とキャンピングカー">
 
         <div>
-          <p>
+          <p class="rental-options">
             「明日から使いたい」<br>
             「長期借りるから安くしてほしい」<br>
             「自分の車のように自由に使いたい」<br>
@@ -152,5 +155,21 @@
 
   </main>
 
+  <script>
+    // 各セクションが画面に入ったらフェードイン表示する
+    document.body.classList.add('js-fade');
+
+    const sections = document.querySelectorAll('.page > section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    sections.forEach((section) => observer.observe(section));
+  </script>
 </body>
 </html>
