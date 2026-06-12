@@ -254,17 +254,20 @@ body {
 .eq-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.2em;
-  margin-bottom: 6px;
+  gap: 0.6em;
+  margin-bottom: 14px;
 }
 
 .eq-row:last-child {
   margin-bottom: 0;
 }
 
+/* ヒーロー上部の「どこよりも、安全」と同じフォント（色だけは背景に合わせて読める茶色） */
 .eq-label {
   flex-shrink: 0;
-  font-size: 22px;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.45;
   white-space: nowrap;
 }
 
@@ -415,7 +418,7 @@ body {
   }
 
   .eq-label {
-    font-size: clamp(20px, 6.5vw, 28px);
+    font-size: 34px;
   }
 
   .free-offer {
@@ -448,6 +451,10 @@ body {
 
   .hero h1 {
     font-size: 42px;
+  }
+
+  .eq-label {
+    font-size: 56px;
   }
 
   .spot-area {
