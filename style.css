@@ -70,10 +70,10 @@ body {
   animation: heroSlideIn 1.5s ease forwards;
 }
 
-/* 1行ずつ、前の行が終わってから次の行が右から入る */
+/* 各行0.5秒ずつ遅れて右から入る（アニメーション自体は1.5秒） */
 .hero-text p:nth-child(1) { animation-delay: 0s; }
-.hero-text p:nth-child(2) { animation-delay: 1.5s; }
-.hero-text p:nth-child(3) { animation-delay: 3s; }
+.hero-text p:nth-child(2) { animation-delay: 0.5s; }
+.hero-text p:nth-child(3) { animation-delay: 1s; }
 
 @keyframes heroSlideIn {
   from { opacity: 0; transform: translateX(60px); }
