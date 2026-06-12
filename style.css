@@ -286,10 +286,9 @@ body {
 
 .eq-row {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
-  gap: 0.6em;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .eq-row:last-child {
@@ -307,9 +306,9 @@ body {
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* 項目は1行ぶん下げて左寄せ（1単語1行） */
+/* 項目はラベルの下・左端から1単語1行で表示 */
 .eq-items {
-  margin-top: 1.6em;
+  margin-top: 4px;
   font-size: 17px;
   line-height: 1.6;
   text-align: left;
@@ -362,7 +361,7 @@ body {
 /* 「是非ご相談ください」は「明日から」と同じ大きさ */
 .free-content .free-cta {
   margin: 0;
-  font-size: 48px;
+  font-size: 38.4px;
   font-weight: bold;
   line-height: 1.3;
   text-align: center;
