@@ -266,7 +266,7 @@ body {
 .slide-in {
   opacity: 0;
   transform: translateX(60px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 /* セクションが画面に入ったら順番に表示 */
@@ -275,12 +275,35 @@ body {
   transform: none;
 }
 
-.is-visible .slide-in:nth-child(1) { transition-delay: 0.1s; }
-.is-visible .slide-in:nth-child(2) { transition-delay: 0.4s; }
-.is-visible .slide-in:nth-child(3) { transition-delay: 0.7s; }
+.is-visible .slide-in:nth-child(1) { transition-delay: 0.2s; }
+.is-visible .slide-in:nth-child(2) { transition-delay: 1.0s; }
+.is-visible .slide-in:nth-child(3) { transition-delay: 1.8s; }
 
 .voice-box {
   display: block;
+}
+
+.voice-by {
+  margin: 6px 0 0;
+  text-align: right;
+  font-size: 13px;
+}
+
+/* 証言の下に置く小さい予約ボタン（予約セクションと同じデザイン） */
+.voice-cta {
+  width: fit-content;
+  margin: 12px auto 0;
+  min-height: 0;
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+
+.voice-cta img {
+  width: 50px;
+}
+
+.voice-cta .carstay-label {
+  font-size: 14px;
 }
 
 .circle {
@@ -334,12 +357,13 @@ body {
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* 項目はラベルの下・左端から1単語1行で表示 */
+/* 項目はラベルの下・右詰めで1単語1行で表示 */
 .eq-items {
+  align-self: flex-end;
   margin-top: 4px;
   font-size: 17px;
   line-height: 1.6;
-  text-align: left;
+  text-align: right;
   color: #f7f2ec;
 }
 
