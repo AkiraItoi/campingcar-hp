@@ -167,37 +167,39 @@ body {
 
 .station-caption {
   position: absolute;
-  top: 6px;
+  top: 0;
   left: 0;
   right: 0;
   margin: 0;
+  padding: 4px 2px;
   text-align: center;
   font-size: 16.5px;
   font-weight: bold;
   line-height: 1.4;
   color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  /* 文字が読みやすいよう半透明の暗い帯を敷く（典型的な対処法） */
+  background: rgba(0, 0, 0, 0.45);
 }
 
-/* 写真の上に重ねる説明文（中央配置） */
+/* 写真の上に重ねる説明文（上部の空に配置） */
 .overlay-photo {
   position: relative;
 }
 
 .overlay-caption {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 5px 2px;
   text-align: center;
-  padding: 4px;
   font-size: 12px;
   font-weight: bold;
   line-height: 1.4;
   color: #fff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  /* 文字が読みやすいよう半透明の暗い帯を敷く */
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .memory {
@@ -248,11 +250,38 @@ body {
   padding: 10px 16px 20px;
 }
 
-.voice-box {
+/* アンケート結果（順次右からスライドイン） */
+.questionnaire-list {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 16px;
-  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.questionnaire-list img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #e6dccf;
+}
+
+.slide-in {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* セクションが画面に入ったら順番に表示 */
+.is-visible .slide-in {
+  opacity: 1;
+  transform: none;
+}
+
+.is-visible .slide-in:nth-child(1) { transition-delay: 0.1s; }
+.is-visible .slide-in:nth-child(2) { transition-delay: 0.4s; }
+.is-visible .slide-in:nth-child(3) { transition-delay: 0.7s; }
+
+.voice-box {
+  display: block;
 }
 
 .circle {
