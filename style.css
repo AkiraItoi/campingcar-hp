@@ -9,6 +9,17 @@ body {
   font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
 }
 
+.version-tag {
+  margin: 0;
+  padding: 4px 8px;
+  background: #333;
+  color: #fff;
+  font-family: monospace;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
 .page {
   width: min(100%, 640px);
   margin: 0 auto;
@@ -24,6 +35,7 @@ body {
 .top-copy {
   margin: 0 0 8px;
   font-size: 24px;
+  font-weight: bold;
   letter-spacing: 0.08em;
 }
 
@@ -160,11 +172,32 @@ body {
   right: 0;
   margin: 0;
   text-align: center;
-  font-size: 11px;
+  font-size: 16.5px;
   font-weight: bold;
   line-height: 1.4;
   color: #fff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* 写真の上に重ねる説明文（中央配置） */
+.overlay-photo {
+  position: relative;
+}
+
+.overlay-caption {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.4;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 .memory {
@@ -254,7 +287,7 @@ body {
 .eq-row {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.6em;
   margin-bottom: 14px;
 }
@@ -274,12 +307,12 @@ body {
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* 項目は1行ぶん下げて右寄せ */
+/* 項目は1行ぶん下げて左寄せ（1単語1行） */
 .eq-items {
   margin-top: 1.6em;
   font-size: 17px;
   line-height: 1.6;
-  text-align: right;
+  text-align: left;
   color: #f7f2ec;
 }
 
@@ -326,10 +359,19 @@ body {
   line-height: 1.3;
 }
 
+/* 「是非ご相談ください」は「明日から」と同じ大きさ */
+.free-content .free-cta {
+  margin: 0;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.3;
+  text-align: center;
+}
+
 .free-sub {
   display: block;
   margin-top: 6px;
-  font-size: 15.2px;
+  font-size: 19.8px;
   font-weight: normal;
 }
 
@@ -433,7 +475,7 @@ body {
   }
 
   .free-sub {
-    font-size: 14.25px;
+    font-size: 18.5px;
   }
 
   .mini-photos img {
