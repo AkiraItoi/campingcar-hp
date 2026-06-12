@@ -66,6 +66,23 @@ body {
 
 .hero-text p {
   margin: 0;
+  opacity: 0;
+  animation: heroSlideIn 1.5s ease forwards;
+}
+
+/* 1行ずつ、前の行が終わってから次の行が右から入る */
+.hero-text p:nth-child(1) { animation-delay: 0s; }
+.hero-text p:nth-child(2) { animation-delay: 1.5s; }
+.hero-text p:nth-child(3) { animation-delay: 3s; }
+
+@keyframes heroSlideIn {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 「安全・安心・快適」を1.5倍に */
+.hero-key {
+  font-size: 1.5em;
 }
 
 .hero h1 {
