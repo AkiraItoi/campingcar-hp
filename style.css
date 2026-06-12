@@ -240,13 +240,13 @@ body {
 }
 
 .equipment {
-  background: #f1f1f1;
+  background: #3a2117;
   padding: 14px 16px;
   text-align: center;
 }
 
 .eq-list {
-  display: inline-block;
+  display: block;
   margin: 0 0 12px;
   text-align: left;
 }
@@ -254,6 +254,7 @@ body {
 .eq-row {
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 0.6em;
   margin-bottom: 14px;
 }
@@ -262,18 +263,24 @@ body {
   margin-bottom: 0;
 }
 
-/* ヒーロー上部の「どこよりも、安全」と同じフォント（色だけは背景に合わせて読める茶色） */
+/* ヒーロー上部の「どこよりも、安全」と同じフォント・色 */
 .eq-label {
   flex-shrink: 0;
   font-size: 48px;
   font-weight: bold;
   line-height: 1.45;
   white-space: nowrap;
+  color: #fff36a;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
 }
 
+/* 項目は1行ぶん下げて右寄せ */
 .eq-items {
+  margin-top: 1.6em;
   font-size: 17px;
   line-height: 1.6;
+  text-align: right;
+  color: #f7f2ec;
 }
 
 .equipment-photos {
