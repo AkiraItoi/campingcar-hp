@@ -99,7 +99,7 @@ body {
 .brown {
   background: #5a351f;
   color: #ffffff;
-  font-size: 24px;
+  font-size: 28.8px;
   text-align: center;
   line-height: 1.3;
 }
@@ -113,8 +113,8 @@ body {
 }
 
 .carstay img {
-  width: 70px;
-  max-width: 45%;
+  width: 84px;
+  max-width: 54%;
   height: auto;
   display: block;
 }
@@ -381,11 +381,11 @@ body {
   }
 
   .brown {
-    font-size: 18px;
+    font-size: 21.6px;
   }
 
   .carstay img {
-    width: 86px;
+    width: 103px;
   }
 
   .carstay-label {
