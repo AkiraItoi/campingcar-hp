@@ -100,14 +100,16 @@ body {
   background: #5a351f;
   color: #ffffff;
   font-size: 24px;
+  text-align: center;
+  line-height: 1.3;
 }
 
 .carstay {
   background: #dcecf6;
   border: 2px solid #99c7df;
   color: #10a8d4;
-  gap: 10px;
-  white-space: nowrap;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .carstay img {
@@ -147,11 +149,22 @@ body {
   object-fit: cover;
 }
 
-.access-grid p {
-  margin: 4px 0 0;
-  font-size: 14px;
+.station-photo {
+  position: relative;
+}
+
+.station-caption {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
   font-weight: bold;
-  color: #5a351f;
+  line-height: 1.4;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
 .memory {
@@ -232,8 +245,30 @@ body {
   text-align: center;
 }
 
-.equipment p {
+.eq-list {
+  display: inline-block;
   margin: 0 0 12px;
+  text-align: left;
+}
+
+.eq-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.2em;
+  margin-bottom: 6px;
+}
+
+.eq-row:last-child {
+  margin-bottom: 0;
+}
+
+.eq-label {
+  flex-shrink: 0;
+  font-size: 22px;
+  white-space: nowrap;
+}
+
+.eq-items {
   font-size: 17px;
   line-height: 1.6;
 }
@@ -275,10 +310,16 @@ body {
   line-height: 1.8;
 }
 
+.free-offer {
+  display: block;
+  font-size: 48px;
+  line-height: 1.3;
+}
+
 .free-sub {
   display: block;
   margin-top: 6px;
-  font-size: 16px;
+  font-size: 15.2px;
   font-weight: normal;
 }
 
@@ -368,18 +409,21 @@ body {
     font-size: 26px;
   }
 
-  .equipment p {
+  .eq-items {
     font-size: clamp(16px, 5vw, 22px);
     line-height: 1.5;
   }
 
-  .rental-options {
-    font-size: 18px;
-    line-height: 1.6;
+  .eq-label {
+    font-size: clamp(20px, 6.5vw, 28px);
+  }
+
+  .free-offer {
+    font-size: clamp(32px, 11vw, 48px);
   }
 
   .free-sub {
-    font-size: 15px;
+    font-size: 14.25px;
   }
 
   .mini-photos img {
