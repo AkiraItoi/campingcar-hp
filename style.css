@@ -188,16 +188,29 @@ body {
   gap: 8px;
 }
 
-/* 当社サイトボタン上部のカレンダーチェックアイコン */
+/* 当社サイトボタンの線画カレンダーアイコン */
 .btn-icon {
   display: block;
-  width: 38px;
-  height: auto;
-  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   background: transparent;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   filter: none;
   padding: 0;
   margin: 0;
+}
+
+.brown .btn-icon {
+  color: #fff9e8;
+}
+
+.brown span {
+  line-height: 1.15;
 }
 
 .btn-icon,
@@ -254,8 +267,9 @@ body {
   }
 
   .mobile-reservation-bar .btn-icon {
-    width: 34px;
-    height: auto;
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
   }
 
   .mobile-reservation-bar .carstay img {
