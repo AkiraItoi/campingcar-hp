@@ -144,11 +144,19 @@ body {
 
 /* 当社サイトボタン上部のカレンダーチェックアイコン */
 .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
-  height: auto;
-  display: block;
+  height: 40px;
+  color: inherit;
   background: transparent;
-  filter: none;
+}
+
+.btn-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .carstay {
@@ -175,6 +183,37 @@ body {
 
 .mobile-reservation-bar {
   display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-reservation-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+    background: rgba(255, 248, 241, 0.96);
+    border-top: 1px solid #e7d7bf;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .mobile-reservation-bar .btn {
+    min-height: 52px;
+    border-radius: 12px;
+  }
+
+  .mobile-reservation-bar .btn-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-reservation-bar .carstay-label {
+    font-size: 16px;
+  }
 }
 
 .access {
@@ -531,6 +570,10 @@ body {
 }
 
 @media (max-width: 600px) {
+  body {
+    padding-bottom: 88px;
+  }
+
   .page {
     padding: 12px;
   }
@@ -589,34 +632,6 @@ body {
 
   .access-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .mobile-reservation-bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
-    background: rgba(255, 248, 241, 0.96);
-    border-top: 1px solid #e7d7bf;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.08);
-  }
-
-  .mobile-reservation-bar .btn {
-    min-height: 52px;
-    border-radius: 12px;
-  }
-
-  .mobile-reservation-bar .btn-icon {
-    width: 32px;
-  }
-
-  .mobile-reservation-bar .carstay-label {
-    font-size: 16px;
   }
 
   .reservation h2,
