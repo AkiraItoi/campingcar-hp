@@ -192,17 +192,17 @@ body {
 .btn-icon {
   display: block;
   width: 38px;
-  height: auto;
-  flex: 0 0 auto;
+  height: 38px;
+  flex: 0 0 38px;
   background: transparent;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   filter: none;
-  mix-blend-mode: multiply;
   padding: 0;
   margin: 0;
-}
-
-.brown {
-  isolation: isolate;
 }
 
 .btn-icon,
@@ -215,6 +215,7 @@ body {
   border: 2px solid #99c7df;
   color: #10a8d4;
   flex-direction: row;
+  justify-content: flex-start;
   gap: 6px;
 }
 
@@ -260,7 +261,8 @@ body {
 
   .mobile-reservation-bar .btn-icon {
     width: 34px;
-    height: auto;
+    height: 34px;
+    flex-basis: 34px;
   }
 
   .mobile-reservation-bar .carstay img {
