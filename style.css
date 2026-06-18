@@ -227,7 +227,7 @@ body {
 }
 
 .carstay img {
-  width: 56px;
+  width: 73px;
   max-width: 100%;
   height: auto;
   display: block;
@@ -238,7 +238,7 @@ body {
   font-family: inherit;
   font-weight: bold;
   color: #10a8d4;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
 .mobile-reservation-bar {
