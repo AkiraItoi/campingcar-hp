@@ -56,18 +56,27 @@ body {
   overflow: hidden;
 }
 
+.hero-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+  transition: opacity 3.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-image.show::after {
+  opacity: 0;
+}
+
 .hero-image img {
   display: block;
   width: 100%;
   height: auto;
-  opacity: 0.35;
-  filter: brightness(0.75) blur(2px);
-  transition: opacity 5s ease, filter 5s ease;
-}
-
-.hero-image img.show {
   opacity: 1;
-  filter: brightness(1) blur(0);
+  filter: none;
 }
 
 .hero-text {
