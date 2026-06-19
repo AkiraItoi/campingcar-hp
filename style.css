@@ -126,21 +126,14 @@ body {
   width: 100%;
   box-sizing: border-box;
   text-align: center;
-  background: #fff8f1;
-  padding: 12px 16px;
-  border-bottom: 1px solid #eadfd4;
+  background: #f3f8df;
+  padding: 10px 16px 0;
+  border-bottom: none;
 }
 
 @media (max-width: 768px) {
   .reservation {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 87px;
-    width: 100%;
-    z-index: 1000;
-    top: auto;
-    margin: 0;
+    display: none;
   }
 }
 
@@ -194,12 +187,10 @@ body {
   width: 38px;
   height: 38px;
   flex: 0 0 38px;
+  color: #ffffff;
+  fill: currentColor;
+  stroke: none;
   background: transparent;
-  fill: none;
-  stroke: #ffffff;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
   filter: none;
   padding: 0;
   margin: 0;
@@ -220,18 +211,21 @@ body {
 }
 
 .carstay img {
-  width: 73px;
-  max-width: 100%;
+  width: 120px;
+  max-width: 150%;
   height: auto;
   display: block;
 }
 
 .carstay-label {
-  font-size: 18px;
+  display: block;
+  flex: 1;
+  font-size: clamp(11px, 3.2vw, 16px);
   font-family: inherit;
   font-weight: bold;
   color: #10a8d4;
-  line-height: 1.15;
+  line-height: 1.08;
+  white-space: nowrap;
 }
 
 .mobile-reservation-bar {
@@ -240,24 +234,58 @@ body {
 
 @media (max-width: 768px) {
   .mobile-reservation-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
-    background: rgba(255, 248, 241, 0.96);
-    border-top: 1px solid #e7d7bf;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.08);
+     position: fixed;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     z-index: 1000;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 6px 1em;
+     padding: 8px 1em calc(8px + env(safe-area-inset-bottom));
+     background: rgba(243, 248, 223, 0.98);
+     border-top: none;
+     box-shadow: none;
   }
+   .mobile-reservation-title {
+   grid-column: 1 / -1;
+   grid-row: 1;
+   display: block;
+   width: 100%;
+   justify-self: stretch;
+   margin: 0;
+   padding: 6px 0 8px;
+   text-align: center;
+   font-size: 32px;
+   font-weight: bold;
+   letter-spacing: 0.08em;
+   color: #7b6858;
+   line-height: 1.2;
+ }
+ .mobile-reservation-bar .brown {
+  grid-column: 1;
+  grid-row: 2;
+}
 
-  .mobile-reservation-bar .btn {
-    min-height: 52px;
-    border-radius: 12px;
-  }
+.mobile-reservation-bar .carstay {
+  grid-column: 2;
+  grid-row: 2;
+}
+  
+.mobile-reservation-bar .btn {
+  min-height: 44px;
+  padding: 5px 8px;
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  transform-origin: center;
+  position: relative;
+}
+
+.mobile-reservation-bar .btn.is-hovered {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+  z-index: 2;
+}
 
   .mobile-reservation-bar .btn-icon {
     width: 34px;
@@ -266,13 +294,16 @@ body {
   }
 
   .mobile-reservation-bar .carstay img {
-    width: 68px;
+    width: 100px;
   }
 
   .mobile-reservation-bar .carstay-label {
-    font-size: 18px;
-    line-height: 1.2;
-  }
+     display: block;
+  font-size: clamp(12px, 3.4vw, 16px);
+  line-height: 1.12;
+  text-align: center;
+  white-space: nowrap;
+   }
 }
 
 .access {
@@ -699,7 +730,7 @@ body {
   }
 
   .carstay-label {
-    font-size: 16px;
+    font-size: clamp(12px, 3.4vw, 16px);
   }
 
   .spot-area,

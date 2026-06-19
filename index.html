@@ -21,7 +21,7 @@
 
         <div class="hero-text">
           <p>どこよりも、<span class="hero-key">安全</span></p>
-          <p>どこよりも、<span class="hero-key">安心</span></p>
+          <p>どこよりも、<span class="hero-key">充実</span></p>
           <p>どこよりも、<span class="hero-key">快適</span></p>
         </div>
       </div>
@@ -119,15 +119,15 @@
       <div class="eq-list">
         <div class="eq-row">
           <span class="eq-label">どこよりも、安全</span>
-          <span class="eq-items">エアサス<br>強化ブレーキ<br>バックモニター<br>コーナーセンサー</span>
+          <span class="eq-items">エアサス<br>強化ブレーキ<br>バックモニター<br>コーナーセンサー<br>ドライブレコーダー</span>
         </div>
           <div class="eq-row">
-          <span class="eq-label">どこよりも、安心</span>
-          <span class="eq-items">冷蔵庫<br>ドラレコ<br>強化バッテリー<br>キャンプ用品常備<br>寝具常備（布団・毛布・枕）</span>
+          <span class="eq-label">どこよりも、充実</span>
+          <span class="eq-items"><br>食器常備<br>救急箱常備<br>キャンプ用品常備<br>ソーラーパネル<br>寝具常備（羽毛布団・毛布・枕）</span>
         </div>
         <div class="eq-row">
           <span class="eq-label">どこよりも、快適</span>
-          <span class="eq-items">TV<br>電子レンジ<br>FFヒーター<br>簡易トイレ<br>家庭用エアコン</span>
+          <span class="eq-items">TV<br>電子レンジ<br>FFヒーター<br>簡易トイレ<br>家庭用エアコン<br>エンジンかけず一晩エアコン使用可能</span>
         </div>
       </div>
 
@@ -141,7 +141,7 @@
     </section>
 
     <section class="free">
-      <h2><span class="free-offer">「明日から」<br>「定期で！」<br>「法人で！」</span><br><span class="free-sub">いろいろな借り方に対応します</span></h2>
+      <h2><span class="free-offer">「明日から！」<br>「定期で！」<br>「法人で！」</span><br><span class="free-sub">いろいろな借り方に対応します</span></h2>
 
       <div class="free-content">
         <!-- 差し替え: 子供とキャンピングカーの写真 -->
@@ -185,19 +185,26 @@
   </main>
 
   <div class="mobile-reservation-bar">
-    <a class="btn brown" href="#">
-      <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false">
-        <rect x="3.6" y="5" width="16.8" height="15" rx="2.2"></rect>
-        <path d="M7.5 3.8v2.8"></path>
-        <path d="M16.5 3.8v2.8"></path>
-        <path d="M3.6 9.3h16.8"></path>
-        <path d="M8.4 13.2l2 2.1 5.2-5.1"></path>
+    <div class="mobile-reservation-title">空き状況を見る・予約する</div>
+
+      <a class="btn brown" href="#">
+      <svg class="btn-icon" viewBox="0 0 100 100" aria-hidden="true" role="img" focusable="false">
+       <path d="M20 18h60c7 0 12 5 12 12v50c0 7-5 12-12 12H20c-7 0-12-5-12-12V30c0-7 5-12 12-12zm0 18v44h60V36H20z"></path>
+       <rect x="26" y="48" width="11" height="11" rx="1.5"></rect>
+       <rect x="44.5" y="48" width="11" height="11" rx="1.5"></rect>
+       <rect x="63" y="48" width="11" height="11" rx="1.5"></rect>
+       <rect x="26" y="66" width="11" height="11" rx="1.5"></rect>
+       <rect x="44.5" y="66" width="11" height="11" rx="1.5"></rect>
+       <rect x="63" y="66" width="11" height="11" rx="1.5"></rect>
+       <rect x="27" y="4" width="12" height="24" rx="6"></rect>
+       <rect x="61" y="4" width="12" height="24" rx="6"></rect>
+       <path d="M45 72l-8-8 5-5 4 4 12-14 6 5-19 18z"></path>
       </svg>
       <span>当社サイト<br>（最安値）</span>
     </a>
     <a class="btn carstay" href="https://carstay.jp/ja/cars/69ca9e9726c366991ece017a/">
       <img src="img/carstay-logo.png" alt="CarStay">
-      <span class="carstay-label">CarStayでの<br>ご利用は<br>こちら</span>
+      <span class="carstay-label">CarStayでの<br>ご利用はこちら</span>
     </a>
   </div>
 
@@ -223,6 +230,30 @@
     }, { threshold: 0.15 });
 
     sections.forEach((section) => observer.observe(section));
+  // 予約ボタン：押している間だけ10％拡大し、明るくする
+   const reservationButtons = document.querySelectorAll('.mobile-reservation-bar .btn');
+
+   reservationButtons.forEach((button) => {
+     button.addEventListener('pointerenter', () => {
+      button.classList.add('is-hovered');
+    });
+
+     button.addEventListener('pointerleave', () => {
+       button.classList.remove('is-hovered');
+    });
+
+     button.addEventListener('pointerdown', () => {
+      button.classList.add('is-hovered');
+    });
+
+     button.addEventListener('pointerup', () => {
+      button.classList.remove('is-hovered');
+    });
+
+     button.addEventListener('pointercancel', () => {
+      button.classList.remove('is-hovered');
+    });
+});
   </script>
 </body>
 </html>
