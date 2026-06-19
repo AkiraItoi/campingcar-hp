@@ -121,14 +121,7 @@ body {
 }
 
 .reservation {
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  background: #f3f8df;
-  padding: 10px 16px 0;
-  border-bottom: none;
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -229,9 +222,44 @@ body {
 }
 
 .mobile-reservation-bar {
-  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 1em;
+  padding: 8px 1em calc(8px + env(safe-area-inset-bottom));
+  background: rgba(243, 248, 223, 0.98);
+  border-top: none;
+  box-shadow: none;
+}
+.mobile-reservation-title {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: block;
+  width: 100%;
+  justify-self: stretch;
+  margin: 0;
+  padding: 6px 0 8px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  color: #7b6858;
+  line-height: 1.2;
 }
 
+.mobile-reservation-bar .brown {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.mobile-reservation-bar .carstay {
+  grid-column: 2;
+  grid-row: 2;
+}
 @media (max-width: 768px) {
   .mobile-reservation-bar {
      position: fixed;
