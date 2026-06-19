@@ -77,24 +77,13 @@
 
     <section class="qa">
       <p class="menu-mark">三</p>
-      <h2>他店との違いを教えて！</h2>
+      <h2>この車を借りるメリットを教えて！</h2>
       <div class="special-button-row">
         <!-- note記事公開後、hrefを本物のURLに差し替える -->
-       <a class="special-btn" href="https://note.com/your_note_id/n/equipment" target="_blank" rel="noopener noreferrer">備品は無料で使っていいって本当？</a>
-       <a class="special-btn" href="https://note.com/your_note_id/n/safety" target="_blank" rel="noopener noreferrer">なんでこの車は安全なの？</a>
-       <a class="special-btn" href="https://note.com/your_note_id/n/cost" target="_blank" rel="noopener noreferrer">お値段は高くないのですか？</a>
-</div>
-
-      <div class="qa">
-
-        <div class="qa-text">
-          <div class="mini-photos">
-            <!-- 差し替え: 質問にあった写真に入れ替え（まぁこのままでもヨシ） -->
-            <img src="img/minamiizu-morning-sea.jpg" alt="南伊豆の朝の海">
-            <img src="img/sunset-nishiizu.jpg" alt="西伊豆の夕日">
-            <img src="img/night-nishiizu-fire.jpg" alt="西伊豆の夜の焚き火">
-          </div>
-        </div>
+       <a class="special-btn" href="https://note.com/your_note_id/n/safety" target="_blank" rel="noopener noreferrer">なんでこの車は安全で快適なの？</a>
+       <a class="special-btn" href="https://note.com/your_note_id/n/equipment" target="_blank" rel="noopener noreferrer">備品を使ってもお金はかからないの？</a>
+       <a class="special-btn" href="https://note.com/your_note_id/n/cost" target="_blank" rel="noopener noreferrer">こんなに揃っていると、お値段は高いのでは？</a>
+       <a class="special-btn" href="https://note.com/your_note_id/n/discount" target="_blank" rel="noopener noreferrer">割引はありますか？</a>
       </div>
     </section>
 
@@ -232,31 +221,57 @@
       });
     }, { threshold: 0.15 });
 
-    sections.forEach((section) => observer.observe(section));
-  // 予約ボタン：カーソルまたはタッチで20％拡大し、明るくする
-   const reservationButtons = document.querySelectorAll('.mobile-reservation-bar .btn');
+       sections.forEach((section) => observer.observe(section));
 
-   reservationButtons.forEach((button) => {
-     button.addEventListener('pointerenter', () => {
-      button.classList.add('is-hovered');
+    // 予約ボタン：カーソルまたはタッチで20％拡大し、明るくする
+    const reservationButtons = document.querySelectorAll('.mobile-reservation-bar .btn');
+
+    reservationButtons.forEach((button) => {
+      button.addEventListener('pointerenter', () => {
+        button.classList.add('is-hovered');
+      });
+
+      button.addEventListener('pointerleave', () => {
+        button.classList.remove('is-hovered');
+      });
+
+      button.addEventListener('pointerdown', () => {
+        button.classList.add('is-hovered');
+      });
+
+      button.addEventListener('pointerup', () => {
+        button.classList.remove('is-hovered');
+      });
+
+      button.addEventListener('pointercancel', () => {
+        button.classList.remove('is-hovered');
+      });
     });
 
-     button.addEventListener('pointerleave', () => {
-       button.classList.remove('is-hovered');
-    });
+    // Q&Aボタン：カーソルまたはタッチで10％拡大し、明るくする
+    const specialButtons = document.querySelectorAll('.special-btn');
 
-     button.addEventListener('pointerdown', () => {
-      button.classList.add('is-hovered');
-    });
+    specialButtons.forEach((button) => {
+      button.addEventListener('pointerenter', () => {
+        button.classList.add('is-hovered');
+      });
 
-     button.addEventListener('pointerup', () => {
-      button.classList.remove('is-hovered');
-    });
+      button.addEventListener('pointerleave', () => {
+        button.classList.remove('is-hovered');
+      });
 
-     button.addEventListener('pointercancel', () => {
-      button.classList.remove('is-hovered');
+      button.addEventListener('pointerdown', () => {
+        button.classList.add('is-hovered');
+      });
+
+      button.addEventListener('pointerup', () => {
+        button.classList.remove('is-hovered');
+      });
+
+      button.addEventListener('pointercancel', () => {
+        button.classList.remove('is-hovered');
+      });
     });
-});
   </script>
 </body>
 </html>
