@@ -13,7 +13,7 @@
   <main class="page">
 
     <section class="hero">
-      <p class="top-copy">三　レンタルしたいけど、いろいろ心配</p>
+      <p class="top-copy">三 レンタルしたいけど、いろいろ心配</p>
 
       <div class="hero-image">
         <!-- 差し替え: メインビジュアル（横長推奨）。現在は源氏山の景色 -->
@@ -75,9 +75,15 @@
 </div>
     </section>
 
-    <section class="memory">
+    <section class="qa">
       <p class="menu-mark">三</p>
       <h2>他店との違いを教えて！</h2>
+      <div class="special-button-row">
+        <!-- note記事公開後、hrefを本物のURLに差し替える -->
+       <a class="special-btn" href="https://note.com/your_note_id/n/equipment" target="_blank" rel="noopener noreferrer">備品は無料で使っていいって本当？</a>
+       <a class="special-btn" href="https://note.com/your_note_id/n/safety" target="_blank" rel="noopener noreferrer">なんでこの車は安全なの？</a>
+       <a class="special-btn" href="https://note.com/your_note_id/n/cost" target="_blank" rel="noopener noreferrer">お値段は高くないのですか？</a>
+</div>
 
       <div class="spot-area">
         <!-- 差し替え: メイン写真（海沿いを走るキャンピングカー） -->
@@ -123,7 +129,7 @@
         </div>
           <div class="eq-row">
           <span class="eq-label">どこよりも、充実</span>
-          <span class="eq-items"><br>食器常備<br>救急箱常備<br>キャンプ用品常備<br>ソーラーパネル<br>寝具常備（羽毛布団・毛布・枕）</span>
+          <span class="eq-items">食器常備<br>救急箱常備<br>キャンプ用品常備<br>ソーラーパネル<br>寝具常備（羽毛布団・毛布・枕）</span>
         </div>
         <div class="eq-row">
           <span class="eq-label">どこよりも、快適</span>
@@ -230,7 +236,7 @@
     }, { threshold: 0.15 });
 
     sections.forEach((section) => observer.observe(section));
-  // 予約ボタン：押している間だけ10％拡大し、明るくする
+  // 予約ボタン：カーソルまたはタッチで20％拡大し、明るくする
    const reservationButtons = document.querySelectorAll('.mobile-reservation-bar .btn');
 
    reservationButtons.forEach((button) => {
