@@ -256,7 +256,7 @@ body {
    margin: 0;
    padding: 6px 0 8px;
    text-align: center;
-   font-size: 32px;
+   font-size: 30px;
    font-weight: bold;
    letter-spacing: 0.08em;
    color: #7b6858;
@@ -282,7 +282,7 @@ body {
 }
 
 .mobile-reservation-bar .btn.is-hovered {
-  transform: scale(1.1);
+  transform: scale(1.2);
   filter: brightness(1.2);
   z-index: 2;
 }
