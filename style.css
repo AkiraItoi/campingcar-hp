@@ -930,7 +930,18 @@ body {
   font-weight: bold;
   text-align: center;
 }
-/* 一時テスト：フェードイン演出を止めて、表示速度を確認する */
+/* 一時テスト：すべてのフェードイン演出を止める */
+.hero-image {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.hero-image.show {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .js-fade .page > section {
   opacity: 1 !important;
   transform: none !important;
