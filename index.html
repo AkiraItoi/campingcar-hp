@@ -273,19 +273,18 @@
       });
     });
 
-      const versionTag = document.getElementById('versionTag');
-    if (versionTag) {
-      const modifiedDate = new Date(document.lastModified);
-
-      const formattedModifiedDate =
-       modifiedDate.getFullYear() + '/' +
-       String(modifiedDate.getMonth() + 1).padStart(2, '0') + '/' +
-       String(modifiedDate.getDate()).padStart(2, '0') + ' ' +
-       String(modifiedDate.getHours()).padStart(2, '0') + ':' +
-       String(modifiedDate.getMinutes()).padStart(2, '0');
-
-versionTag.textContent = 'ver. ' + formattedModifiedDate;
-    }
+      
+ const versionTag = document.getElementById('versionTag');
+ if (versionTag) {
+   versionTag.textContent = '確認 ' + new Date().toLocaleString('ja-JP', {
+     year: 'numeric',
+     month: '2-digit',
+     day: '2-digit',
+     hour: '2-digit',
+     minute: '2-digit',
+     hour12: false
+  });
+}
   </script>
 </body>
 </html>
