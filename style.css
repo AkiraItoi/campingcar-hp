@@ -956,3 +956,20 @@ body {
 body {
  padding-bottom: 180px;
 }
+/* スマホ：最後の問い合わせボタンが下部予約バーに隠れないように止める */
+@media (max-width: 768px) {
+  html {
+    scroll-snap-type: y proximity;
+    scroll-padding-bottom: 220px;
+  }
+
+  .free {
+    scroll-snap-align: end;
+    scroll-snap-stop: always;
+    padding-bottom: 240px;
+  }
+
+  .contact {
+    margin-bottom: 180px;
+  }
+}
