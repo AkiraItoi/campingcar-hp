@@ -1063,15 +1063,11 @@ body {
   cursor: pointer;
 }
 
-.reserve-step.is-active {
-  color: #fff;
+.reserve-step.is-active,
+.reserve-step.is-done {
   background: #5a351f;
   border-color: #5a351f;
-}
-
-.reserve-step.is-done {
-  color: #5a351f;
-  border-color: #5a351f;
+  color: #fff;
 }
 
 .reserve-selected-summary {
