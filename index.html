@@ -87,6 +87,64 @@
       </div>
     </section>
 
+    <section class="price">
+      <p class="menu-mark">三</p>
+      <h2>料金の目安</h2>
+      <p class="price-desc">料金は「格安期・通常期・繁忙期」の3シーズン制です。土日祝は各料金の25％増です。</p>
+
+      <div class="price-cards">
+        <div class="price-card">
+          <p class="price-card-title">格安期</p>
+          <p class="price-card-row"><span>平日24時間</span><span>18,000円</span></p>
+          <p class="price-card-row"><span>土日祝24時間</span><span>22,500円</span></p>
+        </div>
+        <div class="price-card">
+          <p class="price-card-title">通常期</p>
+          <p class="price-card-row"><span>平日24時間</span><span>27,000円</span></p>
+          <p class="price-card-row"><span>土日祝24時間</span><span>33,750円</span></p>
+        </div>
+        <div class="price-card">
+          <p class="price-card-title">繁忙期</p>
+          <p class="price-card-row"><span>平日24時間</span><span>46,000円</span></p>
+          <p class="price-card-row"><span>土日祝24時間</span><span>57,500円</span></p>
+        </div>
+      </div>
+
+      <div class="price-calc">
+        <h3>概算料金を計算する</h3>
+
+        <label class="price-calc-label" for="priceStart">利用開始日時</label>
+        <input class="price-calc-input" type="datetime-local" id="priceStart">
+
+        <label class="price-calc-label" for="priceEnd">返却日時</label>
+        <input class="price-calc-input" type="datetime-local" id="priceEnd">
+
+        <label class="price-calc-label" for="priceSeason">シーズン選択</label>
+        <select class="price-calc-input" id="priceSeason">
+          <option value="cheap">格安期</option>
+          <option value="normal">通常期</option>
+          <option value="busy">繁忙期</option>
+        </select>
+
+        <label class="price-calc-label" for="priceDay">曜日区分</label>
+        <select class="price-calc-input" id="priceDay">
+          <option value="weekday">平日</option>
+          <option value="holiday">土日祝</option>
+        </select>
+
+        <button type="button" class="price-calc-btn" id="priceCalcBtn">概算料金を見る</button>
+
+        <p class="price-calc-result" id="priceCalcResult"></p>
+      </div>
+
+      <div class="price-notes">
+        <p>※表示料金は概算です。正式料金は予約確定前にご案内します。</p>
+        <p>※24時間料金をもとに時間割で計算しています。</p>
+        <p>※6時間未満のご利用は短時間料金として計算します。</p>
+        <p>※走行距離制限を超えた場合は、追加料金が発生します。</p>
+      </div>
+    </section>
+
     <section class="voice">
       <h2>お客様の声</h2>
 
@@ -303,6 +361,50 @@
       versionTag.textContent = 'ver. local';
     });
 }
+  </script>
+
+  <script>
+    const priceCalcBtn = document.getElementById('priceCalcBtn');
+    if (priceCalcBtn) {
+      const priceRateTable = {
+        cheap:  { weekday: 18000, holiday: 22500 },
+        normal: { weekday: 27000, holiday: 33750 },
+        busy:   { weekday: 46000, holiday: 57500 }
+      };
+
+      priceCalcBtn.addEventListener('click', () => {
+        const startInput = document.getElementById('priceStart');
+        const endInput = document.getElementById('priceEnd');
+        const seasonInput = document.getElementById('priceSeason');
+        const dayInput = document.getElementById('priceDay');
+        const resultEl = document.getElementById('priceCalcResult');
+
+        if (!startInput.value || !endInput.value) {
+          resultEl.textContent = '利用開始日時と返却日時を入力してください。';
+          return;
+        }
+
+        const startDate = new Date(startInput.value);
+        const endDate = new Date(endInput.value);
+
+        if (endDate <= startDate) {
+          resultEl.textContent = '返却日時は利用開始日時より後の日時を指定してください。';
+          return;
+        }
+
+        const usageHours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
+        const base24h = priceRateTable[seasonInput.value][dayInput.value];
+        let hourlyRate = base24h / 24;
+
+        if (usageHours < 6) {
+          hourlyRate *= 2;
+        }
+
+        const total = Math.round(hourlyRate * usageHours);
+
+        resultEl.textContent = '概算料金: ' + total.toLocaleString('ja-JP') + '円（利用時間: ' + usageHours + '時間）';
+      });
+    }
   </script>
 </body>
 </html>

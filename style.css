@@ -973,3 +973,136 @@ body {
     margin-bottom: 180px;
   }
 }
+
+.price {
+  background: #fffaf4;
+  border: 1px solid #eadfd4;
+  border-radius: 14px;
+  padding: 20px 16px;
+  margin: 18px 0;
+  text-align: center;
+}
+
+.price h2 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+
+.price-desc {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.price-cards {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.price-card {
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.price-card-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #5a351f;
+  text-align: center;
+}
+
+.price-card-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.price-card-row:last-child {
+  margin-bottom: 0;
+}
+
+.price-calc {
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.price-calc h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.price-calc-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.price-calc-input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e6cdb8;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #5a351f;
+  background: #fff;
+}
+
+.price-calc-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #5a351f;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.price-calc-btn:hover {
+  filter: brightness(1.1);
+}
+
+.price-calc-result {
+  margin: 14px 0 0;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: #5a351f;
+  min-height: 1.4em;
+}
+
+.price-notes {
+  text-align: left;
+}
+
+.price-notes p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #9b6a45;
+}
+
+.price-notes p:last-child {
+  margin-bottom: 0;
+}
