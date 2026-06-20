@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>空き状況・料金を確認する</title>
+  <link rel="stylesheet" href="style.css?v=20260618-1950">
+</head>
+<body>
+
+  <main class="page">
+
+    <section class="price">
+      <h2>空き状況・料金を確認する</h2>
+      <p class="price-desc">カレンダーから利用開始日時と返却日時を選択すると、概算料金を確認できます。</p>
+
+      <div class="reserve-step-header">
+        <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
+        <button type="button" class="reserve-step" id="reserveStepEnd">② 返却日時を選択</button>
+      </div>
+
+      <div class="reserve-selected-summary" id="reserveSelectedSummary"></div>
+
+      <div class="reserve-calendar-nav">
+        <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn">前の2ヶ月</button>
+        <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn">次の2ヶ月</button>
+      </div>
+
+      <div class="reserve-calendars" id="reserveCalendars"></div>
+
+      <div class="reserve-time-popup" id="reserveTimePopup" hidden>
+        <div class="reserve-time-popup-inner">
+          <p class="reserve-time-popup-title" id="reserveTimePopupTitle"></p>
+          <div class="reserve-time-grid" id="reserveTimeGrid"></div>
+          <button type="button" class="reserve-time-popup-close" id="reserveTimePopupClose">閉じる</button>
+        </div>
+      </div>
+
+      <div class="reserve-result" id="reserveResult"></div>
+
+      <div class="reserve-action-buttons">
+        <a class="special-btn" href="#">予約リクエストへ進む</a>
+        <a class="special-btn" href="index.html">トップページへ戻る</a>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (() => {
+      const RESERVE_BASE_24H = 27000;
+
+      const stepStartEl = document.getElementById('reserveStepStart');
+      const stepEndEl = document.getElementById('reserveStepEnd');
+      const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
+      const nextMonthBtn = document.getElementById('reserveNextMonthBtn');
+      const calendarsEl = document.getElementById('reserveCalendars');
+      const summaryEl = document.getElementById('reserveSelectedSummary');
+      const popupEl = document.getElementById('reserveTimePopup');
+      const popupTitleEl = document.getElementById('reserveTimePopupTitle');
+      const timeGridEl = document.getElementById('reserveTimeGrid');
+      const popupCloseEl = document.getElementById('reserveTimePopupClose');
+      const resultEl = document.getElementById('reserveResult');
+
+      const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
+
+      let step = 'start';
+      let startDate = null;
+      let endDate = null;
+      let pendingDateKey = null;
+      let calendarOffset = 0;
+      const CALENDAR_MAX_OFFSET = 4;
+
+      function pad(n) {
+        return String(n).padStart(2, '0');
+      }
+
+      function formatSelected(date) {
+        return date.getFullYear() + '/' + pad(date.getMonth() + 1) + '/' + pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+      }
+
+      function buildMonthCalendar(year, month) {
+        const wrap = document.createElement('div');
+        wrap.className = 'reserve-calendar';
+
+        const title = document.createElement('p');
+        title.className = 'reserve-calendar-title';
+        title.textContent = year + '年' + (month + 1) + '月';
+        wrap.appendChild(title);
+
+        const weekRow = document.createElement('div');
+        weekRow.className = 'reserve-calendar-grid reserve-calendar-weekrow';
+        WEEKDAY_LABELS.forEach((label) => {
+          const cell = document.createElement('span');
+          cell.className = 'reserve-weekday';
+          cell.textContent = label;
+          weekRow.appendChild(cell);
+        });
+        wrap.appendChild(weekRow);
+
+        const grid = document.createElement('div');
+        grid.className = 'reserve-calendar-grid';
+
+        const firstDay = new Date(year, month, 1);
+        const startOffset = firstDay.getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < startOffset; i++) {
+          const blank = document.createElement('span');
+          blank.className = 'reserve-day reserve-day-blank';
+          grid.appendChild(blank);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cellDate = new Date(year, month, d);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'reserve-day';
+          btn.textContent = String(d);
+
+          const isPast = cellDate < today;
+          const isBeforeStart = step === 'end' && startDate &&
+            cellDate < new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+
+          if (isPast || isBeforeStart) {
+            btn.disabled = true;
+            btn.classList.add('reserve-day-disabled');
+          } else {
+            btn.addEventListener('click', () => openTimePopup(year, month, d));
+          }
+
+          if (startDate && cellDate.getFullYear() === startDate.getFullYear() &&
+              cellDate.getMonth() === startDate.getMonth() && cellDate.getDate() === startDate.getDate()) {
+            btn.classList.add('reserve-day-selected-start');
+          }
+          if (endDate && cellDate.getFullYear() === endDate.getFullYear() &&
+              cellDate.getMonth() === endDate.getMonth() && cellDate.getDate() === endDate.getDate()) {
+            btn.classList.add('reserve-day-selected-end');
+          }
+
+          grid.appendChild(btn);
+        }
+
+        wrap.appendChild(grid);
+        return wrap;
+      }
+
+      function renderCalendars() {
+        calendarsEl.innerHTML = '';
+        const base = new Date();
+        for (let i = 0; i < 2; i++) {
+          const target = new Date(base.getFullYear(), base.getMonth() + calendarOffset + i, 1);
+          calendarsEl.appendChild(buildMonthCalendar(target.getFullYear(), target.getMonth()));
+        }
+        prevMonthBtn.disabled = calendarOffset <= 0;
+        nextMonthBtn.disabled = calendarOffset >= CALENDAR_MAX_OFFSET;
+      }
+
+      function renderTimeGrid() {
+        timeGridEl.innerHTML = '';
+        for (let h = 0; h < 24; h++) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'reserve-time-btn';
+          if (h < 12) {
+            btn.classList.add('reserve-time-am');
+          } else {
+            btn.classList.add('reserve-time-pm');
+          }
+          btn.textContent = h + '時';
+          btn.addEventListener('click', () => selectTime(h));
+          timeGridEl.appendChild(btn);
+        }
+      }
+
+      function openTimePopup(year, month, day) {
+        pendingDateKey = { year, month, day };
+        popupTitleEl.textContent = year + '年' + (month + 1) + '月' + day + '日の時間を選択（' + (step === 'start' ? '開始' : '返却') + '）';
+        popupEl.hidden = false;
+      }
+
+      function closeTimePopup() {
+        popupEl.hidden = true;
+        pendingDateKey = null;
+      }
+
+      function selectTime(hour) {
+        if (!pendingDateKey) {
+          return;
+        }
+
+        const picked = new Date(pendingDateKey.year, pendingDateKey.month, pendingDateKey.day, hour, 0, 0, 0);
+
+        if (step === 'start') {
+          startDate = picked;
+          if (endDate && endDate <= startDate) {
+            endDate = null;
+          }
+          step = 'end';
+        } else {
+          endDate = picked;
+        }
+
+        closeTimePopup();
+        renderStepHeader();
+        renderSummary();
+        renderCalendars();
+        calcPrice();
+      }
+
+      function renderStepHeader() {
+        stepStartEl.classList.toggle('is-active', step === 'start');
+        stepStartEl.classList.toggle('is-done', !!startDate);
+        stepEndEl.classList.toggle('is-active', step === 'end');
+        stepEndEl.classList.toggle('is-done', !!endDate);
+      }
+
+      function setStep(newStep) {
+        step = newStep;
+        renderStepHeader();
+        renderCalendars();
+      }
+
+      function renderSummary() {
+        let html = '';
+        if (startDate) {
+          html += '<p>利用開始：' + formatSelected(startDate) + '</p>';
+        }
+        if (endDate) {
+          html += '<p>返却：' + formatSelected(endDate) + '</p>';
+        }
+        summaryEl.innerHTML = html;
+      }
+
+      function calcPrice() {
+        if (!startDate || !endDate) {
+          resultEl.innerHTML = '';
+          return;
+        }
+
+        if (endDate <= startDate) {
+          resultEl.innerHTML = '<p class="reserve-result-detail">返却日時は利用開始日時より後にしてください。</p>';
+          return;
+        }
+
+        const usageHours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
+        let hourlyRate = RESERVE_BASE_24H / 24;
+
+        if (usageHours < 6) {
+          hourlyRate *= 2;
+        }
+
+        const total = Math.floor((hourlyRate * usageHours) / 1000) * 1000;
+
+        resultEl.innerHTML =
+          '<p class="reserve-result-label">概算料金</p>' +
+          '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">利用時間：' + usageHours + '時間 / 通常期・平日料金で計算</p>';
+      }
+
+      popupCloseEl.addEventListener('click', closeTimePopup);
+      stepStartEl.addEventListener('click', () => setStep('start'));
+      stepEndEl.addEventListener('click', () => setStep('end'));
+      prevMonthBtn.addEventListener('click', () => {
+        calendarOffset = Math.max(0, calendarOffset - 2);
+        renderCalendars();
+      });
+      nextMonthBtn.addEventListener('click', () => {
+        calendarOffset = Math.min(CALENDAR_MAX_OFFSET, calendarOffset + 2);
+        renderCalendars();
+      });
+
+      renderTimeGrid();
+      renderStepHeader();
+      renderCalendars();
+    })();
+  </script>
+
+</body>
+</html>

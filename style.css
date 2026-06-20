@@ -997,99 +997,34 @@ body {
 }
 
 .price-cards {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   margin-bottom: 20px;
 }
 
 .price-card {
-  background: #fff;
-  border: 1px solid #eadfd4;
-  border-radius: 12px;
-  padding: 12px 14px;
-  text-align: left;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
 }
 
 .price-card-title {
-  margin: 0 0 8px;
-  font-size: 17px;
+  margin: 0;
+  font-size: 24px;
   font-weight: bold;
   color: #5a351f;
   text-align: center;
 }
 
-.price-card-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 0 4px;
-  font-size: 14px;
-}
-
-.price-card-row:last-child {
-  margin-bottom: 0;
-}
-
-.price-calc {
-  background: #fff;
-  border: 1px solid #eadfd4;
-  border-radius: 12px;
-  padding: 16px;
-  text-align: left;
-  margin-bottom: 16px;
-}
-
-.price-calc h3 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.price-calc-label {
-  display: block;
-  margin: 12px 0 6px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.price-calc-input {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e6cdb8;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 15px;
-  color: #5a351f;
-  background: #fff;
-}
-
-.price-calc-btn {
-  display: block;
-  width: 100%;
-  margin-top: 16px;
-  padding: 12px 16px;
-  background: #5a351f;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.price-calc-btn:hover {
-  filter: brightness(1.1);
-}
-
-.price-calc-result {
-  margin: 14px 0 0;
-  font-size: 16px;
+.price-card-amount {
+  margin: 0;
+  font-size: 38px;
   font-weight: bold;
   text-align: center;
   color: #5a351f;
-  min-height: 1.4em;
 }
 
 .price-notes {
@@ -1098,11 +1033,248 @@ body {
 
 .price-notes p {
   margin: 0 0 6px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.6;
-  color: #9b6a45;
+  color: #9b8a78;
 }
 
 .price-notes p:last-child {
   margin-bottom: 0;
+}
+
+.reserve-step-header {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.reserve-step {
+  flex: 1;
+  margin: 0;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #b0a08e;
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 8px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.reserve-step.is-active {
+  color: #fff;
+  background: #5a351f;
+  border-color: #5a351f;
+}
+
+.reserve-step.is-done {
+  color: #5a351f;
+  border-color: #5a351f;
+}
+
+.reserve-selected-summary {
+  margin: 0 0 12px;
+  font-size: 14px;
+  text-align: center;
+  color: #5a351f;
+}
+
+.reserve-selected-summary p {
+  margin: 0 0 4px;
+}
+
+.reserve-calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.reserve-nav-btn {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #eadfd4;
+  border-radius: 8px;
+  background: #fff;
+  color: #5a351f;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reserve-nav-btn:disabled {
+  color: #d8c7b5;
+  cursor: not-allowed;
+}
+
+.reserve-calendars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.reserve-calendar {
+  flex: 1 1 220px;
+  max-width: 260px;
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.reserve-calendar-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #5a351f;
+}
+
+.reserve-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.reserve-weekday {
+  font-size: 11px;
+  text-align: center;
+  color: #9b8a78;
+}
+
+.reserve-day {
+  display: block;
+  width: 100%;
+  padding: 4px 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  color: #5a351f;
+  cursor: pointer;
+}
+
+.reserve-day-blank {
+  visibility: hidden;
+}
+
+.reserve-day-disabled {
+  color: #d8c7b5;
+  cursor: not-allowed;
+}
+
+.reserve-day-selected-start,
+.reserve-day-selected-end {
+  background: #5a351f;
+  color: #fff;
+}
+
+.reserve-time-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 16px;
+  z-index: 10;
+}
+
+.reserve-time-popup[hidden] {
+  display: none;
+}
+
+.reserve-time-popup-inner {
+  width: 100%;
+  max-width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.reserve-time-popup-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #5a351f;
+}
+
+.reserve-time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-auto-flow: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.reserve-time-btn {
+  padding: 7px 0;
+  border: 1px solid #eadfd4;
+  border-radius: 6px;
+  background: #fffaf4;
+  font-family: inherit;
+  font-size: 12px;
+  color: #5a351f;
+  cursor: pointer;
+}
+
+.reserve-time-popup-close {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #e8dfd3;
+  color: #5a351f;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reserve-result-label {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #9b8a78;
+}
+
+.reserve-result-price {
+  margin: 0 0 4px;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+  color: #5a351f;
+}
+
+.reserve-result-detail {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+  color: #9b8a78;
+}
+
+.reserve-time-am {
+  background: #fffaf4;
+}
+
+.reserve-time-pm {
+  background: #f0e6dc;
+}
+
+.reserve-action-buttons {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
 }
