@@ -916,3 +916,17 @@ body {
     transform: none !important;
   }
 }
+.map-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 20px;
+  background: #e8dfd3;
+  color: #5a351f;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
