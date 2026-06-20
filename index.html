@@ -276,14 +276,23 @@
       
  const versionTag = document.getElementById('versionTag');
  if (versionTag) {
-   versionTag.textContent = '確認 ' + new Date().toLocaleString('ja-JP', {
-     year: 'numeric',
-     month: '2-digit',
-     day: '2-digit',
-     hour: '2-digit',
-     minute: '2-digit',
-     hour12: false
-  });
+  fetch('https://api.github.com/repos/akiraitoi/campingcar-hp/commits/main')
+    .then((response) => response.json())
+    .then((data) => {
+      const commitDate = new Date(data.commit.committer.date);
+
+      versionTag.textContent = 'ver. ' + commitDate.toLocaleString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    })
+    .catch(() => {
+      versionTag.textContent = 'ver. 取得失敗';
+    });
 }
   </script>
 </body>
