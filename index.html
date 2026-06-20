@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <p class="version-tag">ver. 20260618-1950</p>
+  <p class="version-tag" id="versionTag"></p>
 
   <main class="page">
 
@@ -272,6 +272,20 @@
         button.classList.remove('is-hovered');
       });
     });
+
+      const versionTag = document.getElementById('versionTag');
+    if (versionTag) {
+      const modifiedDate = new Date(document.lastModified);
+
+      const formattedModifiedDate =
+       modifiedDate.getFullYear() + '/' +
+       String(modifiedDate.getMonth() + 1).padStart(2, '0') + '/' +
+       String(modifiedDate.getDate()).padStart(2, '0') + ' ' +
+       String(modifiedDate.getHours()).padStart(2, '0') + ':' +
+       String(modifiedDate.getMinutes()).padStart(2, '0');
+
+versionTag.textContent = 'ver. ' + formattedModifiedDate;
+    }
   </script>
 </body>
 </html>
