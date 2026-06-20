@@ -276,10 +276,10 @@
       
  const versionTag = document.getElementById('versionTag');
  if (versionTag) {
-  fetch('https://api.github.com/repos/akiraitoi/campingcar-hp/commits/main')
+  fetch('version.json')
     .then((response) => response.json())
     .then((data) => {
-      const commitDate = new Date(data.commit.committer.date);
+      const commitDate = new Date(data.commitDate);
 
       versionTag.textContent = 'ver. ' + commitDate.toLocaleString('ja-JP', {
         year: 'numeric',
@@ -291,7 +291,7 @@
       });
     })
     .catch(() => {
-      versionTag.textContent = 'ver. 取得失敗';
+      versionTag.textContent = 'ver. local';
     });
 }
   </script>
