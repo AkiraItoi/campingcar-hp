@@ -954,5 +954,5 @@ body {
 }
 /* 下部固定予約バーに隠れないようにする */
 body {
-  padding-bottom: 200px;
+ padding-bottom: 180px;
 }
