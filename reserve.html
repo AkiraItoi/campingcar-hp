@@ -49,8 +49,20 @@
   <script>
     (() => {
       // 料金マスター：現在の固定料金設定をここに集約（現状の数値は変更していない）
+      // 将来的に格安期・通常期・繁忙期で料金を分けられるよう区分を用意（現時点では未使用で、計算は通常期のみを参照）
       const RESERVE_PRICE_MASTER = {
-        base24h: 27000 // 24時間あたりの基本料金
+        cheap: {
+          label: '格安期',
+          base24h: 27000
+        },
+        regular: {
+          label: '通常期',
+          base24h: 27000
+        },
+        high: {
+          label: '繁忙期',
+          base24h: 27000
+        }
       };
 
       const SHORT_USE_HOUR_LIMIT =  12;   // この時間以下は短時間利用とみなす
@@ -254,7 +266,8 @@
         }
 
         const usageHours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
-        let hourlyRate = RESERVE_PRICE_MASTER.base24h / 24;
+        const currentPrice = RESERVE_PRICE_MASTER.regular;
+        let hourlyRate = currentPrice.base24h / 24;
 
         if (usageHours <= SHORT_USE_HOUR_LIMIT) {
         hourlyRate *= SHORT_USE_MULTIPLIER;
