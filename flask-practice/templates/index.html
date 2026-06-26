@@ -2,10 +2,60 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Flask練習</title>
+  <title>キャンピングカー料金計算</title>
 </head>
 <body>
-  <h1>FlaskでHTMLを表示しています</h1>
-  <p>これは templates/index.html から表示されています。</p>
+  <h1>キャンピングカー料金計算</h1>
+
+  <form method="POST">
+    <label for="start_date">出発日</label>
+    <input type="date" id="start_date" name="start_date" required>
+
+    <br><br>
+
+    <label for="end_date">返却日</label>
+    <input type="date" id="end_date" name="end_date" required>
+
+    <br><br>
+
+    <button type="submit">料金を計算する</button>
+  </form>
+
+  {% if error %}
+    <hr>
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  {% if start_date and end_date %}
+    <hr>
+    <h2>入力された日付</h2>
+    <p>出発日：{{ start_date }}</p>
+    <p>返却日：{{ end_date }}</p>
+  {% endif %}
+
+ {% if nights %}
+  <h2>泊数計算</h2>
+  <p>泊数：{{ nights }}泊</p>
+{% endif %}
+
+{% if total_price %}
+  <h2>概算料金</h2>
+  <p>概算料金：{{ total_price }}円</p>
+{% endif %}
+
+{% if daily_breakdown %}
+  <h2>日別料金内訳</h2>
+  <ul>
+    {% for day in daily_breakdown %}
+      <li>{{ day.date }}：{{ day.season }} {{ day.price }}円</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<hr>
+<h2>料金表テスト</h2>
+<p>格安期：{{ price_table["格安期"] }}円</p>
+<p>通常期：{{ price_table["通常期"] }}円</p>
+<p>繁忙期：{{ price_table["繁忙期"] }}円</p>
 </body>
 </html>

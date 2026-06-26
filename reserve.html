@@ -48,7 +48,14 @@
 
   <script>
     (() => {
-      const RESERVE_BASE_24H = 27000;
+      // 料金マスター：現在の固定料金設定をここに集約（現状の数値は変更していない）
+      const RESERVE_PRICE_MASTER = {
+        base24h: 27000 // 24時間あたりの基本料金
+      };
+
+      const SHORT_USE_HOUR_LIMIT =  12;   // この時間以下は短時間利用とみなす
+      const SHORT_USE_MULTIPLIER =  2;   // 短時間利用時の時間単価倍率
+      const ROUND_DOWN_UNIT = 1000;     // 合計料金の切り捨て単位（円）
 
       const stepStartEl = document.getElementById('reserveStepStart');
       const stepEndEl = document.getElementById('reserveStepEnd');
@@ -247,13 +254,13 @@
         }
 
         const usageHours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
-        let hourlyRate = RESERVE_BASE_24H / 24;
+        let hourlyRate = RESERVE_PRICE_MASTER.base24h / 24;
 
-        if (usageHours < 6) {
-          hourlyRate *= 2;
-        }
+        if (usageHours <= SHORT_USE_HOUR_LIMIT) {
+        hourlyRate *= SHORT_USE_MULTIPLIER;
+       }
 
-        const total = Math.floor((hourlyRate * usageHours) / 1000) * 1000;
+        const total = Math.floor((hourlyRate * usageHours) / ROUND_DOWN_UNIT) * ROUND_DOWN_UNIT;
 
         resultEl.innerHTML =
           '<p class="reserve-result-label">概算料金</p>' +
