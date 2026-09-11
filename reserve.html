@@ -48,26 +48,129 @@
 
   <script>
     (() => {
-      // 料金マスター：現在の固定料金設定をここに集約（現状の数値は変更していない）
-      // 将来的に格安期・通常期・繁忙期で料金を分けられるよう区分を用意（現時点では未使用で、計算は通常期のみを参照）
-      const RESERVE_PRICE_MASTER = {
-        cheap: {
-          label: '格安期',
-          base24h: 27000
-        },
-        regular: {
-          label: '通常期',
-          base24h: 27000
-        },
-        high: {
-          label: '繁忙期',
-          base24h: 27000
-        }
-      };
+      // 料金マスター：通常期／シーズン期の時間単価（税込概算）
+      const REGULAR_WEEKDAY_HOURLY = 750;     // 通常期・平日：円/時間
+      const REGULAR_HOLIDAY_HOURLY = 937.5;   // 通常期・土日祝：円/時間（25%加算）
+      const SEASON_WEEKDAY_HOURLY = 1500;     // シーズン期・平日：円/時間
+      const SEASON_HOLIDAY_HOURLY = 1875;     // シーズン期・土日祝：円/時間（25%加算）
+      const FINAL_ROUND_DOWN_UNIT = 100;      // 最終金額の切り捨て単位（円）
+      const SURVEY_DISCOUNT_RATE = 0.2;       // アンケート協力割：車両利用料金に対する返金率
 
-      const SHORT_USE_HOUR_LIMIT =  12;   // この時間以下は短時間利用とみなす
-      const SHORT_USE_MULTIPLIER =  2;   // 短時間利用時の時間単価倍率
-      const ROUND_DOWN_UNIT = 1000;     // 合計料金の切り捨て単位（円）
+      // シーズン期間（毎年繰り返し・開始日終了日を含む、月日のみで判定）
+      const SEASON_RANGES = [
+        { startMonth: 3, startDay: 15, endMonth: 4, endDay: 10 },
+        { startMonth: 4, startDay: 25, endMonth: 5, endDay: 10 },
+        { startMonth: 7, startDay: 12, endMonth: 8, endDay: 31 },
+        { startMonth: 9, startDay: 15, endMonth: 9, endDay: 28 },
+        { startMonth: 12, startDay: 20, endMonth: 1, endDay: 15 } // 年をまたぐ期間
+      ];
+
+      function isSeasonDate(date) {
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return SEASON_RANGES.some((range) => {
+          if (range.startMonth <= range.endMonth) {
+            return (month > range.startMonth || (month === range.startMonth && day >= range.startDay)) &&
+                   (month < range.endMonth || (month === range.endMonth && day <= range.endDay));
+          }
+          return (month === range.startMonth && day >= range.startDay) ||
+                 (month === range.endMonth && day <= range.endDay);
+        });
+      }
+
+      // 日本の祝日判定（外部ライブラリ不使用）。現行の祝日法（ハッピーマンデー・春分/秋分・
+      // 国民の休日・振替休日）に基づき年ごとに祝日を算出し、予約可能期間内で正しく判定する。
+      function calcEquinoxDay(year, kind) {
+        const base = kind === 'spring' ? 20.8431 : 23.2488;
+        return Math.floor(base + 0.242194 * (year - 1980) - Math.floor((year - 1980) / 4));
+      }
+
+      function nthWeekdayOfMonth(year, month, nth, weekday) {
+        const first = new Date(year, month - 1, 1);
+        const firstWeekdayDate = 1 + ((7 + weekday - first.getDay()) % 7);
+        return firstWeekdayDate + (nth - 1) * 7;
+      }
+
+      function buildHolidayMap(year) {
+        const map = {};
+        const set = (m, d, name) => { map[m + '-' + d] = name; };
+
+        set(1, 1, '元日');
+        set(1, nthWeekdayOfMonth(year, 1, 2, 1), '成人の日');
+        set(2, 11, '建国記念の日');
+        set(2, 23, '天皇誕生日');
+        set(3, calcEquinoxDay(year, 'spring'), '春分の日');
+        set(4, 29, '昭和の日');
+        set(5, 3, '憲法記念日');
+        set(5, 4, 'みどりの日');
+        set(5, 5, 'こどもの日');
+        set(7, nthWeekdayOfMonth(year, 7, 3, 1), '海の日');
+        set(8, 11, '山の日');
+        set(9, nthWeekdayOfMonth(year, 9, 3, 1), '敬老の日');
+        set(9, calcEquinoxDay(year, 'autumn'), '秋分の日');
+        set(10, nthWeekdayOfMonth(year, 10, 2, 1), 'スポーツの日');
+        set(11, 3, '文化の日');
+        set(11, 23, '勤労感謝の日');
+
+        // 国民の休日：前後を祝日に挟まれた平日を休日とする
+        let cursor = new Date(year, 0, 2);
+        const yearEnd = new Date(year, 11, 30);
+        while (cursor <= yearEnd) {
+          const key = (cursor.getMonth() + 1) + '-' + cursor.getDate();
+          if (!map[key]) {
+            const prev = new Date(year, cursor.getMonth(), cursor.getDate() - 1);
+            const next = new Date(year, cursor.getMonth(), cursor.getDate() + 1);
+            const prevKey = (prev.getMonth() + 1) + '-' + prev.getDate();
+            const nextKey = (next.getMonth() + 1) + '-' + next.getDate();
+            if (map[prevKey] && map[nextKey]) {
+              map[key] = '国民の休日';
+            }
+          }
+          cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 1);
+        }
+
+        // 振替休日：日曜と重なる祝日の直後にある祝日でない日を休日とする
+        Object.keys(map).sort((a, b) => {
+          const [am, ad] = a.split('-').map(Number);
+          const [bm, bd] = b.split('-').map(Number);
+          return (am - bm) || (ad - bd);
+        }).forEach((key) => {
+          const [m, d] = key.split('-').map(Number);
+          if (new Date(year, m - 1, d).getDay() === 0) {
+            let substitute = new Date(year, m - 1, d + 1);
+            while (substitute.getFullYear() === year && map[(substitute.getMonth() + 1) + '-' + substitute.getDate()]) {
+              substitute = new Date(substitute.getFullYear(), substitute.getMonth(), substitute.getDate() + 1);
+            }
+            if (substitute.getFullYear() === year) {
+              map[(substitute.getMonth() + 1) + '-' + substitute.getDate()] = '振替休日';
+            }
+          }
+        });
+
+        return map;
+      }
+
+      const HOLIDAY_MAP_CACHE = {};
+      function isJapaneseHoliday(date) {
+        const year = date.getFullYear();
+        if (!HOLIDAY_MAP_CACHE[year]) {
+          HOLIDAY_MAP_CACHE[year] = buildHolidayMap(year);
+        }
+        return !!HOLIDAY_MAP_CACHE[year][(date.getMonth() + 1) + '-' + date.getDate()];
+      }
+
+      function isWeekendOrHoliday(date) {
+        const dayOfWeek = date.getDay();
+        return dayOfWeek === 0 || dayOfWeek === 6 || isJapaneseHoliday(date);
+      }
+
+      function hourlyRateForDate(date) {
+        const special = isWeekendOrHoliday(date);
+        if (isSeasonDate(date)) {
+          return special ? SEASON_HOLIDAY_HOURLY : SEASON_WEEKDAY_HOURLY;
+        }
+        return special ? REGULAR_HOLIDAY_HOURLY : REGULAR_WEEKDAY_HOURLY;
+      }
 
       const stepStartEl = document.getElementById('reserveStepStart');
       const stepEndEl = document.getElementById('reserveStepEnd');
@@ -265,20 +368,79 @@
           return;
         }
 
-        const usageHours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
-        const currentPrice = RESERVE_PRICE_MASTER.regular;
-        let hourlyRate = currentPrice.base24h / 24;
+        const usageHours = Math.round((endDate - startDate) / (1000 * 60 * 60));
 
-        if (usageHours <= SHORT_USE_HOUR_LIMIT) {
-        hourlyRate *= SHORT_USE_MULTIPLIER;
-       }
+        let regularHours = 0;
+        let seasonHours = 0;
+        let specialHours = 0;
+        let calculatedAmount = 0;
+        let regularWeekdayHours = 0;
+        let regularHolidayHours = 0;
+        let seasonWeekdayHours = 0;
+        let seasonHolidayHours = 0;
 
-        const total = Math.floor((hourlyRate * usageHours) / ROUND_DOWN_UNIT) * ROUND_DOWN_UNIT;
+        for (let i = 0; i < usageHours; i++) {
+          const hourStart = new Date(startDate.getTime() + i * 60 * 60 * 1000);
+          const season = isSeasonDate(hourStart);
+          const special = isWeekendOrHoliday(hourStart);
+
+          if (season) {
+            seasonHours++;
+          } else {
+            regularHours++;
+          }
+          if (special) {
+            specialHours++;
+          }
+
+          if (season) {
+            if (special) {
+              seasonHolidayHours++;
+            } else {
+              seasonWeekdayHours++;
+            }
+          } else if (special) {
+            regularHolidayHours++;
+          } else {
+            regularWeekdayHours++;
+          }
+
+          calculatedAmount += season
+            ? (special ? SEASON_HOLIDAY_HOURLY : SEASON_WEEKDAY_HOURLY)
+            : (special ? REGULAR_HOLIDAY_HOURLY : REGULAR_WEEKDAY_HOURLY);
+        }
+
+        let amountBeforeRounding = calculatedAmount;
+        let minimumApplied = false;
+        let minimumCharge = null;
+        if (usageHours < 24) {
+          minimumCharge = hourlyRateForDate(startDate) * 24;
+          if (minimumCharge > calculatedAmount) {
+            amountBeforeRounding = minimumCharge;
+            minimumApplied = true;
+          }
+        }
+
+        const total = Math.floor(amountBeforeRounding / FINAL_ROUND_DOWN_UNIT) * FINAL_ROUND_DOWN_UNIT;
+        const surveyRefund = Math.floor(total * SURVEY_DISCOUNT_RATE);
+        const netAfterRefund = total - surveyRefund;
 
         resultEl.innerHTML =
           '<p class="reserve-result-label">概算料金</p>' +
           '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>' +
-          '<p class="reserve-result-detail">利用時間：' + usageHours + '時間 / 通常期・平日料金で計算</p>';
+          '<p class="reserve-result-detail">利用時間：' + usageHours + '時間（通常期 ' + regularHours + '時間 / シーズン期 ' + seasonHours + '時間）</p>' +
+          '<p class="reserve-result-detail">土日祝加算：' + (specialHours > 0 ? '対象 ' + specialHours + '時間（該当時間帯を25%加算して計算）' : 'なし') + '</p>' +
+          '<p class="reserve-result-detail">通常期平日：' + regularWeekdayHours + '時間 × ' + REGULAR_WEEKDAY_HOURLY.toLocaleString('ja-JP') + '円 = ' + (regularWeekdayHours * REGULAR_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">通常期土日祝：' + regularHolidayHours + '時間 × ' + REGULAR_HOLIDAY_HOURLY.toLocaleString('ja-JP') + '円 = ' + (regularHolidayHours * REGULAR_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">シーズン期平日：' + seasonWeekdayHours + '時間 × ' + SEASON_WEEKDAY_HOURLY.toLocaleString('ja-JP') + '円 = ' + (seasonWeekdayHours * SEASON_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">シーズン期土日祝：' + seasonHolidayHours + '時間 × ' + SEASON_HOLIDAY_HOURLY.toLocaleString('ja-JP') + '円 = ' + (seasonHolidayHours * SEASON_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">最低料金の適用：' + (minimumApplied ? 'あり（利用開始日の24時間料金を適用）' : 'なし') + '</p>' +
+          (minimumApplied
+            ? '<p class="reserve-result-detail">24時間最低料金との差額：' + (minimumCharge - calculatedAmount).toLocaleString('ja-JP') + '円（実計算額 ' + calculatedAmount.toLocaleString('ja-JP') + '円 → 最低料金 ' + minimumCharge.toLocaleString('ja-JP') + '円）</p>'
+            : '') +
+          '<p class="reserve-result-detail">内訳合計（丸め前）：' + amountBeforeRounding.toLocaleString('ja-JP') + '円 → 100円未満切り捨て後の合計：' + total.toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail">アンケート協力割：利用後に自社アンケートの回答を確認し、車両利用料金の20％を銀行振込で返金します。先着10組限定・残り8組</p>' +
+          '<p class="reserve-result-detail">予定返金額：' + surveyRefund.toLocaleString('ja-JP') + '円 / 返金後の実質負担額：' + netAfterRefund.toLocaleString('ja-JP') + '円</p>';
       }
 
       popupCloseEl.addEventListener('click', closeTimePopup);
