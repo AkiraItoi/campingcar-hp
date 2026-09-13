@@ -172,6 +172,10 @@
         return special ? REGULAR_HOLIDAY_HOURLY : REGULAR_WEEKDAY_HOURLY;
       }
 
+      // 予約リクエストフォーム（Googleフォーム）への自動入力設定
+      const RESERVATION_FORM_BASE_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScUqp9nXnwH3MR5jsUKwGLK9qe-9ZI--xJEMxWzOf7LN9ZURQ/viewform?usp=pp_url';
+      const RESERVATION_FORM_ENTRY_ID = 'entry.1948271766';
+
       const stepStartEl = document.getElementById('reserveStepStart');
       const stepEndEl = document.getElementById('reserveStepEnd');
       const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
@@ -183,6 +187,7 @@
       const timeGridEl = document.getElementById('reserveTimeGrid');
       const popupCloseEl = document.getElementById('reserveTimePopupClose');
       const resultEl = document.getElementById('reserveResult');
+      const reserveRequestBtn = document.getElementById('reserveRequestBtn');
 
       const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -192,6 +197,7 @@
       let pendingDateKey = null;
       let calendarOffset = 0;
       const CALENDAR_MAX_OFFSET = 4;
+      let reservationSummaryText = null;
 
       function pad(n) {
         return String(n).padStart(2, '0');
@@ -371,6 +377,8 @@
       }
 
       function calcPrice() {
+        reservationSummaryText = null;
+
         if (!startDate || !endDate) {
           resultEl.innerHTML = '';
           return;
@@ -468,7 +476,43 @@
           '<p class="reserve-result-detail">内訳合計（丸め前）：' + amountBeforeRounding.toLocaleString('ja-JP') + '円 → 100円未満切り捨て後の合計：' + total.toLocaleString('ja-JP') + '円</p>' +
           '<p class="reserve-result-detail">アンケート協力割：利用後に自社アンケートの回答を確認し、車両利用料金の20％を銀行振込で返金します。先着10組限定・残り8組（2026年9月11日時点）</p>' +
           '<p class="reserve-result-detail">予定返金額：' + surveyRefund.toLocaleString('ja-JP') + '円 / 返金後の実質負担額：' + netAfterRefund.toLocaleString('ja-JP') + '円</p>';
+
+        // 予約リクエストフォームへ渡す文章：画面表示中の料金内訳をそのまま利用する（計算のやり直しはしない）
+        const displayedBreakdownLines = Array.from(resultEl.children).map((el) => el.textContent);
+        reservationSummaryText = [
+          '【ご予約内容】',
+          '出発日時：' + formatSelected(startDate),
+          '返却日時：' + formatSelected(endDate),
+          '利用日数と時間：' + formatHoursAsDaysAndHours(usageHours),
+          '概算料金：' + total.toLocaleString('ja-JP') + '円',
+          'アンケート協力割の適用状況：予定返金額 ' + surveyRefund.toLocaleString('ja-JP') + '円 / 返金後の実質負担額 ' + netAfterRefund.toLocaleString('ja-JP') + '円',
+          '',
+          '【画面表示の料金内訳】'
+        ].concat(displayedBreakdownLines).join('\n');
       }
+
+      function buildReservationGuidanceMessage() {
+        if (!startDate) {
+          return '予約リクエストに進む前に、開始日時を選択してください。';
+        }
+        if (!endDate) {
+          return '予約リクエストに進む前に、返却日時を選択してください。';
+        }
+        if (endDate <= startDate) {
+          return '返却日時は利用開始日時より後にしてください。';
+        }
+        return '予約リクエストに進む前に、料金の計算結果を表示してください。';
+      }
+
+      reserveRequestBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (!reservationSummaryText) {
+          resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
+          return;
+        }
+        const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
+        window.open(formUrl, '_blank', 'noopener,noreferrer');
+      });
 
       popupCloseEl.addEventListener('click', closeTimePopup);
       stepStartEl.addEventListener('click', () => setStep('start'));
