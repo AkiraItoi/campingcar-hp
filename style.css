@@ -696,9 +696,10 @@ body {
   font-weight: normal;
 }
 
+/* SNSボタン：PC・スマートフォンとも3ボタン横一列・均等幅 */
 .sns-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 18px 0;
 }
@@ -709,28 +710,45 @@ body {
   justify-content: center;
   width: 100%;
   min-height: 48px;
+  /* ロゴ周囲のクリアスペース（ロゴ表示サイズ40pxの25%） */
+  padding: 10px;
   border: 1px solid #e6cdb8;
   border-radius: 999px;
   background: #fff;
   color: #9b6a45;
   text-decoration: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.sns-btn svg {
-  width: 22px;
-  height: 22px;
+.sns-btn:focus-visible {
+  outline: 3px solid #9b6a45;
+  outline-offset: 2px;
+}
+
+/* 公式ロゴは40px四方の表示領域に収め、縦横比（アスペクト比）は変更しない */
+.sns-logo {
   display: block;
-  fill: currentColor;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
-.sns-btn.line {
-  background: #06c755;
-  color: #fff;
-  border-color: #06c755;
+/* LINEボタンのみ：ロゴの右横に「準備中」を横並び・中央揃えで表示 */
+.sns-btn--line {
+  gap: 4px;
+  padding-inline: 4px;
 }
 
-.sns-btn.line svg {
-  fill: currentColor;
+.sns-label {
+  font-size: clamp(10px, 2.6vw, 13px);
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .contact {
