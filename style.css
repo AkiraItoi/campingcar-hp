@@ -699,7 +699,7 @@ body {
 /* SNSボタン：PC・スマートフォンとも3ボタン横一列・均等幅 */
 .sns-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 18px 0;
 }
@@ -737,6 +737,18 @@ body {
   width: 40px;
   height: 40px;
   object-fit: contain;
+}
+
+/* LINEボタンのみ：ロゴの右横に「準備中」を横並び・中央揃えで表示 */
+.sns-btn--line {
+  gap: 4px;
+  padding-inline: 4px;
+}
+
+.sns-label {
+  font-size: clamp(10px, 2.6vw, 13px);
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .contact {
