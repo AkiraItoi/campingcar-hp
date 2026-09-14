@@ -698,7 +698,7 @@ body {
 
 .sns-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin: 18px 0;
 }
@@ -707,6 +707,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 100%;
   min-height: 48px;
   border: 1px solid #e6cdb8;
@@ -714,22 +715,15 @@ body {
   background: #fff;
   color: #9b6a45;
   text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .sns-btn svg {
   width: 22px;
   height: 22px;
   display: block;
-  fill: currentColor;
-}
-
-.sns-btn.line {
-  background: #06c755;
-  color: #fff;
-  border-color: #06c755;
-}
-
-.sns-btn.line svg {
+  flex-shrink: 0;
   fill: currentColor;
 }
 
