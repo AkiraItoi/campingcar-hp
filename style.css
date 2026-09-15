@@ -1014,35 +1014,111 @@ body {
   line-height: 1.7;
 }
 
-.price-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 20px;
+.price-subtitle {
+  margin: 22px 0 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #5a351f;
+  letter-spacing: 0.04em;
 }
 
-.price-card {
+.price-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 4px;
+}
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.price-table th,
+.price-table td {
+  border: 1px solid #eadfd4;
+  padding: 10px 12px;
+  vertical-align: middle;
+}
+
+.price-table thead th {
+  background: #f3e7db;
+  color: #5a351f;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.price-table tbody th {
+  background: #fffaf4;
+  color: #5a351f;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.price-table td {
+  color: #4a4038;
+}
+
+.price-table .price-amount {
+  font-size: 20px;
+  font-weight: bold;
+  color: #5a351f;
+  white-space: nowrap;
+}
+
+.price-table-rules td {
+  min-width: 260px;
+}
+
+.price-season-list {
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  text-align: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
 }
 
-.price-card-title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
+.price-season-list li {
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 14px;
   color: #5a351f;
-  text-align: center;
 }
 
-.price-card-amount {
+.price-season-note {
   margin: 0;
-  font-size: 38px;
+  font-size: 12px;
+  color: #9b8a78;
+}
+
+.price-info {
+  background: #fff;
+  border: 1px solid #eadfd4;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.price-info-title {
+  margin: 0 0 6px;
+  font-size: 16px;
   font-weight: bold;
-  text-align: center;
   color: #5a351f;
+}
+
+.price-info-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #4a4038;
 }
 
 .price-notes {
@@ -1058,6 +1134,29 @@ body {
 
 .price-notes p:last-child {
   margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .price {
+    padding: 20px 12px;
+  }
+
+  .price-table {
+    font-size: 13px;
+  }
+
+  .price-table th,
+  .price-table td {
+    padding: 8px 10px;
+  }
+
+  .price-table .price-amount {
+    font-size: 18px;
+  }
+
+  .price-table-rules td {
+    min-width: 200px;
+  }
 }
 
 .reserve-step-header {
