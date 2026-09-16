@@ -453,16 +453,16 @@
           ? '<p class="reserve-result-detail">通常期土日祝（' + (REGULAR_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(regularHolidayHours) + '　' + (regularHolidayHours * REGULAR_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
         const seasonWeekdayLine = seasonWeekdayHours > 0
-          ? '<p class="reserve-result-detail">シーズン期平日（' + (SEASON_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonWeekdayHours) + '　' + (seasonWeekdayHours * SEASON_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail">人気期平日（' + (SEASON_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonWeekdayHours) + '　' + (seasonWeekdayHours * SEASON_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
         const seasonHolidayLine = seasonHolidayHours > 0
-          ? '<p class="reserve-result-detail">シーズン期土日祝（' + (SEASON_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonHolidayHours) + '　' + (seasonHolidayHours * SEASON_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail">人気期土日祝（' + (SEASON_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonHolidayHours) + '　' + (seasonHolidayHours * SEASON_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
 
         resultEl.innerHTML =
           '<p class="reserve-result-label">概算料金</p>' +
           '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>' +
-          '<p class="reserve-result-detail">利用時間：' + formatHoursAsDaysAndHours(usageHours) + '（通常期 ' + formatHoursAsDaysAndHours(regularHours) + ' / シーズン期 ' + formatHoursAsDaysAndHours(seasonHours) + '）</p>' +
+          '<p class="reserve-result-detail">利用時間：' + formatHoursAsDaysAndHours(usageHours) + '（通常期 ' + formatHoursAsDaysAndHours(regularHours) + ' / 人気期 ' + formatHoursAsDaysAndHours(seasonHours) + '）</p>' +
           '<p class="reserve-result-detail">土日祝加算：' + (specialHours > 0 ? '対象 ' + formatHoursAsDaysAndHours(specialHours) + '（該当時間帯を25%加算して計算）' : 'なし') + '</p>' +
           '<p class="reserve-result-detail">1日＝24時間。24時間を超えた部分は1時間単位で計算します。</p>' +
           regularWeekdayLine +
