@@ -763,6 +763,57 @@ body {
   font-size: 16px;
 }
 
+.company {
+  background: #fffaf4;
+  border: 1px solid #eadfd4;
+  border-radius: 14px;
+  padding: 20px 16px;
+  margin: 18px 0;
+  text-align: center;
+}
+
+.company h2 {
+  margin: 0 0 14px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+
+.company-info {
+  margin: 0;
+  text-align: left;
+}
+
+.company-info dt {
+  margin: 14px 0 2px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #9b6a45;
+}
+
+.company-info dt:first-child {
+  margin-top: 0;
+}
+
+.company-info dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #4a4038;
+  word-break: break-word;
+}
+
+.company-info dd a {
+  color: #5a351f;
+  text-decoration: underline;
+}
+
+.company-map-link {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 13px;
+}
+
 @media (max-width: 600px) {
   body {
     padding-bottom: 88px;
