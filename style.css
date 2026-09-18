@@ -199,15 +199,22 @@ body {
   border: 2px solid #99c7df;
   color: #10a8d4;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 6px;
 }
 
-.carstay img {
-  width: 120px;
-  max-width: 150%;
-  height: auto;
+/* CarStayロゴ画像は使用せず、商標と無関係な汎用の外部リンクアイコンを表示する */
+.carstay-icon {
   display: block;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  color: #10a8d4;
+  fill: none;
+  stroke: currentColor;
+  background: transparent;
+  padding: 0;
+  margin: 0;
 }
 
 .carstay-label {
@@ -219,6 +226,12 @@ body {
   color: #10a8d4;
   line-height: 1.08;
   white-space: nowrap;
+}
+
+/* スマホ専用の短い予約ボタン文言（既定では非表示。PC表示はここまでの通常文言のまま） */
+.btn-label-compact,
+.carstay-label-compact {
+  display: none;
 }
 
 .mobile-reservation-bar {
@@ -260,6 +273,7 @@ body {
   grid-column: 2;
   grid-row: 2;
 }
+/* スマホ：固定予約バーをコンパクト表示にする（見出し非表示・ボタン省スペース化） */
 @media (max-width: 768px) {
   .mobile-reservation-bar {
      position: fixed;
@@ -268,41 +282,35 @@ body {
      bottom: 0;
      z-index: 1000;
      display: grid;
-     grid-template-columns: 1fr 1fr;
-     gap: 6px 1em;
-     padding: 8px 1em calc(8px + env(safe-area-inset-bottom));
+     /* 「CarStayで予約」の方が実測で幅を要するため、左右を等分せず右側に少し多めに配分する */
+     grid-template-columns: 0.85fr 1.15fr;
+     gap: 8px;
+     padding: 11px 10px calc(11px + env(safe-area-inset-bottom, 0px));
      background: rgba(243, 248, 223, 0.98);
      border-top: none;
      box-shadow: none;
   }
-   .mobile-reservation-title {
-   grid-column: 1 / -1;
-   grid-row: 1;
-   display: block;
-   width: 100%;
-   justify-self: stretch;
-   margin: 0;
-   padding: 6px 0 8px;
-   text-align: center;
-   font-size: 28px;
-   font-weight: bold;
-   letter-spacing: 0.08em;
-   color: #7b6858;
-   line-height: 1.2;
- }
+
+  /* スマホでは見出し「空き状況を見る・予約する」を非表示にしてバーを圧縮する */
+  .mobile-reservation-title {
+    display: none;
+  }
+
  .mobile-reservation-bar .brown {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1;
 }
 
 .mobile-reservation-bar .carstay {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
 }
-  
+
 .mobile-reservation-bar .btn {
-  min-height: 44px;
-  padding: 5px 8px;
+  min-width: 0;
+  min-height: 50px;
+  padding: 6px 6px;
+  gap: 5px;
   border-radius: 12px;
   transition: transform 0.15s ease, filter 0.15s ease;
   transform-origin: center;
@@ -310,28 +318,43 @@ body {
 }
 
 .mobile-reservation-bar .btn.is-hovered {
-  transform: scale(1.2);
+  transform: scale(1.1);
   filter: brightness(1.2);
   z-index: 2;
 }
 
-  .mobile-reservation-bar .btn-icon {
-    width: 34px;
-    height: 34px;
-    flex-basis: 34px;
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
   }
 
-  .mobile-reservation-bar .carstay img {
-    width: 100px;
+  /* PC用の詳しい文言は隠し、スマホ専用の短い文言に切り替える */
+  .mobile-reservation-bar .btn-label-full,
+  .mobile-reservation-bar .carstay-label-full {
+    display: none;
   }
 
-  .mobile-reservation-bar .carstay-label {
-     display: block;
-  font-size: clamp(12px, 3.4vw, 16px);
-  line-height: 1.12;
-  text-align: center;
-  white-space: nowrap;
-   }
+  .mobile-reservation-bar .btn-label-compact,
+  .mobile-reservation-bar .carstay-label-compact {
+    display: block;
+  }
+
+  .mobile-reservation-bar .btn-label-compact,
+  .mobile-reservation-bar .carstay-label-compact {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* 左右のスマホ用ラベルを17〜18px程度に統一（左は「公式予約」に短縮して両立させる） */
+  .mobile-reservation-bar .btn-label-compact,
+  .mobile-reservation-bar .carstay-label-compact {
+    font-size: clamp(17px, 4.6vw, 18px);
+  }
 }
 
 .access {
@@ -824,7 +847,8 @@ body {
   }
 
   .top-copy {
-    font-size: 18px;
+    font-size: clamp(14px, 4.4vw, 18px);
+    text-wrap: balance;
   }
 
   .hero-text {
@@ -836,6 +860,27 @@ body {
   .hero h1 {
     font-size: 26px;
     line-height: 1.4;
+    text-wrap: balance;
+  }
+
+  /* 「この車を借りるメリットを教えて！」等の見出しで、1〜2文字だけの最終行を防ぐ */
+  .qa h2 {
+    font-size: clamp(20px, 6vw, 26px);
+    line-height: 1.5;
+    text-wrap: balance;
+    padding: 0 4px;
+  }
+
+  /* FAQボタン：文言末尾（「る？」「は？」等）が孤立しないよう balance で改行位置を調整 */
+  .special-btn {
+    font-size: clamp(14px, 4.3vw, 17px);
+    line-height: 1.5;
+    padding: 14px 12px;
+    text-wrap: balance;
+  }
+
+  .free-sub {
+    text-wrap: balance;
   }
 
   .button-row {
@@ -859,10 +904,6 @@ body {
   /* アクセス見出しはスマホでは少し抑える（PCの32pxに対して可読性優先） */
   .access h3 {
     font-size: 26px;
-  }
-
-  .carstay img {
-    width: 103px;
   }
 
   .carstay-label {
@@ -1026,25 +1067,15 @@ body {
   opacity: 1 !important;
   transform: none !important;
 }
-/* 下部固定予約バーに隠れないようにする */
+/* 下部固定予約バーに隠れないようにする（PC） */
 body {
  padding-bottom: 180px;
 }
-/* スマホ：最後の問い合わせボタンが下部予約バーに隠れないように止める */
+/* スマホ：コンパクト化した固定予約バーの実際の高さに合わせて本文の余白を確保する
+   （旧: scroll-snap + .free/.contact の大きな padding/margin による隙間を廃止） */
 @media (max-width: 768px) {
-  html {
-    scroll-snap-type: y proximity;
-    scroll-padding-bottom: 220px;
-  }
-
-  .free {
-    scroll-snap-align: end;
-    scroll-snap-stop: always;
-    padding-bottom: 240px;
-  }
-
-  .contact {
-    margin-bottom: 180px;
+  body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -1236,8 +1267,16 @@ body {
   cursor: pointer;
 }
 
-.reserve-step.is-active,
+/* 選択済み（決定済みだが今は操作対象ではない）は薄い表示にする */
 .reserve-step.is-done {
+  background: #f3e7db;
+  border-color: #d9c4a8;
+  color: #5a351f;
+}
+
+/* 選択中（今まさに操作している方）だけを濃い茶色にする。
+   両方確定後（is-doneも付く）は選択中の濃色を出さない */
+.reserve-step.is-active:not(.is-done) {
   background: #5a351f;
   border-color: #5a351f;
   color: #fff;
