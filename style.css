@@ -1267,8 +1267,16 @@ body {
   cursor: pointer;
 }
 
-.reserve-step.is-active,
+/* 選択済み（決定済みだが今は操作対象ではない）は薄い表示にする */
 .reserve-step.is-done {
+  background: #f3e7db;
+  border-color: #d9c4a8;
+  color: #5a351f;
+}
+
+/* 選択中（今まさに操作している方）だけを濃い茶色にする。
+   両方確定後（is-doneも付く）は選択中の濃色を出さない */
+.reserve-step.is-active:not(.is-done) {
   background: #5a351f;
   border-color: #5a351f;
   color: #fff;
