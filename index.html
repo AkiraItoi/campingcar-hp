@@ -361,17 +361,10 @@
   }
 
   window.addEventListener('pageshow', function () {
-    setTimeout(function () {
-      if (window.location.hash) {
-        var target = document.getElementById(window.location.hash.slice(1));
-        if (target) {
-          target.scrollIntoView();
-          return;
-        }
-      }
-      window.scrollTo(0, 0);
-    }, 0);
-  });
+  setTimeout(function () {
+    window.scrollTo(0, 0);
+  }, 0);
+});
     document.addEventListener('DOMContentLoaded', function () {
       var heroImage = document.querySelector('.hero-image');
       if (heroImage) {
