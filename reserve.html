@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>空き状況・料金を確認する</title>
-  <link rel="stylesheet" href="style.css?v=20261009-1">
+  <link rel="stylesheet" href="style.css?v=20261009-2">
 </head>
 <body class="reserve-page">
 
@@ -43,24 +43,10 @@
 
       <div class="reserve-price-headline" id="reservePriceHeadline" hidden></div>
 
-      <button type="button" class="reserve-details-toggle" id="reserveDetailsToggleBtn" hidden
-              aria-expanded="false" aria-controls="reserveDetailsPanel">
-        料金の計算方法・内訳を見る
-      </button>
+      <a class="reserve-details-toggle" href="docs/rental-price-list.pdf"
+         target="_blank" rel="noopener noreferrer">料金設定詳細</a>
 
-      <div class="reserve-details-panel" id="reserveDetailsPanel">
-        <p class="reserve-breakdown-title">料金の計算方法</p>
-        <div class="reserve-common-rules" id="reserveCommonRules">
-          <ul>
-            <li>1日＝24時間として計算します。</li>
-            <li>24時間を超えた部分は、1時間単位で加算します。</li>
-            <li>通常期と人気期で、時間あたりの料金が異なります。</li>
-            <li>土日祝は、該当料金に25％を加算します。人気期料金とも重複して適用します。</li>
-            <li>24時間以内のご利用には、1日分の料金（最低料金）を適用します。</li>
-            <li>最終的な車両利用料金は、100円未満を切り捨てます。</li>
-            <li>利用後に自社アンケートの回答を確認し、車両利用料金の20％を銀行振込で返金します。先着10組限定・残り8組（2026年9月11日時点）</li>
-          </ul>
-        </div>
+      <div class="reserve-details-panel" id="reserveDetailsPanel" hidden aria-hidden="true">
         <div class="reserve-result" id="reserveResult"></div>
       </div>
 
@@ -217,8 +203,6 @@
       const timeGridEl = document.getElementById('reserveTimeGrid');
       const popupCloseEl = document.getElementById('reserveTimePopupClose');
       const priceHeadlineEl = document.getElementById('reservePriceHeadline');
-      const detailsToggleBtn = document.getElementById('reserveDetailsToggleBtn');
-      const detailsPanelEl = document.getElementById('reserveDetailsPanel');
       const actionButtonsEl = document.getElementById('reserveActionButtons');
       const resultEl = document.getElementById('reserveResult');
       const reserveRequestBtn = document.getElementById('reserveRequestBtn');
@@ -233,7 +217,6 @@
       const CALENDAR_MAX_OFFSET = 4;
       let reservationSummaryText = null;
       let view = 'selecting'; // 'selecting' | 'complete'
-      let detailsOpen = false;
       // true: 完了表示からカード／「日時を変更する」で再編集中。押した側の日時だけを変更し、
       // もう一方の確定済み日時は保持する（初回のシーケンシャル入力時はfalseのまま）
       let editingMode = false;
@@ -411,7 +394,6 @@
 
         // 開始・返却の両方が有効な組み合わせになったときだけ、完了表示へ切り替える
         if (startDate && endDate && endDate > startDate) {
-          detailsOpen = false;
           editingMode = false;
           view = 'complete';
         } else {
@@ -433,13 +415,6 @@
         renderCalendars();
       }
 
-      function updateDetailsToggle() {
-        const complete = view === 'complete';
-        detailsToggleBtn.setAttribute('aria-expanded', String(detailsOpen));
-        // 選択中は常に展開、完了表示ではdetailsOpenに従って開閉する
-        detailsPanelEl.hidden = complete && !detailsOpen;
-      }
-
       // 選択中／完了表示の切り替え。表示の出し分けのみで、日時計算・料金計算は一切行わない
       function updateView() {
         const complete = view === 'complete';
@@ -449,10 +424,7 @@
 
         editBtn.hidden = !complete;
         priceHeadlineEl.hidden = !complete;
-        detailsToggleBtn.hidden = !complete;
         actionButtonsEl.hidden = !complete;
-
-        updateDetailsToggle();
       }
 
       // 完了表示から選択中表示へ戻り、指定したstep（'start'/'end'）を選択中にする。
@@ -650,10 +622,6 @@
           return;
         }
         startEditingStep(card.dataset.step === 'end' ? 'end' : 'start');
-      });
-      detailsToggleBtn.addEventListener('click', () => {
-        detailsOpen = !detailsOpen;
-        updateDetailsToggle();
       });
       prevMonthBtn.addEventListener('click', () => {
         calendarOffset = Math.max(0, calendarOffset - 2);
