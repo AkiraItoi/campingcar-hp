@@ -663,6 +663,12 @@ body {
   color: #f7f2ec;
 }
 
+/* 設備欄の補足注記は本文より少し小さく表示する */
+.eq-note {
+  font-size: 0.75em;
+  opacity: 0.85;
+}
+
 .equipment-photos {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -930,6 +936,10 @@ body {
   .eq-items {
     font-size: clamp(16px, 5vw, 22px);
     line-height: 1.5;
+  }
+
+  .eq-note {
+    font-size: 0.7em;
   }
 
   .eq-label {
