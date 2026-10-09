@@ -415,9 +415,11 @@
         updateDetailsToggle();
       }
 
-      function startEditing() {
+      // 完了表示から選択中表示へ戻り、指定したstep（'start'/'end'）を選択中にする。
+      // 「日時を変更する」ボタンと、日時カード自体の押下の両方から共通で呼び出す。
+      function startEditingStep(targetStep) {
         view = 'selecting';
-        step = 'start';
+        step = targetStep;
         renderStepHeader();
         renderCalendars();
         updateView();
@@ -427,14 +429,14 @@
         const startText = startDate ? formatSelected(startDate) : '未選択';
         const endText = endDate ? formatSelected(endDate) : '未選択';
         summaryEl.innerHTML =
-          '<div class="reserve-summary-card' + (startDate ? ' is-filled' : '') + '">' +
+          '<button type="button" class="reserve-summary-card' + (startDate ? ' is-filled' : '') + '" data-step="start">' +
             '<p class="reserve-summary-card-label">① 利用開始</p>' +
             '<p class="reserve-summary-card-value">' + startText + '</p>' +
-          '</div>' +
-          '<div class="reserve-summary-card' + (endDate ? ' is-filled' : '') + '">' +
+          '</button>' +
+          '<button type="button" class="reserve-summary-card' + (endDate ? ' is-filled' : '') + '" data-step="end">' +
             '<p class="reserve-summary-card-label">② 返却</p>' +
             '<p class="reserve-summary-card-value">' + endText + '</p>' +
-          '</div>';
+          '</button>';
       }
 
       // 表示用：時間数を「○日○時間」の形式に変換する（1日＝24時間）。料金計算には使用しない。
@@ -598,7 +600,15 @@
       popupCloseEl.addEventListener('click', closeTimePopup);
       stepStartEl.addEventListener('click', () => setStep('start'));
       stepEndEl.addEventListener('click', () => setStep('end'));
-      editBtn.addEventListener('click', startEditing);
+      editBtn.addEventListener('click', () => startEditingStep('start'));
+      // 完了表示の日時カード自体を押しても、対応するstepを選択中にして再編集へ入れるようにする
+      summaryEl.addEventListener('click', (event) => {
+        const card = event.target.closest('.reserve-summary-card');
+        if (!card) {
+          return;
+        }
+        startEditingStep(card.dataset.step === 'end' ? 'end' : 'start');
+      });
       detailsToggleBtn.addEventListener('click', () => {
         detailsOpen = !detailsOpen;
         updateDetailsToggle();

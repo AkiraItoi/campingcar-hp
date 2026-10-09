@@ -1306,12 +1306,17 @@ body {
   }
 }
 
+/* カード自体をbuttonにして、押すと対応するstepを選択中にして再編集できるようにする */
 .reserve-summary-card {
+  display: block;
+  width: 100%;
   padding: 10px 14px;
   border: 1px solid #eadfd4;
   border-radius: 10px;
   background: #fffaf4;
   text-align: left;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .reserve-summary-card .reserve-summary-card-label {
