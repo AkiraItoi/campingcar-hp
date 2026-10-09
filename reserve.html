@@ -23,6 +23,8 @@
       <button type="button" class="reserve-edit-btn" id="reserveEditBtn" hidden>日時を変更する</button>
 
       <div class="reserve-selecting-area" id="reserveSelectingArea">
+        <p class="reserve-date-error" id="reserveDateError" hidden></p>
+
         <div class="reserve-calendar-nav">
           <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn">前の2ヶ月</button>
           <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn">次の2ヶ月</button>
@@ -205,6 +207,7 @@
       const stepEndEl = document.getElementById('reserveStepEnd');
       const editBtn = document.getElementById('reserveEditBtn');
       const selectingAreaEl = document.getElementById('reserveSelectingArea');
+      const dateErrorEl = document.getElementById('reserveDateError');
       const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
       const nextMonthBtn = document.getElementById('reserveNextMonthBtn');
       const calendarsEl = document.getElementById('reserveCalendars');
@@ -231,6 +234,9 @@
       let reservationSummaryText = null;
       let view = 'selecting'; // 'selecting' | 'complete'
       let detailsOpen = false;
+      // true: 完了表示からカード／「日時を変更する」で再編集中。押した側の日時だけを変更し、
+      // もう一方の確定済み日時は保持する（初回のシーケンシャル入力時はfalseのまま）
+      let editingMode = false;
 
       function pad(n) {
         return String(n).padStart(2, '0');
@@ -285,8 +291,11 @@
           const isPast = cellDate < today;
           const isBeforeStart = step === 'end' && startDate &&
             cellDate < new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+          // 再編集で開始日時だけを変更する場合、保持中の返却日時より後の日は選べないようにする
+          const isAfterEnd = editingMode && step === 'start' && endDate &&
+            cellDate > new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
-          if (isPast || isBeforeStart) {
+          if (isPast || isBeforeStart || isAfterEnd) {
             btn.disabled = true;
             btn.classList.add('reserve-day-disabled');
           } else {
@@ -337,6 +346,16 @@
         }
       }
 
+      function showDateError(message) {
+        dateErrorEl.textContent = message;
+        dateErrorEl.hidden = false;
+      }
+
+      function clearDateError() {
+        dateErrorEl.hidden = true;
+        dateErrorEl.textContent = '';
+      }
+
       function openTimePopup(year, month, day) {
         pendingDateKey = { year, month, day };
         popupTitleEl.textContent = year + '年' + (month + 1) + '月' + day + '日の時間を選択（' + (step === 'start' ? '開始' : '返却') + '）';
@@ -356,11 +375,31 @@
         const picked = new Date(pendingDateKey.year, pendingDateKey.month, pendingDateKey.day, hour, 0, 0, 0);
 
         if (step === 'start') {
+          // 開始日時が返却日時以後になる組み合わせは確定しない。
+          // 既存の確定済み返却日時は無効値で上書きしない
+          if (endDate && picked >= endDate) {
+            closeTimePopup();
+            showDateError('開始日時は、返却日時（' + formatSelected(endDate) + '）より前にしてください。');
+            return;
+          }
+          clearDateError();
           startDate = picked;
-          // 開始日時を（再）確定した場合は、以前の返却日時と計算結果を常に解除し、返却日時を選び直してもらう
-          endDate = null;
-          step = 'end';
+          if (editingMode) {
+            // 再編集：開始日時だけを変更する。返却日時は保持し、返却選択へは自動移動しない
+          } else {
+            // 初回入力：返却日時の選択へ自動的に進む
+            endDate = null;
+            step = 'end';
+          }
         } else {
+          // 返却日時が開始日時以前になる組み合わせは確定しない。
+          // 既存の確定済み開始日時は無効値で上書きしない
+          if (startDate && picked <= startDate) {
+            closeTimePopup();
+            showDateError('返却日時は、開始日時（' + formatSelected(startDate) + '）より後にしてください。');
+            return;
+          }
+          clearDateError();
           endDate = picked;
         }
 
@@ -373,6 +412,7 @@
         // 開始・返却の両方が有効な組み合わせになったときだけ、完了表示へ切り替える
         if (startDate && endDate && endDate > startDate) {
           detailsOpen = false;
+          editingMode = false;
           view = 'complete';
         } else {
           view = 'selecting';
@@ -420,6 +460,8 @@
       function startEditingStep(targetStep) {
         view = 'selecting';
         step = targetStep;
+        editingMode = true;
+        clearDateError();
         renderStepHeader();
         renderCalendars();
         updateView();

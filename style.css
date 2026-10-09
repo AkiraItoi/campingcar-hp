@@ -1349,6 +1349,21 @@ body {
   color: #5a351f;
 }
 
+.reserve-date-error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #c0392b;
+  border-radius: 6px;
+  background: #fdecea;
+  color: #a5281b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.reserve-date-error[hidden] {
+  display: none;
+}
+
 .reserve-calendar-nav {
   display: flex;
   justify-content: space-between;
