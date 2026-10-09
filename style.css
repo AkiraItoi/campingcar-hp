@@ -1258,6 +1258,10 @@ body {
   margin: 16px 0;
 }
 
+.reserve-step-header[hidden] {
+  display: none;
+}
+
 .reserve-step {
   flex: 1;
   margin: 0;
@@ -1280,9 +1284,9 @@ body {
   color: #5a351f;
 }
 
-/* 選択中（今まさに操作している方）だけを濃い茶色にする。
-   両方確定後（is-doneも付く）は選択中の濃色を出さない */
-.reserve-step.is-active:not(.is-done) {
+/* 選択中は、選択済みかどうかに関係なく常に濃い茶色にする。
+   .is-done より後に置くことで、両方付いている場合も濃色を優先させる */
+.reserve-step.is-active {
   background: #5a351f;
   border-color: #5a351f;
   color: #fff;
@@ -1302,12 +1306,17 @@ body {
   }
 }
 
+/* カード自体をbuttonにして、押すと対応するstepを選択中にして再編集できるようにする */
 .reserve-summary-card {
+  display: block;
+  width: 100%;
   padding: 10px 14px;
   border: 1px solid #eadfd4;
   border-radius: 10px;
   background: #fffaf4;
   text-align: left;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .reserve-summary-card .reserve-summary-card-label {
@@ -1338,6 +1347,21 @@ body {
 .reserve-summary-card.is-filled .reserve-summary-card-value {
   font-size: 18px;
   color: #5a351f;
+}
+
+.reserve-date-error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #c0392b;
+  border-radius: 6px;
+  background: #fdecea;
+  color: #a5281b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.reserve-date-error[hidden] {
+  display: none;
 }
 
 .reserve-calendar-nav {
@@ -1513,13 +1537,51 @@ body {
   color: #5a351f;
 }
 
-/* 概算料金の下の説明カード。#reserveResultに結果が無いときは非表示にする */
-.reserve-result-wrap {
+/* #reserveResult内のlabel/priceは完了表示の見出し（.reserve-price-headline）に複製して
+   表示するため、内訳パネルの中では重複表示しないように隠す（#reserveResult自体の
+   子要素・textContentには一切影響しない） */
+#reserveResult .reserve-result-label,
+#reserveResult .reserve-result-price {
+  display: none;
+}
+
+/* 完了表示：概算料金の見出し（常に表示、内訳の開閉には連動しない） */
+.reserve-price-headline {
+  margin: 4px 0 14px;
+}
+
+/* 完了表示：「日時を変更する」「料金の計算方法・内訳を見る」ボタン */
+.reserve-edit-btn,
+.reserve-details-toggle {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 0 0 14px;
+  border: 1px solid #eadfd4;
+  border-radius: 8px;
+  background: #fff;
+  color: #5a351f;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reserve-details-toggle {
+  background: #f3e7db;
+}
+
+.reserve-edit-btn[hidden],
+.reserve-details-toggle[hidden] {
+  display: none;
+}
+
+/* 料金の計算方法・内訳パネル */
+.reserve-details-panel {
   margin-top: 4px;
 }
 
 .reserve-breakdown-title {
-  display: none;
   margin: 0 0 8px;
   font-size: 17px;
   font-weight: bold;
@@ -1527,11 +1589,43 @@ body {
   text-align: left;
 }
 
-.reserve-result-wrap:has(.reserve-result-price) .reserve-breakdown-title {
-  display: block;
+/* 日程に依存しない共通ルール（選択中は常時表示、完了表示ではトグルで開閉） */
+.reserve-common-rules {
+  margin-bottom: 4px;
 }
 
-/* 内訳の各行を「薄い背景と枠線」のカードにまとめる（行同士は罫線で区切る） */
+.reserve-common-rules ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reserve-common-rules li {
+  padding: 9px 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  text-align: left;
+  color: #6b5b4a;
+  background: #fffaf4;
+  border-left: 1px solid #eadfd4;
+  border-right: 1px solid #eadfd4;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.reserve-common-rules li:first-child {
+  border-top: 1px solid #eadfd4;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.reserve-common-rules li:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* 内訳の各行を「薄い背景と枠線」のカードにまとめる（行同士は罫線で区切る）
+   「.reserve-result-detail + .reserve-result-detail」でない＝連続するdetail行の先頭、
+   という判定にすることで、直前にlabel/price等の他のp要素があっても正しく先頭行を判定できる */
 .reserve-result-detail {
   margin: 0;
   padding: 9px 14px;
@@ -1545,7 +1639,7 @@ body {
   border-bottom: 1px solid #eadfd4;
 }
 
-.reserve-result-detail:first-of-type {
+.reserve-result-detail:not(.reserve-result-detail + .reserve-result-detail) {
   margin-top: 10px;
   border-top: 1px solid #eadfd4;
   border-top-left-radius: 10px;
@@ -1573,4 +1667,8 @@ body {
   display: grid;
   gap: 12px;
   margin-top: 16px;
+}
+
+.reserve-action-buttons[hidden] {
+  display: none;
 }
