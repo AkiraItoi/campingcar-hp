@@ -11,8 +11,7 @@
   <main class="page">
 
     <section class="price">
-      <h2>空き状況・料金を確認する</h2>
-      <p class="price-desc">カレンダーから利用開始日時と返却日時を選択すると、概算料金を確認できます。</p>
+      <h2 class="reserve-title">空き状況と料金を確認</h2>
 
       <div class="reserve-step-header">
         <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
@@ -36,7 +35,10 @@
         </div>
       </div>
 
-      <div class="reserve-result" id="reserveResult"></div>
+      <div class="reserve-result-wrap">
+        <p class="reserve-breakdown-title">料金の計算方法</p>
+        <div class="reserve-result" id="reserveResult"></div>
+      </div>
 
       <div class="reserve-action-buttons">
         <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストへ進む</a>
@@ -353,14 +355,17 @@
       }
 
       function renderSummary() {
-        let html = '';
-        if (startDate) {
-          html += '<p>利用開始：' + formatSelected(startDate) + '</p>';
-        }
-        if (endDate) {
-          html += '<p>返却：' + formatSelected(endDate) + '</p>';
-        }
-        summaryEl.innerHTML = html;
+        const startText = startDate ? formatSelected(startDate) : '未選択';
+        const endText = endDate ? formatSelected(endDate) : '未選択';
+        summaryEl.innerHTML =
+          '<div class="reserve-summary-card' + (startDate ? ' is-filled' : '') + '">' +
+            '<p class="reserve-summary-card-label">① 利用開始</p>' +
+            '<p class="reserve-summary-card-value">' + startText + '</p>' +
+          '</div>' +
+          '<div class="reserve-summary-card' + (endDate ? ' is-filled' : '') + '">' +
+            '<p class="reserve-summary-card-label">② 返却</p>' +
+            '<p class="reserve-summary-card-value">' + endText + '</p>' +
+          '</div>';
       }
 
       // 表示用：時間数を「○日○時間」の形式に変換する（1日＝24時間）。料金計算には使用しない。
@@ -447,35 +452,35 @@
         const netAfterRefund = total - surveyRefund;
 
         const regularWeekdayLine = regularWeekdayHours > 0
-          ? '<p class="reserve-result-detail">通常期平日（' + (REGULAR_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(regularWeekdayHours) + '　' + (regularWeekdayHours * REGULAR_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail"><strong>通常期平日（' + (REGULAR_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：</strong>' + formatHoursAsDaysAndHours(regularWeekdayHours) + '　' + (regularWeekdayHours * REGULAR_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
         const regularHolidayLine = regularHolidayHours > 0
-          ? '<p class="reserve-result-detail">通常期土日祝（' + (REGULAR_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(regularHolidayHours) + '　' + (regularHolidayHours * REGULAR_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail"><strong>通常期土日祝（' + (REGULAR_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：</strong>' + formatHoursAsDaysAndHours(regularHolidayHours) + '　' + (regularHolidayHours * REGULAR_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
         const seasonWeekdayLine = seasonWeekdayHours > 0
-          ? '<p class="reserve-result-detail">人気期平日（' + (SEASON_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonWeekdayHours) + '　' + (seasonWeekdayHours * SEASON_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail"><strong>人気期平日（' + (SEASON_WEEKDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：</strong>' + formatHoursAsDaysAndHours(seasonWeekdayHours) + '　' + (seasonWeekdayHours * SEASON_WEEKDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
         const seasonHolidayLine = seasonHolidayHours > 0
-          ? '<p class="reserve-result-detail">人気期土日祝（' + (SEASON_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：' + formatHoursAsDaysAndHours(seasonHolidayHours) + '　' + (seasonHolidayHours * SEASON_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
+          ? '<p class="reserve-result-detail"><strong>人気期土日祝（' + (SEASON_HOLIDAY_HOURLY * 24).toLocaleString('ja-JP') + '円／日）：</strong>' + formatHoursAsDaysAndHours(seasonHolidayHours) + '　' + (seasonHolidayHours * SEASON_HOLIDAY_HOURLY).toLocaleString('ja-JP') + '円</p>'
           : '';
 
         resultEl.innerHTML =
           '<p class="reserve-result-label">概算料金</p>' +
           '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>' +
-          '<p class="reserve-result-detail">利用時間：' + formatHoursAsDaysAndHours(usageHours) + '（通常期 ' + formatHoursAsDaysAndHours(regularHours) + ' / 人気期 ' + formatHoursAsDaysAndHours(seasonHours) + '）</p>' +
-          '<p class="reserve-result-detail">土日祝加算：' + (specialHours > 0 ? '対象 ' + formatHoursAsDaysAndHours(specialHours) + '（該当時間帯を25%加算して計算）' : 'なし') + '</p>' +
-          '<p class="reserve-result-detail">1日＝24時間。24時間を超えた部分は1時間単位で計算します。</p>' +
+          '<p class="reserve-result-detail"><strong>利用時間：</strong>' + formatHoursAsDaysAndHours(usageHours) + '（通常期 ' + formatHoursAsDaysAndHours(regularHours) + ' / 人気期 ' + formatHoursAsDaysAndHours(seasonHours) + '）</p>' +
+          '<p class="reserve-result-detail"><strong>土日祝加算：</strong>' + (specialHours > 0 ? '対象 ' + formatHoursAsDaysAndHours(specialHours) + '（該当時間帯を25%加算して計算）' : 'なし') + '</p>' +
+          '<p class="reserve-result-detail"><strong>1日＝24時間。</strong>24時間を超えた部分は1時間単位で計算します。</p>' +
           regularWeekdayLine +
           regularHolidayLine +
           seasonWeekdayLine +
           seasonHolidayLine +
-          '<p class="reserve-result-detail">最低料金の適用：' + (minimumApplied ? 'あり（利用開始日の24時間料金を適用）' : 'なし') + '</p>' +
+          '<p class="reserve-result-detail"><strong>最低料金の適用：</strong>' + (minimumApplied ? 'あり（利用開始日の24時間料金を適用）' : 'なし') + '</p>' +
           (minimumApplied
-            ? '<p class="reserve-result-detail">24時間最低料金との差額：' + (minimumCharge - calculatedAmount).toLocaleString('ja-JP') + '円（実計算額 ' + calculatedAmount.toLocaleString('ja-JP') + '円 → 最低料金 ' + minimumCharge.toLocaleString('ja-JP') + '円）</p>'
+            ? '<p class="reserve-result-detail"><strong>24時間最低料金との差額：</strong>' + (minimumCharge - calculatedAmount).toLocaleString('ja-JP') + '円（実計算額 ' + calculatedAmount.toLocaleString('ja-JP') + '円 → 最低料金 ' + minimumCharge.toLocaleString('ja-JP') + '円）</p>'
             : '') +
-          '<p class="reserve-result-detail">内訳合計（丸め前）：' + amountBeforeRounding.toLocaleString('ja-JP') + '円 → 100円未満切り捨て後の合計：' + total.toLocaleString('ja-JP') + '円</p>' +
-          '<p class="reserve-result-detail">アンケート協力割：利用後に自社アンケートの回答を確認し、車両利用料金の20％を銀行振込で返金します。先着10組限定・残り8組（2026年9月11日時点）</p>' +
-          '<p class="reserve-result-detail">予定返金額：' + surveyRefund.toLocaleString('ja-JP') + '円 / 返金後の実質負担額：' + netAfterRefund.toLocaleString('ja-JP') + '円</p>';
+          '<p class="reserve-result-detail">内訳合計（丸め前）：' + amountBeforeRounding.toLocaleString('ja-JP') + '円 → <strong>100円未満切り捨て後の合計：</strong>' + total.toLocaleString('ja-JP') + '円</p>' +
+          '<p class="reserve-result-detail"><strong>アンケート協力割：</strong>利用後に自社アンケートの回答を確認し、車両利用料金の20％を銀行振込で返金します。先着10組限定・残り8組（2026年9月11日時点）</p>' +
+          '<p class="reserve-result-detail"><strong>予定返金額：</strong>' + surveyRefund.toLocaleString('ja-JP') + '円 / <strong>返金後の実質負担額：</strong>' + netAfterRefund.toLocaleString('ja-JP') + '円</p>';
 
         // 予約リクエストフォームへ渡す文章：画面表示中の料金内訳をそのまま利用する（計算のやり直しはしない）
         const displayedBreakdownLines = Array.from(resultEl.children).map((el) => el.textContent);
@@ -528,6 +533,7 @@
 
       renderTimeGrid();
       renderStepHeader();
+      renderSummary();
       renderCalendars();
     })();
   </script>

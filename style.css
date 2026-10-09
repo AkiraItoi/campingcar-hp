@@ -1095,6 +1095,12 @@ body {
   letter-spacing: 0.06em;
 }
 
+/* 予約ページの見出し「空き状況と料金を確認」：スマホ幅でも1行に収める */
+.price h2.reserve-title {
+  font-size: clamp(20px, 6.5vw, 28px);
+  white-space: normal;
+}
+
 .price-desc {
   margin: 0 0 16px;
   font-size: 14px;
@@ -1282,15 +1288,56 @@ body {
   color: #fff;
 }
 
+/* 利用開始・返却日時のカードUI。スマホでは縦積み、幅600px以上は横並び */
 .reserve-selected-summary {
-  margin: 0 0 12px;
-  font-size: 14px;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+@media (min-width: 600px) {
+  .reserve-selected-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.reserve-summary-card {
+  padding: 10px 14px;
+  border: 1px solid #eadfd4;
+  border-radius: 10px;
+  background: #fffaf4;
+  text-align: left;
+}
+
+.reserve-summary-card .reserve-summary-card-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  color: #9b8a78;
+}
+
+.reserve-summary-card .reserve-summary-card-value {
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+  color: #b0a08e;
+}
+
+/* 選択済み：日付が高コントラストで一目で分かるようにする */
+.reserve-summary-card.is-filled {
+  background: #fff;
+  border-color: #d9c4a8;
+}
+
+.reserve-summary-card.is-filled .reserve-summary-card-label {
   color: #5a351f;
 }
 
-.reserve-selected-summary p {
-  margin: 0 0 4px;
+.reserve-summary-card.is-filled .reserve-summary-card-value {
+  font-size: 18px;
+  color: #5a351f;
 }
 
 .reserve-calendar-nav {
@@ -1466,11 +1513,52 @@ body {
   color: #5a351f;
 }
 
+/* 概算料金の下の説明カード。#reserveResultに結果が無いときは非表示にする */
+.reserve-result-wrap {
+  margin-top: 4px;
+}
+
+.reserve-breakdown-title {
+  display: none;
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: bold;
+  color: #5a351f;
+  text-align: left;
+}
+
+.reserve-result-wrap:has(.reserve-result-price) .reserve-breakdown-title {
+  display: block;
+}
+
+/* 内訳の各行を「薄い背景と枠線」のカードにまとめる（行同士は罫線で区切る） */
 .reserve-result-detail {
   margin: 0;
-  font-size: 13px;
-  text-align: center;
-  color: #9b8a78;
+  padding: 9px 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  text-align: left;
+  color: #6b5b4a;
+  background: #fffaf4;
+  border-left: 1px solid #eadfd4;
+  border-right: 1px solid #eadfd4;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.reserve-result-detail:first-of-type {
+  margin-top: 10px;
+  border-top: 1px solid #eadfd4;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.reserve-result-detail:last-of-type {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.reserve-result-detail strong {
+  color: #5a351f;
 }
 
 .reserve-time-am {
