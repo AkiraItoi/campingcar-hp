@@ -1560,79 +1560,6 @@ body {
   margin: 4px 0 14px;
 }
 
-/* 完了表示：「日時を変更する」「料金の計算方法・内訳を見る」ボタン */
-.reserve-edit-btn,
-.reserve-details-toggle {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 0 0 14px;
-  border: 1px solid #eadfd4;
-  border-radius: 8px;
-  background: #fff;
-  color: #5a351f;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.reserve-details-toggle {
-  background: #f3e7db;
-}
-
-.reserve-edit-btn[hidden],
-.reserve-details-toggle[hidden] {
-  display: none;
-}
-
-/* 料金の計算方法・内訳パネル */
-.reserve-details-panel {
-  margin-top: 4px;
-}
-
-.reserve-breakdown-title {
-  margin: 0 0 8px;
-  font-size: 17px;
-  font-weight: bold;
-  color: #5a351f;
-  text-align: left;
-}
-
-/* 日程に依存しない共通ルール（選択中は常時表示、完了表示ではトグルで開閉） */
-.reserve-common-rules {
-  margin-bottom: 4px;
-}
-
-.reserve-common-rules ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.reserve-common-rules li {
-  padding: 9px 14px;
-  font-size: 15px;
-  line-height: 1.7;
-  text-align: left;
-  color: #6b5b4a;
-  background: #fffaf4;
-  border-left: 1px solid #eadfd4;
-  border-right: 1px solid #eadfd4;
-  border-bottom: 1px solid #eadfd4;
-}
-
-.reserve-common-rules li:first-child {
-  border-top: 1px solid #eadfd4;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.reserve-common-rules li:last-child {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
 /* 内訳の各行を「薄い背景と枠線」のカードにまとめる（行同士は罫線で区切る）
    「.reserve-result-detail + .reserve-result-detail」でない＝連続するdetail行の先頭、
    という判定にすることで、直前にlabel/price等の他のp要素があっても正しく先頭行を判定できる */
@@ -1675,10 +1602,28 @@ body {
 
 .reserve-action-buttons {
   display: grid;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+.reserve-action-buttons .special-btn {
+  margin: 0;
+}
+
+.reserve-price-guide-link,
+.reserve-price-guide-link:visited {
+  background: #f3e7db;
+  color: #5a351f;
+  border: 1px solid #d9c4a8;
+}
+
+.reserve-back-link,
+.reserve-back-link:visited {
+  background: #fff;
+  color: #5a351f;
+  border: 1px solid #d9c4a8;
 }
