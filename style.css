@@ -1833,8 +1833,8 @@ body {
 
 .reserve-confirm-error.is-emphasized {
   color: #c0392b;
-  font-size: 18px;
-  transform: scale(1.06);
+  font-size: 22px;
+  transform: scale(1.1);
 }
 
 @media (max-width: 430px) {
