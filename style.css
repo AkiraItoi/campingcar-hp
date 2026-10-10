@@ -1816,14 +1816,19 @@ body {
 
 .reserve-confirm-error {
   margin: 8px 0 0;
-  color: #c0392b;
-  font-size: 18px;
+  color: #6b5b4d;
+  font-size: 14px;
   line-height: 1.5;
   font-weight: bold;
+  text-align: center;
+  transform-origin: center;
+  transition: color 0.2s ease, font-size 0.2s ease, transform 0.2s ease;
 }
 
-.reserve-confirm-error[hidden] {
-  display: none;
+.reserve-confirm-error.is-emphasized {
+  color: #c0392b;
+  font-size: 18px;
+  transform: scale(1.06);
 }
 
 @media (max-width: 430px) {

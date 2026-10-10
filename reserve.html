@@ -60,7 +60,7 @@
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
             <span id="reserveConfirmText"><a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（個人情報の取扱いを含む）</a>と<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
           </div>
-          <p class="reserve-confirm-error" id="reserveConfirmError" hidden>各内容を確認し、チェックを入れてください。</p>
+          <p class="reserve-confirm-error" id="reserveConfirmError">各内容を確認し、チェックを入れてください。</p>
         </div>
         <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
         <a class="special-btn" href="index.html">トップページへ戻る</a>
@@ -637,11 +637,12 @@
         }
         if (!reserveConfirmCheck.checked) {
           event.preventDefault();
-          reserveConfirmError.hidden = false;
-          reserveConfirmCheck.focus();
+          reserveConfirmError.classList.add('is-emphasized');
+          reserveConfirmCheck.focus({ preventScroll: true });
+          reserveConfirmError.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
-        reserveConfirmError.hidden = true;
+        reserveConfirmError.classList.remove('is-emphasized');
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
         // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
         reserveRequestBtn.href = formUrl;
@@ -651,7 +652,7 @@
 
       reserveConfirmCheck.addEventListener('change', () => {
         if (reserveConfirmCheck.checked) {
-          reserveConfirmError.hidden = true;
+          reserveConfirmError.classList.remove('is-emphasized');
         }
       });
 
