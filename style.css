@@ -1808,6 +1808,12 @@ body {
   background: #fff;
   color: #5a351f;
   text-align: left;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.reserve-confirm-box.is-emphasized {
+  border-color: #e5a3a3;
+  background: #fff0f0;
 }
 
 .reserve-confirm-box .reserve-confirm-check {

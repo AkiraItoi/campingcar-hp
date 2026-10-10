@@ -55,7 +55,7 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-        <div class="reserve-confirm-box">
+        <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
             <span id="reserveConfirmText"><a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（個人情報の取扱いを含む）</a>と<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
@@ -217,6 +217,7 @@
       const actionButtonsEl = document.getElementById('reserveActionButtons');
       const resultEl = document.getElementById('reserveResult');
       const reserveRequestBtn = document.getElementById('reserveRequestBtn');
+      const reserveConfirmBox = document.getElementById('reserveConfirmBox');
       const reserveConfirmCheck = document.getElementById('reserveConfirmCheck');
       const reserveConfirmError = document.getElementById('reserveConfirmError');
 
@@ -637,11 +638,13 @@
         }
         if (!reserveConfirmCheck.checked) {
           event.preventDefault();
+          reserveConfirmBox.classList.add('is-emphasized');
           reserveConfirmError.classList.add('is-emphasized');
           reserveConfirmCheck.focus({ preventScroll: true });
           reserveConfirmError.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
+        reserveConfirmBox.classList.remove('is-emphasized');
         reserveConfirmError.classList.remove('is-emphasized');
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
         // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
@@ -652,6 +655,7 @@
 
       reserveConfirmCheck.addEventListener('change', () => {
         if (reserveConfirmCheck.checked) {
+          reserveConfirmBox.classList.remove('is-emphasized');
           reserveConfirmError.classList.remove('is-emphasized');
         }
       });
