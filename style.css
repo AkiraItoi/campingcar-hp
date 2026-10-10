@@ -1706,22 +1706,31 @@ body {
 
 /* 予約リクエスト送信前の確認 */
 .reserve-request-notice {
-  padding: 14px;
+  padding: 16px;
   margin-bottom: 16px;
   border: 1px solid #d9c6b5;
   border-radius: 10px;
-  background: #fff;
+  background: #fffaf4;
   color: #5a351f;
   text-align: left;
 }
 
 .reserve-request-notice h3 {
-  margin: 0 0 8px;
-  font-size: 18px;
+  margin: 0 0 10px;
+  font-size: 20px;
   text-align: center;
 }
 
-.reserve-request-notice > p {
+.reserve-request-alert {
+  margin: 0 0 8px;
+  padding: 9px 10px;
+  border-left: 4px solid #8b4f2f;
+  background: #f3e7db;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.reserve-request-flow {
   margin: 0;
   font-size: 14px;
   line-height: 1.7;
@@ -1779,10 +1788,14 @@ body {
   }
 
   .reserve-request-notice h3 {
-    font-size: 17px;
+    font-size: 18px;
   }
 
-  .reserve-request-notice > p,
+  .reserve-request-alert {
+    font-size: 15px;
+  }
+
+  .reserve-request-flow,
   .reserve-confirm-check {
     font-size: 13px;
   }
