@@ -423,15 +423,8 @@
       }
 
       function focusCalendar() {
+        selectingAreaEl.classList.add('is-expanded');
         calendarsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        window.setTimeout(() => {
-          calendarsEl.classList.remove('is-prompted');
-          void calendarsEl.offsetWidth;
-          calendarsEl.classList.add('is-prompted');
-        }, 300);
-        window.setTimeout(() => {
-          calendarsEl.classList.remove('is-prompted');
-        }, 1000);
       }
 
       function setStep(newStep, shouldFocusCalendar) {
@@ -447,6 +440,10 @@
       // 選択中／完了表示の切り替え。表示の出し分けのみで、日時計算・料金計算は一切行わない
       function updateView() {
         const complete = view === 'complete';
+
+        if (complete) {
+          selectingAreaEl.classList.remove('is-expanded');
+        }
 
         stepHeaderEl.hidden = complete;
         selectingAreaEl.hidden = complete;
@@ -633,19 +630,23 @@
       }
 
       reserveRequestBtn.addEventListener('click', (event) => {
-        event.preventDefault();
         if (!reservationSummaryText) {
+          event.preventDefault();
           resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
           return;
         }
         if (!reserveConfirmCheck.checked) {
+          event.preventDefault();
           reserveConfirmError.hidden = false;
           reserveConfirmCheck.focus();
           return;
         }
         reserveConfirmError.hidden = true;
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
-        window.open(formUrl, '_blank', 'noopener,noreferrer');
+        // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
+        reserveRequestBtn.href = formUrl;
+        reserveRequestBtn.target = '_blank';
+        reserveRequestBtn.rel = 'noopener noreferrer';
       });
 
       reserveConfirmCheck.addEventListener('change', () => {

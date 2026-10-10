@@ -1426,20 +1426,29 @@ body {
   scroll-margin-top: 12px;
 }
 
-.reserve-calendars.is-prompted {
-  transform-origin: top center;
-  animation: reserve-calendar-prompt 600ms ease-out;
+.reserve-selecting-area.is-expanded {
+  border-color: #5a351f;
+  box-shadow: 0 8px 24px rgba(90, 53, 31, 0.18);
 }
 
-@keyframes reserve-calendar-prompt {
-  0%, 100% {
-    transform: scale(1);
-    filter: none;
-  }
-  45% {
-    transform: scale(1.04);
-    filter: drop-shadow(0 8px 12px rgba(90, 53, 31, 0.25));
-  }
+.reserve-selecting-area.is-expanded .reserve-calendar {
+  flex-basis: 300px;
+  max-width: 340px;
+  padding: 14px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-calendar-title {
+  font-size: 17px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-weekday {
+  font-size: 13px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-day {
+  min-height: 38px;
+  padding: 8px 0;
+  font-size: 16px;
 }
 
 .reserve-date-error {
@@ -1725,6 +1734,14 @@ body {
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+/* 日時確定後の主操作を、説明文なしでも次の行動と分かる大きさで維持する */
+#reserveRequestBtn {
+  min-height: 58px;
+  padding: 15px 18px;
+  font-size: 18px;
+  box-shadow: 0 7px 18px rgba(90, 53, 31, 0.2);
 }
 
 /* 予約リクエスト送信前の確認 */
