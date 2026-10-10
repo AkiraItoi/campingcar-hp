@@ -1111,12 +1111,6 @@ body {
   letter-spacing: 0.06em;
 }
 
-/* 予約ページの見出し「空き状況と料金を確認」：スマホ幅でも1行に収める */
-.price h2.reserve-title {
-  font-size: clamp(20px, 6.5vw, 28px);
-  white-space: normal;
-}
-
 .price-desc {
   margin: 0 0 16px;
   font-size: 14px;
@@ -1712,13 +1706,12 @@ body {
   border-radius: 10px;
   background: #fffaf4;
   color: #5a351f;
-  text-align: left;
+  text-align: center;
 }
 
 .reserve-request-notice h3 {
   margin: 0 0 10px;
-  font-size: 20px;
-  text-align: center;
+  font-size: 24px;
 }
 
 .reserve-request-alert {
@@ -1726,14 +1719,16 @@ body {
   padding: 9px 10px;
   border-left: 4px solid #8b4f2f;
   background: #f3e7db;
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.5;
+  text-align: center;
 }
 
 .reserve-request-flow {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.7;
+  text-align: center;
 }
 
 .reserve-confirm-check {
@@ -1788,14 +1783,17 @@ body {
   }
 
   .reserve-request-notice h3 {
-    font-size: 18px;
+    font-size: 22px;
   }
 
   .reserve-request-alert {
+    font-size: 16px;
+  }
+
+  .reserve-request-flow {
     font-size: 15px;
   }
 
-  .reserve-request-flow,
   .reserve-confirm-check {
     font-size: 13px;
   }
