@@ -1815,16 +1815,11 @@ body {
 }
 
 .reserve-confirm-error {
-  margin: 12px 0 0;
-  padding: 12px 14px;
-  border: 2px solid #c0392b;
-  border-radius: 8px;
-  background: #fdecea;
-  color: #a5281b;
+  margin: 8px 0 0;
+  color: #c0392b;
   font-size: 18px;
   line-height: 1.5;
   font-weight: bold;
-  text-align: center;
 }
 
 .reserve-confirm-error[hidden] {
