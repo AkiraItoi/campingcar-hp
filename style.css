@@ -1413,6 +1413,31 @@ body {
   color: #5a351f;
 }
 
+.reserve-summary-card.is-editing {
+  border: 2px solid #5a351f;
+  box-shadow: 0 0 0 3px rgba(90, 53, 31, 0.12);
+}
+
+.reserve-selecting-area {
+  padding: 12px;
+  border: 2px solid #d9c4a8;
+  border-radius: 12px;
+  background: #fffdf9;
+  scroll-margin-top: 12px;
+}
+
+.reserve-selection-guide {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #5a351f;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .reserve-date-error {
   margin: 0 0 12px;
   padding: 10px 14px;
