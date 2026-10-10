@@ -13,6 +13,11 @@
     <section class="price" id="reservePriceSection">
       <h2 class="reserve-title">空き状況と料金を確認</h2>
 
+      <div class="reserve-request-notice">
+        <h3>予約リクエストについて</h3>
+        <p>フォームの送信時点では、予約は確定しません。当社が空き状況と内容を確認し、予約確定の連絡を送信した時点で予約成立となります。</p>
+      </div>
+
       <div class="reserve-step-header" id="reserveStepHeader">
         <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
         <button type="button" class="reserve-step" id="reserveStepEnd">② 返却日時を選択</button>
@@ -51,12 +56,10 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-        <div class="reserve-request-notice">
-          <h3>予約リクエストについて</h3>
-          <p>フォームの送信時点では、予約は確定しません。当社が空き状況と内容を確認し、予約確定の連絡を送信した時点で予約成立となります。</p>
+        <div class="reserve-confirm-box">
           <div class="reserve-confirm-check">
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
-            <span id="reserveConfirmText"><a href="privacy.html" target="_blank" rel="noopener noreferrer">個人情報の取扱い</a>、<a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款</a>、<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
+            <span id="reserveConfirmText"><a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（個人情報の取扱いを含む）</a>と<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
           </div>
           <p class="reserve-confirm-error" id="reserveConfirmError" hidden>各内容を確認し、チェックを入れてください。</p>
         </div>
