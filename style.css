@@ -1815,9 +1815,16 @@ body {
 }
 
 .reserve-confirm-error {
-  margin-top: 8px;
-  color: #a33a2b;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 2px solid #c0392b;
+  border-radius: 8px;
+  background: #fdecea;
+  color: #a5281b;
+  font-size: 18px;
+  line-height: 1.5;
   font-weight: bold;
+  text-align: center;
 }
 
 .reserve-confirm-error[hidden] {
@@ -1844,4 +1851,5 @@ body {
   .reserve-confirm-check {
     font-size: 15px;
   }
+
 }
