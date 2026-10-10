@@ -954,6 +954,12 @@ body {
     font-size: 18.5px;
   }
 
+  /* スマホではCTAを1行で読みやすく表示する */
+  .free-content .free-cta {
+    font-size: clamp(24px, 7.2vw, 30px);
+    white-space: nowrap;
+  }
+
   .mini-photos img {
     height: 90px;
   }
