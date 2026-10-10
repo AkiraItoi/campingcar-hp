@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>空き状況・料金を確認する</title>
-  <link rel="stylesheet" href="style.css?v=20261009-2">
+  <link rel="stylesheet" href="style.css?v=20261010-2">
 </head>
 <body class="reserve-page">
 
@@ -51,7 +51,16 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストへ進む</a>
+        <div class="reserve-request-notice">
+          <h3>予約リクエストについて</h3>
+          <p>フォームの送信時点では、予約は確定しません。当社が空き状況と内容を確認し、予約確定の連絡を送信した時点で予約成立となります。</p>
+          <div class="reserve-confirm-check">
+            <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
+            <span id="reserveConfirmText"><a href="privacy.html" target="_blank" rel="noopener noreferrer">個人情報の取扱い</a>、<a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款</a>、<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
+          </div>
+          <p class="reserve-confirm-error" id="reserveConfirmError" hidden>各内容を確認し、チェックを入れてください。</p>
+        </div>
+        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
         <a class="special-btn" href="index.html">トップページへ戻る</a>
       </div>
     </section>
@@ -206,6 +215,8 @@
       const actionButtonsEl = document.getElementById('reserveActionButtons');
       const resultEl = document.getElementById('reserveResult');
       const reserveRequestBtn = document.getElementById('reserveRequestBtn');
+      const reserveConfirmCheck = document.getElementById('reserveConfirmCheck');
+      const reserveConfirmError = document.getElementById('reserveConfirmError');
 
       const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -607,8 +618,20 @@
           resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
           return;
         }
+        if (!reserveConfirmCheck.checked) {
+          reserveConfirmError.hidden = false;
+          reserveConfirmCheck.focus();
+          return;
+        }
+        reserveConfirmError.hidden = true;
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
         window.open(formUrl, '_blank', 'noopener,noreferrer');
+      });
+
+      reserveConfirmCheck.addEventListener('change', () => {
+        if (reserveConfirmCheck.checked) {
+          reserveConfirmError.hidden = true;
+        }
       });
 
       popupCloseEl.addEventListener('click', closeTimePopup);

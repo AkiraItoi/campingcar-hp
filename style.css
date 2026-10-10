@@ -1703,3 +1703,158 @@ body {
 .reserve-action-buttons[hidden] {
   display: none;
 }
+
+/* 予約リクエスト送信前の確認 */
+.reserve-request-notice {
+  padding: 14px;
+  border: 1px solid #d9c6b5;
+  border-radius: 10px;
+  background: #fff;
+  color: #5a351f;
+  text-align: left;
+}
+
+.reserve-request-notice h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.reserve-request-notice > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.reserve-confirm-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.reserve-confirm-check input {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: #5a351f;
+}
+
+.reserve-confirm-check a,
+.policy-card a {
+  color: #7a3f1f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.reserve-request-notice .reserve-confirm-error {
+  margin-top: 8px;
+  color: #a33a2b;
+  font-weight: bold;
+}
+
+.reserve-confirm-error[hidden] {
+  display: none;
+}
+
+/* 個人情報の取扱い */
+.policy-page {
+  padding-bottom: 0;
+  background: #f7f2ec;
+}
+
+.policy-card {
+  padding: 22px 18px;
+  border: 1px solid #eadfd4;
+  border-radius: 14px;
+  background: #fffaf4;
+  color: #5f5145;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  line-height: 1.8;
+}
+
+.policy-card h1 {
+  margin: 0 0 18px;
+  color: #5a351f;
+  font-size: clamp(24px, 7vw, 32px);
+  text-align: center;
+}
+
+.policy-card h2 {
+  margin: 24px 0 8px;
+  color: #5a351f;
+  font-size: 18px;
+}
+
+.policy-card p,
+.policy-card ul {
+  margin: 0;
+  font-size: 15px;
+}
+
+.policy-card ul {
+  padding-left: 1.4em;
+}
+
+.policy-company {
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  margin: 0;
+  font-size: 15px;
+}
+
+.policy-company dt,
+.policy-company dd {
+  margin: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid #eadfd4;
+}
+
+.policy-company dt {
+  color: #5a351f;
+  font-weight: bold;
+}
+
+.policy-date {
+  margin-top: 24px !important;
+  text-align: right;
+}
+
+.policy-back-link {
+  display: block;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #5a351f;
+  color: #fff !important;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none !important;
+}
+
+@media (max-width: 430px) {
+  .reserve-request-notice {
+    padding: 12px;
+  }
+
+  .reserve-request-notice h3 {
+    font-size: 17px;
+  }
+
+  .reserve-request-notice > p,
+  .reserve-confirm-check {
+    font-size: 13px;
+  }
+
+  .policy-company {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-company dt {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
