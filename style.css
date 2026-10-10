@@ -1426,16 +1426,20 @@ body {
   scroll-margin-top: 12px;
 }
 
-.reserve-selection-guide {
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: #5a351f;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1.5;
-  text-align: center;
+.reserve-calendars.is-prompted {
+  transform-origin: top center;
+  animation: reserve-calendar-prompt 600ms ease-out;
+}
+
+@keyframes reserve-calendar-prompt {
+  0%, 100% {
+    transform: scale(1);
+    filter: none;
+  }
+  45% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 8px 12px rgba(90, 53, 31, 0.25));
+  }
 }
 
 .reserve-date-error {

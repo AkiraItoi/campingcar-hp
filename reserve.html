@@ -27,7 +27,6 @@
       <button type="button" class="reserve-edit-btn" id="reserveEditBtn" hidden>日時を変更する</button>
 
       <div class="reserve-selecting-area" id="reserveSelectingArea">
-        <p class="reserve-selection-guide" id="reserveSelectionGuide" aria-live="polite"></p>
         <p class="reserve-date-error" id="reserveDateError" hidden></p>
 
         <div class="reserve-calendar-nav">
@@ -205,7 +204,6 @@
       const stepEndEl = document.getElementById('reserveStepEnd');
       const editBtn = document.getElementById('reserveEditBtn');
       const selectingAreaEl = document.getElementById('reserveSelectingArea');
-      const selectionGuideEl = document.getElementById('reserveSelectionGuide');
       const dateErrorEl = document.getElementById('reserveDateError');
       const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
       const nextMonthBtn = document.getElementById('reserveNextMonthBtn');
@@ -422,15 +420,18 @@
         stepStartEl.classList.toggle('is-done', !!startDate);
         stepEndEl.classList.toggle('is-active', step === 'end');
         stepEndEl.classList.toggle('is-done', !!endDate);
-        selectionGuideEl.textContent = step === 'start'
-          ? 'カレンダーから利用開始日を選択してください'
-          : 'カレンダーから返却日を選択してください';
       }
 
       function focusCalendar() {
-        window.requestAnimationFrame(() => {
-          selectingAreaEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
+        calendarsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => {
+          calendarsEl.classList.remove('is-prompted');
+          void calendarsEl.offsetWidth;
+          calendarsEl.classList.add('is-prompted');
+        }, 300);
+        window.setTimeout(() => {
+          calendarsEl.classList.remove('is-prompted');
+        }, 1000);
       }
 
       function setStep(newStep, shouldFocusCalendar) {
