@@ -1111,12 +1111,6 @@ body {
   letter-spacing: 0.06em;
 }
 
-/* 予約ページの見出し「空き状況と料金を確認」：スマホ幅でも1行に収める */
-.price h2.reserve-title {
-  font-size: clamp(20px, 6.5vw, 28px);
-  white-space: normal;
-}
-
 .price-desc {
   margin: 0 0 16px;
   font-size: 14px;
@@ -1419,6 +1413,44 @@ body {
   color: #5a351f;
 }
 
+.reserve-summary-card.is-editing {
+  border: 2px solid #5a351f;
+  box-shadow: 0 0 0 3px rgba(90, 53, 31, 0.12);
+}
+
+.reserve-selecting-area {
+  padding: 12px;
+  border: 2px solid #d9c4a8;
+  border-radius: 12px;
+  background: #fffdf9;
+  scroll-margin-top: 12px;
+}
+
+.reserve-selecting-area.is-expanded {
+  border-color: #5a351f;
+  box-shadow: 0 8px 24px rgba(90, 53, 31, 0.18);
+}
+
+.reserve-selecting-area.is-expanded .reserve-calendar {
+  flex-basis: 300px;
+  max-width: 340px;
+  padding: 14px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-calendar-title {
+  font-size: 17px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-weekday {
+  font-size: 13px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-day {
+  min-height: 38px;
+  padding: 8px 0;
+  font-size: 16px;
+}
+
 .reserve-date-error {
   margin: 0 0 12px;
   padding: 10px 14px;
@@ -1702,4 +1734,128 @@ body {
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+/* 日時確定後の主操作を、説明文なしでも次の行動と分かる大きさで維持する */
+#reserveRequestBtn {
+  min-height: 58px;
+  padding: 15px 18px;
+  font-size: 18px;
+  box-shadow: 0 7px 18px rgba(90, 53, 31, 0.2);
+}
+
+/* 予約リクエスト送信前の確認 */
+.reserve-request-notice {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #d9c6b5;
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #5a351f;
+  text-align: center;
+}
+
+.reserve-request-notice h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  letter-spacing: normal;
+}
+
+.reserve-request-alert {
+  margin: 0 0 8px;
+  padding: 9px 10px;
+  border-left: 4px solid #8b4f2f;
+  background: #f3e7db;
+  font-size: 17px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.reserve-request-flow {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.reserve-confirm-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.reserve-confirm-check input {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: #5a351f;
+}
+
+.reserve-confirm-check a {
+  color: #7a3f1f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.reserve-confirm-box {
+  padding: 12px 14px;
+  border: 1px solid #d9c6b5;
+  border-radius: 10px;
+  background: #fff;
+  color: #5a351f;
+  text-align: left;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.reserve-confirm-box.is-emphasized {
+  border-color: #e5a3a3;
+  background: #fff0f0;
+}
+
+.reserve-confirm-box .reserve-confirm-check {
+  margin-top: 0;
+}
+
+.reserve-confirm-error {
+  margin: 8px 0 0;
+  color: #6b5b4d;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: bold;
+  text-align: center;
+  transform-origin: center;
+  transition: color 0.2s ease, font-size 0.2s ease, transform 0.2s ease;
+}
+
+.reserve-confirm-error.is-emphasized {
+  color: #c0392b;
+  font-size: 22px;
+  transform: scale(1.1);
+}
+
+@media (max-width: 430px) {
+  .reserve-request-notice {
+    padding: 12px;
+  }
+
+  .reserve-request-notice h2 {
+    font-size: 22px;
+  }
+
+  .reserve-request-alert {
+    font-size: 16px;
+  }
+
+  .reserve-request-flow {
+    font-size: 15px;
+  }
+
+  .reserve-confirm-check {
+    font-size: 15px;
+  }
+
 }

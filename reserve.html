@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>空き状況・料金を確認する</title>
-  <link rel="stylesheet" href="style.css?v=20261009-2">
+  <title>予約リクエスト・料金確認｜SUN AID</title>
+  <link rel="stylesheet" href="style.css?v=20261010-2">
 </head>
 <body class="reserve-page">
 
   <main class="page">
 
     <section class="price" id="reservePriceSection">
-      <h2 class="reserve-title">空き状況と料金を確認</h2>
+      <div class="reserve-request-notice">
+        <h2>予約リクエスト・料金確認</h2>
+        <p class="reserve-request-alert"><strong>この時点では、まだ予約は確定しません。</strong></p>
+        <p class="reserve-request-flow">予約日時を入力した後、予約フォームからリクエストを送信し、当社との日程確認が完了した後に、予約が確定します。</p>
+      </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
         <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
@@ -51,7 +55,14 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストへ進む</a>
+        <div class="reserve-confirm-box" id="reserveConfirmBox">
+          <div class="reserve-confirm-check">
+            <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
+            <span id="reserveConfirmText"><a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（個人情報の取扱いを含む）</a>と<a href="index.html#price" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
+          </div>
+          <p class="reserve-confirm-error" id="reserveConfirmError">各内容を確認し、チェックを入れてください。</p>
+        </div>
+        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
         <a class="special-btn" href="index.html">トップページへ戻る</a>
       </div>
     </section>
@@ -206,6 +217,9 @@
       const actionButtonsEl = document.getElementById('reserveActionButtons');
       const resultEl = document.getElementById('reserveResult');
       const reserveRequestBtn = document.getElementById('reserveRequestBtn');
+      const reserveConfirmBox = document.getElementById('reserveConfirmBox');
+      const reserveConfirmCheck = document.getElementById('reserveConfirmCheck');
+      const reserveConfirmError = document.getElementById('reserveConfirmError');
 
       const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -388,7 +402,6 @@
 
         closeTimePopup();
         renderStepHeader();
-        renderSummary();
         renderCalendars();
         calcPrice();
 
@@ -399,6 +412,7 @@
         } else {
           view = 'selecting';
         }
+        renderSummary();
         updateView();
       }
 
@@ -409,15 +423,28 @@
         stepEndEl.classList.toggle('is-done', !!endDate);
       }
 
-      function setStep(newStep) {
+      function focusCalendar() {
+        selectingAreaEl.classList.add('is-expanded');
+        calendarsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function setStep(newStep, shouldFocusCalendar) {
         step = newStep;
         renderStepHeader();
+        renderSummary();
         renderCalendars();
+        if (shouldFocusCalendar) {
+          focusCalendar();
+        }
       }
 
       // 選択中／完了表示の切り替え。表示の出し分けのみで、日時計算・料金計算は一切行わない
       function updateView() {
         const complete = view === 'complete';
+
+        if (complete) {
+          selectingAreaEl.classList.remove('is-expanded');
+        }
 
         stepHeaderEl.hidden = complete;
         selectingAreaEl.hidden = complete;
@@ -435,19 +462,21 @@
         editingMode = true;
         clearDateError();
         renderStepHeader();
+        renderSummary();
         renderCalendars();
         updateView();
+        focusCalendar();
       }
 
       function renderSummary() {
         const startText = startDate ? formatSelected(startDate) : '未選択';
         const endText = endDate ? formatSelected(endDate) : '未選択';
         summaryEl.innerHTML =
-          '<button type="button" class="reserve-summary-card' + (startDate ? ' is-filled' : '') + '" data-step="start">' +
+          '<button type="button" class="reserve-summary-card' + (startDate ? ' is-filled' : '') + (view === 'selecting' && step === 'start' ? ' is-editing' : '') + '" data-step="start">' +
             '<p class="reserve-summary-card-label">① 利用開始</p>' +
             '<p class="reserve-summary-card-value">' + startText + '</p>' +
           '</button>' +
-          '<button type="button" class="reserve-summary-card' + (endDate ? ' is-filled' : '') + '" data-step="end">' +
+          '<button type="button" class="reserve-summary-card' + (endDate ? ' is-filled' : '') + (view === 'selecting' && step === 'end' ? ' is-editing' : '') + '" data-step="end">' +
             '<p class="reserve-summary-card-label">② 返却</p>' +
             '<p class="reserve-summary-card-value">' + endText + '</p>' +
           '</button>';
@@ -602,18 +631,38 @@
       }
 
       reserveRequestBtn.addEventListener('click', (event) => {
-        event.preventDefault();
         if (!reservationSummaryText) {
+          event.preventDefault();
           resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
           return;
         }
+        if (!reserveConfirmCheck.checked) {
+          event.preventDefault();
+          reserveConfirmBox.classList.add('is-emphasized');
+          reserveConfirmError.classList.add('is-emphasized');
+          reserveConfirmCheck.focus({ preventScroll: true });
+          reserveConfirmError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        reserveConfirmBox.classList.remove('is-emphasized');
+        reserveConfirmError.classList.remove('is-emphasized');
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
-        window.open(formUrl, '_blank', 'noopener,noreferrer');
+        // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
+        reserveRequestBtn.href = formUrl;
+        reserveRequestBtn.target = '_blank';
+        reserveRequestBtn.rel = 'noopener noreferrer';
+      });
+
+      reserveConfirmCheck.addEventListener('change', () => {
+        if (reserveConfirmCheck.checked) {
+          reserveConfirmBox.classList.remove('is-emphasized');
+          reserveConfirmError.classList.remove('is-emphasized');
+        }
       });
 
       popupCloseEl.addEventListener('click', closeTimePopup);
-      stepStartEl.addEventListener('click', () => setStep('start'));
-      stepEndEl.addEventListener('click', () => setStep('end'));
+      stepStartEl.addEventListener('click', () => setStep('start', true));
+      stepEndEl.addEventListener('click', () => setStep('end', true));
       editBtn.addEventListener('click', () => startEditingStep('start'));
       // 完了表示の日時カード自体を押しても、対応するstepを選択中にして再編集へ入れるようにする
       summaryEl.addEventListener('click', (event) => {
