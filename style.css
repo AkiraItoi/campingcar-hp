@@ -2603,35 +2603,50 @@ body {
 .private-campsite { padding: 16px 12px; border: 1px solid #d8c6b4; border-radius: 12px; text-align: center; background: #fffaf4; }
 .private-campsite p { margin: 0; font-size: 18px; font-weight: bold; line-height: 1.6; }
 
-/* 紹介コピー：左端と右側イラストの列を揃え、まとまり全体を中央配置 */
+/* 紹介コピー：3行の文字と人物に同じ列配置を適用 */
 .hero .hero-copy-group {
   width: min(100%, 560px);
   margin: 0 auto;
   text-align: left;
+  container-type: inline-size;
 }
 .hero-copy-group .hero-registration-note,
 .hero-copy-group .hero-promise {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   align-items: center;
+  justify-content: stretch;
+  width: 100%;
   gap: 10px;
 }
 .hero-copy-group .hero-registration-note { margin: 18px 0 0; }
-.hero-copy-group .hero-registration { grid-column: 1; grid-row: 1; text-align: left; }
-.hero-copy-group .hero-registration-illustration { grid-column: 2; grid-row: 1; justify-self: start; }
+.hero .hero-copy-group .hero-registration {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+  font-size: min(42px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
+}
+.hero-copy-group .hero-registration-illustration {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  width: 80px;
+  height: 76px;
+  object-fit: contain;
+  margin: 0;
+}
 .hero .hero-copy-group .hero-promises { margin: 12px 0 24px; text-align: left; }
 .hero-copy-group .hero-promise-copy { text-align: left; }
 .hero .hero-copy-group .hero-question { justify-content: flex-start; margin: 0; }
-
-/* 登録年月は人物と横並びのまま1行。見出し用の列幅制限から独立させる */
-.hero-copy-group .hero-registration-note {
-  grid-template-columns: minmax(0, max-content) auto;
-}
-.hero-copy-group .hero-registration {
-  white-space: nowrap;
-}
+.hero-copy-group .hero-driver { --driver-size: 64px; }
 @media (max-width: 768px) {
-  .hero-copy-group .hero-registration {
-    font-size: min(26px, calc((100vw - 100px) / 10));
+  .hero .hero-copy-group .hero-registration {
+    font-size: min(26px, calc((100vw - 56px) * 1.4 / 2.4 / 10));
+    font-size: min(26px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
   }
+  .hero-copy-group .hero-registration-illustration { width: 64px; height: 60px; }
+  .hero-copy-group .hero-driver { --driver-size: 48px; }
 }
