@@ -2063,22 +2063,19 @@ body {
   .reserve-selecting-area,
   .reserve-selecting-area.is-expanded { padding: 6px; border-width: 1px; }
   .reserve-date-error { margin: 0 0 6px; padding: 6px 10px; font-size: 13px; }
-  /* 月送りは月タイトルと同じ行の左右に重ね、縦方向の高さを使わない */
-  .reserve-calendar-nav { position: absolute; top: 0; left: 0; right: 0; z-index: 1; margin: 0; pointer-events: none; }
-  .reserve-nav-btn { flex: 0 0 52px; min-height: 40px; padding: 0; font-size: 0; pointer-events: auto; }
-  .reserve-nav-btn::before { font-size: 18px; }
-  #reservePrevMonthBtn::before { content: "◀"; }
-  #reserveNextMonthBtn::before { content: "▶"; }
-  .reserve-calendars { margin-bottom: 0; }
+  /* 2か月を横並び（縦に積まない・横スクロールなし）。月送りは2か月単位 */
+  .reserve-calendar-nav { margin: 0 0 4px; gap: 6px; }
+  .reserve-nav-btn { flex: 1; min-height: 36px; padding: 0; font-size: 14px; }
+  .reserve-calendars { flex-wrap: nowrap; gap: 4px; margin-bottom: 0; }
   .reserve-calendars .reserve-calendar,
-  .reserve-selecting-area.is-expanded .reserve-calendar { padding: 4px 6px 6px; border: none; }
+  .reserve-selecting-area.is-expanded .reserve-calendar { flex: 1 1 0; width: auto; min-width: 0; max-width: none; padding: 2px; border: none; }
   .reserve-calendar-title,
-  .reserve-selecting-area.is-expanded .reserve-calendar-title { margin: 0 0 4px; line-height: 40px; font-size: 18px; }
+  .reserve-selecting-area.is-expanded .reserve-calendar-title { margin: 0 0 2px; line-height: 28px; font-size: 14px; }
   .reserve-weekday,
-  .reserve-selecting-area.is-expanded .reserve-weekday { font-size: 14px; line-height: 20px; }
-  .reserve-calendar-grid { gap: 2px; }
+  .reserve-selecting-area.is-expanded .reserve-weekday { font-size: 11px; line-height: 18px; overflow: hidden; }
+  .reserve-calendar-grid { gap: 1px; }
   .reserve-day,
-  .reserve-selecting-area.is-expanded .reserve-day { min-height: 38px; font-size: 17px; }
+  .reserve-selecting-area.is-expanded .reserve-day { min-height: 36px; font-size: 13px; }
 }
 
 /* 日時ボタン：選択後は「ラベル／日時」の2行。左右等幅で、日時を省略・縮小しない */

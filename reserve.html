@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
-  <link rel="stylesheet" href="style.css?v=20261011-2">
+  <link rel="stylesheet" href="style.css?v=20261011-3">
 </head>
 <body class="reserve-page">
 
@@ -224,12 +224,10 @@
       let endDate = null;
       let pendingDateKey = null;
       let calendarOffset = 0;
-      // 表示する月数：スマホ幅（768px以下）は1か月、それより広い画面は従来どおり2か月。
-      // 選択済みの日時・予約状態とは独立しており、表示月数を切り替えても失われない。
+      // 表示する月数：スマホ・PCとも2か月を横並び（月送りも2か月単位）。
       const CALENDAR_TOTAL_MONTHS = 6;
-      const mobileCalendarQuery = window.matchMedia('(max-width: 768px)');
       function visibleMonthCount() {
-        return mobileCalendarQuery.matches ? 1 : 2;
+        return 2;
       }
       let reservationSummaryText = null;
       let view = 'selecting'; // 'selecting' | 'complete'
@@ -736,13 +734,6 @@
         calendarOffset = Math.min(CALENDAR_TOTAL_MONTHS - visibleMonthCount(), calendarOffset + visibleMonthCount());
         renderCalendars();
       });
-
-      // 画面幅の変化（回転・リサイズ）で表示月数が変わったら、カレンダーだけ描き直す
-      if (mobileCalendarQuery.addEventListener) {
-        mobileCalendarQuery.addEventListener('change', renderCalendars);
-      } else if (mobileCalendarQuery.addListener) {
-        mobileCalendarQuery.addListener(renderCalendars);
-      }
 
       renderTimeGrid();
       renderStepHeader();
