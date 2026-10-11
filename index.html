@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261011-final2">
+  <link rel="stylesheet" href="style.css?v=20261011-final3">
 </head>
 <body>
 
@@ -225,7 +225,7 @@
       </div>
       <p class="price-document-note">オプション料金、保険・免責、NOC、保証金などの最新条件は、上記PDFをご確認ください。</p>
 
-      <h3 class="price-subtitle">キャンセル料金</h3>
+      <h3 class="price-subtitle" id="cancel-fee">キャンセル料金</h3>
       <div class="price-table-wrap">
         <table class="price-table">
           <thead>
@@ -271,7 +271,7 @@
     </section>
 
     <section class="free">
-      <h2><span class="free-offer">「安全第一！」<br>「暑い寒いはイヤ！」<br>「<span class="nb">寝具、</span><span class="nb">キャンプ・BBQ道具も借りたい」</span></span><br><span class="free-sub"><span class="nb">こういうあなたを</span><span class="nb">サポートします</span></span></h2>
+      <h2><span class="free-offer">「安全第一！」<br>「暑い寒いはイヤ！」<span class="free-offer-line3">「寝具・キャンプ・BBQ道具も借りたい」</span></span><br><span class="free-sub"><span class="nb">こういうあなたを</span><span class="nb">サポートします</span></span></h2>
 
       <div class="free-content">
         <!-- 差し替え: 子供とキャンピングカーの写真 -->
@@ -374,11 +374,27 @@
   history.scrollRestoration = 'manual';
   }
 
+  // アンカー付き（例 #cancel-fee）で開いたときは先頭へ戻さず、その見出しへ移動する。
+  // 画像の読込でレイアウトが動いても位置を保つため、load後にもう一度合わせる。
+  function scrollToHashTarget() {
+    var id = decodeURIComponent((location.hash || '').slice(1));
+    var el = id ? document.getElementById(id) : null;
+    if (el) {
+      el.scrollIntoView({ block: 'start' });
+      return true;
+    }
+    return false;
+  }
   window.addEventListener('pageshow', function () {
-  setTimeout(function () {
-    window.scrollTo(0, 0);
-  }, 0);
-});
+    setTimeout(function () {
+      if (!scrollToHashTarget()) {
+        window.scrollTo(0, 0);
+      }
+    }, 0);
+  });
+  window.addEventListener('load', function () {
+    scrollToHashTarget();
+  });
     document.addEventListener('DOMContentLoaded', function () {
       var heroImage = document.querySelector('.hero-image');
       if (heroImage) {

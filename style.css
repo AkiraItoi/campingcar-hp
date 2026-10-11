@@ -2411,3 +2411,33 @@ body {
     padding-right: 0;
   }
 }
+
+/* トップページ：3行目「寝具・キャンプ・BBQ道具も借りたい」を1行に。見出し幅（h2）を基準に収まる大きさにする */
+.free-offer .free-offer-line3 {
+  display: block;
+  white-space: nowrap;
+  font-size: calc((100vw - 58px) / 20);
+  font-size: min(1em, 5cqw);
+}
+
+/* キャンセル料金へのアンカー移動：見出しが画面最上端に貼り付かない余白 */
+.price-subtitle#cancel-fee {
+  scroll-margin-top: 12px;
+}
+
+/* 予約ページ：確認案内（各内容を確認し、チェックを入れてください。）を欄幅に合わせて1行に収める */
+.reserve-confirm-box {
+  container-type: inline-size;
+}
+
+.reserve-page .reserve-confirm-error {
+  margin: 8px -10px 0;
+  white-space: nowrap;
+  font-size: clamp(11px, calc((100vw - 60px) / 21.5), 16px);
+  font-size: min(16px, calc((100cqw + 20px) / 21.5));
+}
+
+.reserve-page .reserve-confirm-error.is-emphasized {
+  font-size: clamp(10px, calc((100vw - 60px) / 23.7), 22px);
+  font-size: min(22px, calc((100cqw + 20px) / 23.7));
+}
