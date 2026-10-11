@@ -353,7 +353,39 @@ body {
   /* 左右のスマホ用ラベルを17〜18px程度に統一（左は「公式予約」に短縮して両立させる） */
   .mobile-reservation-bar .btn-label-compact,
   .mobile-reservation-bar .carstay-label-compact {
-    font-size: clamp(17px, 4.6vw, 18px);
+    font-size: clamp(16px, 4.8vw, 18px);
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
+  }
+
+  /* 予約ボタン2つ：控えめなグラデーション・細い縁取り・軽い立体感で質感を揃える */
+  .mobile-reservation-bar .brown,
+  .mobile-reservation-bar .carstay {
+    min-height: 54px;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 2px 5px rgba(0, 0, 0, 0.16);
+  }
+
+  .mobile-reservation-bar .brown {
+    background: linear-gradient(180deg, #7a5a43 0%, #4e3326 100%);
+    border: 1px solid #8e725e;
+  }
+
+  .mobile-reservation-bar .carstay {
+    background: linear-gradient(180deg, #6ea4dc 0%, #3e79b8 100%);
+    border: 1px solid #8fb8e3;
+  }
+
+  .mobile-reservation-bar .carstay-icon {
+    color: #fff;
+  }
+
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: clamp(26px, 8.5vw, 32px);
+    height: clamp(26px, 8.5vw, 32px);
+    flex: 0 0 clamp(26px, 8.5vw, 32px);
   }
 }
 
@@ -367,6 +399,12 @@ body {
   /* 見出しを現在の2倍（16px→32px）に */
   font-size: 32px;
   font-weight: normal;
+}
+
+/* 車両引渡し場所の見出し：狭い列でも折り返さないよう小さめにする */
+#accessMap h3 {
+  font-size: 18px;
+  white-space: nowrap;
 }
 
 .access-grid {
@@ -405,20 +443,45 @@ body {
   border: 0;
 }
 
+/* 住所は地図の上部に配置し、下部のGoogleマップ操作UI（ズーム等）を隠さないようにする */
 .map-address-overlay {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
   z-index: 1;
   margin: 0;
-  padding: 4px 6px;
-  background: rgba(0, 0, 0, 0.56);
+  padding: 5px 7px;
+  background: rgba(0, 0, 0, 0.62);
   color: #fff;
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 12px;
+  line-height: 1.4;
   text-align: left;
   pointer-events: none;
+}
+
+/* 地図内に重ねる小さな外部リンク。住所（上部）・Googleマップ標準操作（右下）と重ならない左下に配置 */
+.map-open-link {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 1;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #5a351f;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.4;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  /* 長い文言でも右下のGoogleマップ標準操作に重ならないよう幅を制限 */
+  max-width: calc(100% - 64px);
+}
+
+.map-open-link:focus-visible {
+  outline: 2px solid #5a351f;
+  outline-offset: 2px;
 }
 
 .station-photo {
@@ -560,9 +623,9 @@ body {
 }
 
 .slide-in {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 1.2s ease, transform 1.2s ease;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* セクションが画面に入ったら順番に表示 */
@@ -620,7 +683,7 @@ body {
 }
 
 .equipment {
-  background: #b89072;
+  background: #ad927c;
   padding: 14px 16px;
   text-align: center;
 }
@@ -657,7 +720,7 @@ body {
 .eq-items {
   align-self: flex-end;
   margin-top: 4px;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.6;
   text-align: right;
   color: #f7f2ec;
@@ -665,8 +728,13 @@ body {
 
 /* 設備欄の補足注記は本文より少し小さく表示する */
 .eq-note {
-  font-size: 0.75em;
-  opacity: 0.85;
+  font-size: 0.8em;
+  opacity: 0.9;
+}
+
+/* 長い装備名は意味の区切りでのみ折り返す */
+.eq-items .nb {
+  white-space: nowrap;
 }
 
 .equipment-photos {
@@ -732,6 +800,7 @@ body {
 .sns-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 10px;
   margin: 18px 0;
 }
@@ -771,16 +840,23 @@ body {
   object-fit: contain;
 }
 
-/* LINEボタンのみ：ロゴの右横に「準備中」を横並び・中央揃えで表示 */
-.sns-btn--line {
-  gap: 4px;
-  padding-inline: 4px;
+/* LINEボタンの真下に配置するためのラップ（他のSNSボタンの配置には影響しない） */
+.sns-line-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
-.sns-label {
-  font-size: clamp(10px, 2.6vw, 13px);
-  line-height: 1;
-  white-space: nowrap;
+/* LINEボタン押下時の案内メッセージ（準備中）。押す前は非表示、押した後は表示を維持する */
+.sns-line-status {
+  margin: 6px 0 0;
+  font-size: 19px;
+  font-weight: bold;
+  color: #c0392b;
+  text-align: center;
+}
+
+.sns-line-status:empty {
+  display: none;
 }
 
 .contact {
@@ -934,12 +1010,14 @@ body {
   }
 
   .eq-items {
-    font-size: clamp(16px, 5vw, 22px);
-    line-height: 1.5;
+    font-size: clamp(17px, 4.8vw, 20px);
+    line-height: 1.6;
+    line-break: strict;
+    overflow-wrap: break-word;
   }
 
   .eq-note {
-    font-size: 0.7em;
+    font-size: 0.75em;
   }
 
   .eq-label {
@@ -1044,22 +1122,6 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
-}
-.map-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 6px;
-  padding: 6px 8px;
-  background: #e8dfd3;
-  color: #5a351f;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: clamp(11px, 1.1vw, 14px);
-  font-weight: bold;
-  line-height: 1.3;
-  text-align: center;
-  word-break: break-word;
 }
 /* 一時テスト：すべてのフェードイン演出を止める */
 .hero-image {
@@ -1182,6 +1244,11 @@ body {
   min-width: 260px;
 }
 
+/* 「計算ルール」表：列見出し「内容」のみ中央揃え（左上の空欄セル・本文は対象外） */
+.price-table-rules thead th:last-child {
+  text-align: center;
+}
+
 .price-season-list {
   display: flex;
   flex-wrap: wrap;
@@ -1213,7 +1280,7 @@ body {
   border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 12px;
-  text-align: left;
+  text-align: center;
 }
 
 .price-info-title {
@@ -1228,6 +1295,38 @@ body {
   font-size: 13px;
   line-height: 1.8;
   color: #4a4038;
+}
+
+/* 割引キャンペーンのみ：リボン風バナー装飾（既存配色のオレンジ・ゴールド系） */
+.price-info--campaign {
+  position: relative;
+  padding-top: 18px;
+  background: linear-gradient(135deg, #fff6e6, #ffe3ad);
+  border: 2px solid #d99a3f;
+  box-shadow: 0 4px 14px rgba(179, 122, 36, 0.25);
+  overflow: hidden;
+}
+
+.price-info--campaign::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #c9882e, #f6c875, #c9882e);
+}
+
+.price-info--campaign .price-info-title {
+  font-size: clamp(18px, 5.2vw, 23px);
+  font-weight: 900;
+  color: #8a4a12;
+  line-height: 1.4;
+}
+
+.price-campaign-highlight {
+  color: #c0392b;
+  font-size: 1.15em;
 }
 
 .price-document-links {
@@ -1312,13 +1411,13 @@ body {
   }
 
   .price-document-links {
-    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .price-document-link {
     min-height: 50px;
-    font-size: 15px;
+    padding: 10px 6px;
+    font-size: 14px;
   }
 }
 
@@ -1702,4 +1801,12 @@ body {
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+/* お客様の声はスクロール演出に依存せず常時表示 */
+.js-fade .page > section.voice,
+.js-fade .page > section.voice.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
 }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261010-1">
+  <link rel="stylesheet" href="style.css?v=20261011-final1">
 </head>
 <body>
 
@@ -34,7 +34,6 @@
     </section>
 
     <section class="access" id="access">
-      <h3>アクセス</h3>
 
       <div class="access-grid">
 
@@ -43,28 +42,28 @@
     <img src="img/park-image.jpg" alt="無料駐車場" loading="lazy">
   </div>
 
-  <div>
+  <div id="accessMap">
+    <h3>車両引渡し場所</h3>
     <!-- Googleマップをページ内に埋め込む -->
     <div class="map-embed-wrap">
-      <!-- Googleマップ埋め込み（所在地：静岡県三島市加屋町5-2 デジカーサ101） -->
+      <p class="map-address-overlay">
+        〒411-0907 静岡県駿東郡清水町伏見38-1<br>
+        島田産婦人科医院 第3駐車場
+      </p>
+      <!-- Googleマップ埋め込み（車両引渡し場所：島田産婦人科医院 第3駐車場） -->
       <iframe class="map-embed"
-              src="https://maps.google.com/maps?q=35.1158736,138.9059811&amp;hl=ja&amp;z=17&amp;output=embed"
-              title="株式会社SUN AID 所在地の地図"
+              src="https://maps.google.com/maps?q=35.111148957290496,138.90046732372795&amp;hl=ja&amp;z=17&amp;output=embed"
+              title="車両引渡し場所の地図"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen></iframe>
-      <p class="map-address-overlay">
-        〒411-0845<br>
-        静岡県三島市加屋町5-2<br>
-        デジカーサ101
-      </p>
+      <a class="map-open-link"
+         href="https://www.google.com/maps/dir/?api=1&amp;destination=35.111148957290496,138.90046732372795&amp;travelmode=driving"
+         target="_blank"
+         rel="noopener noreferrer">
+        車両引渡し場所へのルートを見る
+      </a>
     </div>
-    <a class="map-link"
-       href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9"
-       target="_blank"
-       rel="noopener noreferrer">
-      Googleマップで場所を開く
-    </a>
   </div>
 
   <div class="overlay-photo">
@@ -113,15 +112,15 @@
       <div class="eq-list">
         <div class="eq-row">
           <span class="eq-label">どこよりも、安全</span>
-          <span class="eq-items">エアサス<br>強化ブレーキ<br>バックモニター<br>コーナーセンサー<br>ドライブレコーダー</span>
+          <span class="eq-items">エアサス<br>強化ブレーキ<br><span class="nb">大容量外部</span><span class="nb">リチウムイオン</span><span class="nb">バッテリー</span><br><span class="eq-note"><span class="nb">※標準のエボライト搭載電池とは</span><span class="nb">別に追加搭載</span></span><br>バックモニター<br>コーナーセンサー<br>ドライブレコーダー<br>居眠りセンサー<br><span class="eq-note"><span class="nb">※居眠り運転を</span><span class="nb">完全に防げるものでは</span><span class="nb">ありません。</span></span></span>
         </div>
           <div class="eq-row">
           <span class="eq-label">どこよりも、充実</span>
-          <span class="eq-items">食器<br>救急箱<br>キャンプ用品（有料オプションあり）<br>ソーラーパネル<br>寝具（有料オプション）</span>
+          <span class="eq-items">食器<br>救急箱<br>ソーラーパネル<br>寝具（有料）<br>椅子・テーブル（有料）<br>BBQセット（有料）<br><span class="eq-note"><span class="nb">焚き火台・ガスグリル・</span><span class="nb">卓上七輪など</span></span></span>
         </div>
         <div class="eq-row">
           <span class="eq-label">どこよりも、快適</span>
-          <span class="eq-items">TV<br>電子レンジ<br>FFヒーター<br>簡易トイレ<br>家庭用エアコン<br>エンジン停止中でも一晩エアコンが使えます<br><span class="eq-note">※バッテリーが十分に充電されている場合</span></span>
+          <span class="eq-items">TV<br>水道<br>冷蔵庫<br>電子レンジ<br>簡易トイレ<br>FFヒーター<br>サイドオーニング<br>家庭用エアコン<br><span class="nb">エアコンは</span><span class="nb">エンジンオフで</span><span class="nb">一晩使用可能</span><br><span class="eq-note">※バッテリーが十分に充電されている場合</span></span>
         </div>
       </div>
 
@@ -161,12 +160,12 @@
               <td>937.5円／1時間</td>
             </tr>
             <tr>
-              <th scope="row">人気期・平日</th>
+              <th scope="row">シーズン期・平日</th>
               <td class="price-amount">36,000円</td>
               <td>1,500円／1時間</td>
             </tr>
             <tr>
-              <th scope="row">人気期・土日祝</th>
+              <th scope="row">シーズン期・土日祝</th>
               <td class="price-amount">45,000円</td>
               <td>1,875円／1時間</td>
             </tr>
@@ -179,22 +178,18 @@
         <table class="price-table price-table-rules">
           <thead>
             <tr>
-              <th scope="col">計算ルール</th>
+              <th scope="col"></th>
               <th scope="col">内容</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">最低料金</th>
-              <td>24時間以内の利用は、1日料金を適用します。</td>
-            </tr>
-            <tr>
-              <th scope="row">超過料金</th>
-              <td>24時間を超えた部分は、1時間単位で加算します。</td>
+              <th scope="row">基本料金</th>
+              <td>1回最低24時間料金、以後1時間毎に加算（1時間未満は切り上げ）。</td>
             </tr>
             <tr>
               <th scope="row">土日祝</th>
-              <td>該当料金に25％を加算します。人気期料金と重複して適用します。</td>
+              <td>該当料金に25％を加算します。シーズン期料金と重複して適用します。</td>
             </tr>
             <tr>
               <th scope="row">端数処理</th>
@@ -204,7 +199,7 @@
         </table>
       </div>
 
-      <h3 class="price-subtitle">人気期の適用期間</h3>
+      <h3 class="price-subtitle">シーズン期の適用期間</h3>
       <ul class="price-season-list">
         <li>3月15日 - 4月10日</li>
         <li>4月25日 - 5月10日</li>
@@ -215,8 +210,8 @@
       <p class="price-season-note">各期間は開始日・終了日を含みます</p>
 
       <h3 class="price-subtitle">割引・法人契約</h3>
-      <div class="price-info">
-        <p class="price-info-title">先着10組、のこり8組（2026年9月11日時点）：車両料金のみ</p>
+      <div class="price-info price-info--campaign">
+       <p class="price-info-title price-info-campaign">HPリニューアル記念割引中！<br>口コミ投稿で<span class="price-campaign-highlight">最大20%引きに！</span></p>
         <p class="price-info-text">自社アンケートおよびその他の口コミの投稿で、車両利用料金の最大20％相当額を、料金入金確認後に銀行振込で返金します。</p>
       </div>
       <div class="price-info">
@@ -225,8 +220,8 @@
       </div>
 
       <div class="price-document-links">
-        <a class="price-document-link" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">最新の料金表（PDF）を見る</a>
-        <a class="price-document-link" href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（PDF）を見る</a>
+        <a class="price-document-link" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金表詳細</a>
+        <a class="price-document-link" href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">約款</a>
       </div>
       <p class="price-document-note">オプション料金、保険・免責、NOC、保証金などの最新条件は、上記PDFをご確認ください。</p>
 
@@ -295,7 +290,13 @@
         <a class="sns-btn" href="https://www.instagram.com/izucampingcar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <img class="sns-logo" src="img/instagram-glyph-gradient-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
         </a>
-        <!-- LINEは運用開始まで非表示 -->
+        <!-- 公式LINEのURLが未確定のため、外部遷移はせずクリックでボタン直下に案内メッセージのみ表示する -->
+        <div class="sns-line-wrap">
+          <button type="button" class="sns-btn" id="snsLineBtn" aria-label="LINE（準備中）" aria-describedby="snsLineStatus">
+            <img class="sns-logo" src="img/line-brand-icon-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
+          </button>
+          <p class="sns-line-status" id="snsLineStatus" role="status" aria-live="polite"></p>
+        </div>
       </div>
 
       <!-- 問い合わせ先のURL（フォーム/メール等）を href に設定 -->
@@ -317,7 +318,7 @@
         <dd>
           〒411-0845<br>
           静岡県三島市加屋町5-2 デジカーサ101<br>
-          <a class="company-map-link" href="#access">Googleマップ・アクセスはこちら</a>
+          <a class="company-map-link" href="#accessMap">車両引渡し場所を見る</a>
         </dd>
 
         <dt>メール</dt>
@@ -466,6 +467,31 @@
       versionTag.textContent = 'ver. local';
     });
 }
+
+    // LINEボタン：正式URL未設定のため外部遷移はせず、準備中メッセージのみ表示する
+    const snsLineBtn = document.getElementById('snsLineBtn');
+    const snsLineStatus = document.getElementById('snsLineStatus');
+    if (snsLineBtn && snsLineStatus) {
+      snsLineBtn.addEventListener('click', () => {
+        snsLineStatus.textContent = '準備中';
+      });
+    }
+
+    // 「Googleマップ・アクセスはこちら」：外部マップではなくページ内の地図へスムーススクロールする
+    const companyMapLink = document.querySelector('.company-map-link');
+    const accessMapTarget = document.getElementById('accessMap');
+    if (companyMapLink && accessMapTarget) {
+      companyMapLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const bar = document.querySelector('.mobile-reservation-bar');
+        const barHeight = bar ? bar.getBoundingClientRect().height : 0;
+        const visibleHeight = window.innerHeight - barHeight;
+        const rect = accessMapTarget.getBoundingClientRect();
+        const targetCenter = rect.top + window.scrollY + rect.height / 2;
+        const scrollTop = Math.max(targetCenter - visibleHeight / 2, 0);
+        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+      });
+    }
   </script>
 </body>
 </html>
