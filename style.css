@@ -2080,3 +2080,80 @@ body {
   .reserve-day,
   .reserve-selecting-area.is-expanded .reserve-day { min-height: 38px; font-size: 17px; }
 }
+
+/* ===== トップページ専用：スマホ表示の最終調整（予約ページ reserve.html には影響しない） ===== */
+
+/* キャンペーン見出し：2行目「口コミ投稿で最大20%引きに！」を途中で折り返さない */
+.price-campaign-line {
+  white-space: nowrap;
+}
+
+/* 料金表：スマホでは横スクロールをやめ、折り返して全列を画面内に収める */
+@media (max-width: 600px) {
+  .price-table-wrap {
+    overflow-x: visible;
+  }
+
+  .price-table thead th,
+  .price-table tbody th,
+  .price-table td {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    padding: 8px 6px;
+  }
+
+  /* 基本料金表：料金区分と「750円／1時間」を語の途中で折り返さない */
+  .price-table-basic th,
+  .price-table-basic td {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .price-table .price-amount {
+    white-space: nowrap;
+  }
+
+  .price-table-rules td {
+    min-width: 0;
+  }
+
+  /* キャンペーン見出し：最も狭い320px幅でも2行目が1行に収まる大きさにする */
+  .price-info--campaign .price-info-title {
+    font-size: clamp(15px, 4.8vw, 23px);
+  }
+
+  .price-info--campaign {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* スマホ下部固定バー：上段2ボタン＋下段1ボタンの構成のまま高さを圧縮（約128px→約108px） */
+@media (max-width: 768px) {
+  .mobile-reservation-bar {
+    gap: 6px 8px;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-reservation-bar .brown,
+  .mobile-reservation-bar .carstay {
+    min-height: 48px;
+  }
+
+  .mobile-reservation-bar .mobile-contact-btn {
+    min-height: 42px;
+    padding: 4px 12px;
+  }
+
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+  }
+
+  /* バー高さ（約108px）＋余白12px＋iPhoneのホームバー領域を本文末尾に確保。予約ページは対象外 */
+  body:not(.reserve-page) {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+}
