@@ -42,9 +42,14 @@
     <img src="img/park-image.jpg" alt="無料駐車場" loading="lazy">
   </div>
 
-  <div>
+  <div id="accessMap">
     <!-- Googleマップをページ内に埋め込む -->
     <div class="map-embed-wrap">
+      <p class="map-address-overlay">
+        〒411-0845<br>
+        静岡県三島市加屋町5-2<br>
+        デジカーサ101
+      </p>
       <!-- Googleマップ埋め込み（所在地：静岡県三島市加屋町5-2 デジカーサ101） -->
       <iframe class="map-embed"
               src="https://maps.google.com/maps?q=35.1158736,138.9059811&amp;hl=ja&amp;z=17&amp;output=embed"
@@ -52,18 +57,13 @@
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen></iframe>
-      <p class="map-address-overlay">
-        〒411-0845<br>
-        静岡県三島市加屋町5-2<br>
-        デジカーサ101
-      </p>
+      <a class="map-open-link"
+         href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9"
+         target="_blank"
+         rel="noopener noreferrer">
+        Googleマップ
+      </a>
     </div>
-    <a class="map-link"
-       href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9"
-       target="_blank"
-       rel="noopener noreferrer">
-      Googleマップで場所を開く
-    </a>
   </div>
 
   <div class="overlay-photo">
@@ -184,12 +184,8 @@
           </thead>
           <tbody>
             <tr>
-              <th scope="row">最低料金</th>
-              <td>24時間以内の利用は、1日料金を適用します。</td>
-            </tr>
-            <tr>
-              <th scope="row">超過料金</th>
-              <td>24時間を超えた部分は、1時間単位で加算します。</td>
+              <th scope="row">基本料金</th>
+              <td>1回最低24時間料金、以後1時間毎に加算（1時間未満は切り上げ）。</td>
             </tr>
             <tr>
               <th scope="row">土日祝</th>
@@ -214,8 +210,8 @@
       <p class="price-season-note">各期間は開始日・終了日を含みます</p>
 
       <h3 class="price-subtitle">割引・法人契約</h3>
-      <div class="price-info">
-        <p class="price-info-title">現在HPリニューアル記念割引！口コミ投稿で最大20%！</p>
+      <div class="price-info price-info--campaign">
+        <p class="price-info-title">現在HPリニューアル記念割引！口コミ投稿で<span class="price-campaign-highlight">最大20%</span>！</p>
         <p class="price-info-text">自社アンケートおよびその他の口コミの投稿で、車両利用料金の最大20％相当額を、料金入金確認後に銀行振込で返金します。</p>
       </div>
       <div class="price-info">
@@ -294,12 +290,12 @@
         <a class="sns-btn" href="https://www.instagram.com/izucampingcar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <img class="sns-logo" src="img/instagram-glyph-gradient-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
         </a>
-        <!-- 公式LINEのURLが未確定のため、リンクなしの準備中表示とする -->
-        <span class="sns-btn sns-btn--line" aria-label="LINE（準備中）">
+        <!-- 公式LINEのURLが未確定のため、外部遷移はせずクリックで案内メッセージのみ表示する -->
+        <button type="button" class="sns-btn" id="snsLineBtn" aria-label="LINE（準備中）" aria-describedby="snsLineStatus">
           <img class="sns-logo" src="img/line-brand-icon-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
-          <span class="sns-label">準備中</span>
-        </span>
+        </button>
       </div>
+      <p class="sns-line-status" id="snsLineStatus" role="status" aria-live="polite"></p>
 
       <!-- 問い合わせ先のURL（フォーム/メール等）を href に設定 -->
       <a class="contact" href="https://docs.google.com/forms/d/e/1FAIpQLScUqp9nXnwH3MR5jsUKwGLK9qe-9ZI--xJEMxWzOf7LN9ZURQ/viewform" target="_blank" rel="noopener noreferrer">お問い合わせフォームはこちら</a>
@@ -320,7 +316,7 @@
         <dd>
           〒411-0845<br>
           静岡県三島市加屋町5-2 デジカーサ101<br>
-          <a class="company-map-link" href="#access">Googleマップ・アクセスはこちら</a>
+          <a class="company-map-link" href="#accessMap">Googleマップ・アクセスはこちら</a>
         </dd>
 
         <dt>メール</dt>
@@ -469,6 +465,31 @@
       versionTag.textContent = 'ver. local';
     });
 }
+
+    // LINEボタン：正式URL未設定のため外部遷移はせず、準備中メッセージのみ表示する
+    const snsLineBtn = document.getElementById('snsLineBtn');
+    const snsLineStatus = document.getElementById('snsLineStatus');
+    if (snsLineBtn && snsLineStatus) {
+      snsLineBtn.addEventListener('click', () => {
+        snsLineStatus.textContent = 'LINE公式アカウントは準備中です。';
+      });
+    }
+
+    // 「Googleマップ・アクセスはこちら」：外部マップではなくページ内の地図へスムーススクロールする
+    const companyMapLink = document.querySelector('.company-map-link');
+    const accessMapTarget = document.getElementById('accessMap');
+    if (companyMapLink && accessMapTarget) {
+      companyMapLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        const bar = document.querySelector('.mobile-reservation-bar');
+        const barHeight = bar ? bar.getBoundingClientRect().height : 0;
+        const visibleHeight = window.innerHeight - barHeight;
+        const rect = accessMapTarget.getBoundingClientRect();
+        const targetCenter = rect.top + window.scrollY + rect.height / 2;
+        const scrollTop = Math.max(targetCenter - visibleHeight / 2, 0);
+        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+      });
+    }
   </script>
 </body>
 </html>
