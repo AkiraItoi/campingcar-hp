@@ -22,7 +22,7 @@
       font-size: 18px;
     }
     .reserve-page .reserve-bank-transfer ol {
-      margin: 0;
+      margin: 10px 0 0;
       padding-left: 1.5em;
     }
     .reserve-page .reserve-bank-transfer li + li {
@@ -56,7 +56,7 @@
       <div class="reserve-request-notice">
         <h2>予約リクエスト・料金確認</h2>
         <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
-        <p class="reserve-request-flow">直接予約は、当社の入金確認時に確定します。</p>
+        <p class="reserve-request-flow">当社の振込案内メールが届いてからお振込みください。入金確認時に予約枠を確保し、予約が確定します。</p>
       </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
@@ -99,11 +99,12 @@
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
           <section class="reserve-bank-transfer" aria-labelledby="reserveBankTransferTitle">
             <h3 id="reserveBankTransferTitle">直接予約・銀行振込の流れ</h3>
+            <p>当社からの振込案内メールが届くまでは、振り込まないでください。</p>
             <ol>
-              <li><strong>予約申込み：</strong>予約リクエストフォームを送信します。</li>
-              <li><strong>振込案内：</strong>当社からの案内で、振込先とお支払い内容をご確認ください。</li>
-              <li><strong>銀行振込：</strong>案内に従ってお振込みください。</li>
-              <li><strong>予約確定：</strong>当社が入金を確認した時点で予約が確定します。</li>
+              <li><strong>予約申込み：</strong>予約リクエストフォームを送信します。この時点では予約枠は確保されません。</li>
+              <li><strong>振込案内：</strong>当社が申込み内容を確認し、フォームに入力されたメールアドレスへ振込案内をお送りします。</li>
+              <li><strong>銀行振込：</strong>振込案内メールを受け取ってから、案内されたお支払い内容に従ってお振込みください。振込手数料はお客様負担です。</li>
+              <li><strong>予約確定：</strong>当社が入金を確認した時点で初めて予約枠を確保し、予約が確定します。予約確定のメールをお送りします。</li>
             </ol>
             <dl aria-label="直接予約の振込先">
               <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
@@ -113,7 +114,7 @@
               <dt>口座名義</dt><dd>株式会社SUN AID</dd>
               <dt>名義カナ</dt><dd>カ）サンエイド</dd>
             </dl>
-            <p>フォームの送信や振込手続きだけでは、予約は確定しません。</p>
+            <p>予約枠の仮押さえは行いません。フォームの送信や振込手続きだけでは、予約枠の確保・予約確定にはなりません。</p>
           </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
