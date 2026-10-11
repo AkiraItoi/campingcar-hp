@@ -2485,3 +2485,14 @@ body {
 .site-copyright small {
   font-size: 12px;
 }
+
+/* トップページ：車両の初度登録をメインコピーの補足として表示 */
+.hero .hero-registration {
+  margin: 18px 0 0;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.5;
+}
+.hero .hero-registration + h1 {
+  margin-top: 6px;
+}
