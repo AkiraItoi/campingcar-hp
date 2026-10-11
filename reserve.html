@@ -32,6 +32,20 @@
       margin: 10px 0 0;
       font-weight: bold;
     }
+    .reserve-page .reserve-bank-transfer dl {
+      display: grid;
+      grid-template-columns: 5em minmax(0, 1fr);
+      gap: 6px 12px;
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid #d9c6b5;
+    }
+    .reserve-page .reserve-bank-transfer dt {
+      font-weight: bold;
+    }
+    .reserve-page .reserve-bank-transfer dd {
+      margin: 0;
+    }
   </style>
 </head>
 <body class="reserve-page">
@@ -91,6 +105,14 @@
               <li><strong>銀行振込：</strong>案内に従ってお振込みください。</li>
               <li><strong>予約確定：</strong>当社が入金を確認した時点で予約が確定します。</li>
             </ol>
+            <dl aria-label="直接予約の振込先">
+              <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
+              <dt>支店名</dt><dd>法人第二営業部（102）</dd>
+              <dt>預金種目</dt><dd>普通預金</dd>
+              <dt>口座番号</dt><dd>1369217</dd>
+              <dt>口座名義</dt><dd>株式会社SUN AID</dd>
+              <dt>名義カナ</dt><dd>カ）サンエイド</dd>
+            </dl>
             <p>フォームの送信や振込手続きだけでは、予約は確定しません。</p>
           </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
