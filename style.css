@@ -689,7 +689,7 @@ body {
 .eq-items {
   align-self: flex-end;
   margin-top: 4px;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.6;
   text-align: right;
   color: #f7f2ec;
@@ -697,8 +697,8 @@ body {
 
 /* 設備欄の補足注記は本文より少し小さく表示する */
 .eq-note {
-  font-size: 0.75em;
-  opacity: 0.85;
+  font-size: 0.8em;
+  opacity: 0.9;
 }
 
 /* 長い装備名は意味の区切りでのみ折り返す */
