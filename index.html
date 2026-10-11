@@ -318,7 +318,7 @@
         <dd>
           〒411-0845<br>
           静岡県三島市加屋町5-2 デジカーサ101<br>
-          <a class="company-map-link" href="#accessMap">車両引渡し場所を見る</a>
+          <a class="company-map-link" href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9" target="_blank" rel="noopener noreferrer">Googleマップを開く</a>
         </dd>
 
         <dt>メール</dt>
@@ -474,22 +474,6 @@
     if (snsLineBtn && snsLineStatus) {
       snsLineBtn.addEventListener('click', () => {
         snsLineStatus.textContent = '準備中';
-      });
-    }
-
-    // 「車両引渡し場所を見る」：外部マップではなくページ内の地図へスムーススクロールする
-    const companyMapLink = document.querySelector('.company-map-link');
-    const accessMapTarget = document.getElementById('accessMap');
-    if (companyMapLink && accessMapTarget) {
-      companyMapLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        const bar = document.querySelector('.mobile-reservation-bar');
-        const barHeight = bar ? bar.getBoundingClientRect().height : 0;
-        const visibleHeight = window.innerHeight - barHeight;
-        const rect = accessMapTarget.getBoundingClientRect();
-        const targetCenter = rect.top + window.scrollY + rect.height / 2;
-        const scrollTop = Math.max(targetCenter - visibleHeight / 2, 0);
-        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
       });
     }
   </script>
