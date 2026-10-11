@@ -2622,3 +2622,16 @@ body {
 .hero .hero-copy-group .hero-promises { margin: 12px 0 24px; text-align: left; }
 .hero-copy-group .hero-promise-copy { text-align: left; }
 .hero .hero-copy-group .hero-question { justify-content: flex-start; margin: 0; }
+
+/* 登録年月は人物と横並びのまま1行。見出し用の列幅制限から独立させる */
+.hero-copy-group .hero-registration-note {
+  grid-template-columns: minmax(0, max-content) auto;
+}
+.hero-copy-group .hero-registration {
+  white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .hero-copy-group .hero-registration {
+    font-size: min(26px, calc((100vw - 100px) / 10));
+  }
+}
