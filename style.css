@@ -812,10 +812,16 @@ body {
 .free-offer {
   display: block;
   font-size: 48px;
-  font-size: clamp(16px, 6.9cqw, 48px);
+  font-size: clamp(16px, 6.5cqw, 48px);
   letter-spacing: 0;
-  white-space: nowrap;
   line-height: 1.3;
+}
+
+/* 3行目は意味のまとまり（「寝具、」と「キャンプ・BBQ道具も借りたい」）の間でだけ折り返す */
+.free-offer .nb,
+.free-sub .nb {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 /* 「是非ご相談ください」は「明日から」と同じ大きさ */
@@ -827,11 +833,14 @@ body {
   text-align: center;
 }
 
+/* キャッチコピー下の説明文：太字・中央揃え・割引キャンペーン「最大20%引きに！」と同じ赤（.price-campaign-highlight の #c0392b） */
 .free-sub {
   display: block;
-  margin-top: 6px;
-  font-size: 19.8px;
-  font-weight: normal;
+  margin-top: 8px;
+  font-size: clamp(20px, 5.6vw, 30px);
+  font-weight: bold;
+  text-align: center;
+  color: #c0392b;
 }
 
 /* SNSボタン：PC・スマートフォンとも3ボタン横一列・均等幅 */
@@ -1065,13 +1074,10 @@ body {
   /* 13文字の見出しが320px幅でも1行に収まる大きさ（以前の「明日から」より長い文言のため） */
   .free-offer {
     /* 画面幅から左右の余白（約58px）を引いた幅に14文字が収まる大きさ */
-    font-size: clamp(16px, calc((100vw - 58px) / 14.4), 48px);
-    font-size: clamp(16px, 6.9cqw, 48px);
+    font-size: clamp(16px, calc((100vw - 58px) / 15.4), 48px);
+    font-size: clamp(16px, 6.5cqw, 48px);
   }
 
-  .free-sub {
-    font-size: 18.5px;
-  }
 
   /* スマホではCTAを1行で読みやすく表示する */
   .free-content .free-cta {
