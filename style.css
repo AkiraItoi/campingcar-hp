@@ -2491,10 +2491,34 @@ body {
 
 /* トップページ：車両の初度登録を赤字・太字で強調 */
 .hero .hero-registration {
-  margin: 18px 0 0;
+  margin: 0;
   color: #c0392b;
   font-weight: 900;
 }
-.hero .hero-registration + h1 {
+.hero .hero-registration-note + h1 {
   margin-top: 6px;
+}
+
+/* 登録年月に添える、いたずら風の驚きイラスト */
+.hero-registration-note {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 18px auto 0;
+}
+.hero-registration-illustration {
+  position: absolute;
+  right: -100px;
+  top: -40px;
+  width: 112px;
+  height: auto;
+  transform: rotate(8deg);
+}
+@media (max-width: 600px) {
+  .hero-registration-illustration {
+    position: static;
+    display: block;
+    width: 90px;
+    margin: -36px 0 4px auto;
+  }
 }
