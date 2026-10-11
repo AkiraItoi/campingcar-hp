@@ -435,6 +435,12 @@ body {
   object-fit: cover;
 }
 
+/* 案内イラスト（16:9・白背景）は正方形に切り取らず全体を表示する。画像内の文字・デザインは変更しない */
+.access-grid img.access-illust {
+  object-fit: contain;
+  background: #fff;
+}
+
 .map-embed-wrap {
   position: relative;
   overflow: hidden;
