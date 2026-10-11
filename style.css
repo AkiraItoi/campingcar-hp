@@ -435,12 +435,6 @@ body {
   object-fit: cover;
 }
 
-/* 案内イラスト（16:9・白背景）は正方形に切り取らず全体を表示する。画像内の文字・デザインは変更しない */
-.access-grid img.access-illust {
-  object-fit: contain;
-  background: #fff;
-}
-
 .map-embed-wrap {
   position: relative;
   overflow: hidden;
@@ -810,9 +804,17 @@ body {
   line-height: 1.8;
 }
 
+/* 見出しの幅（h2）を基準に、14文字の「」付き見出しが1行ずつ収まる大きさにする（cqw非対応の古いブラウザは従来のpx/vw指定） */
+.free h2 {
+  container-type: inline-size;
+}
+
 .free-offer {
   display: block;
   font-size: 48px;
+  font-size: clamp(16px, 6.9cqw, 48px);
+  letter-spacing: 0;
+  white-space: nowrap;
   line-height: 1.3;
 }
 
@@ -1060,8 +1062,11 @@ body {
     font-size: 34px;
   }
 
+  /* 13文字の見出しが320px幅でも1行に収まる大きさ（以前の「明日から」より長い文言のため） */
   .free-offer {
-    font-size: clamp(32px, 11vw, 48px);
+    /* 画面幅から左右の余白（約58px）を引いた幅に14文字が収まる大きさ */
+    font-size: clamp(16px, calc((100vw - 58px) / 14.4), 48px);
+    font-size: clamp(16px, 6.9cqw, 48px);
   }
 
   .free-sub {
