@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
-  <link rel="stylesheet" href="style.css?v=20261011-1">
+  <link rel="stylesheet" href="style.css?v=20261011-2">
 </head>
 <body class="reserve-page">
 
@@ -431,9 +431,26 @@
         return (date.getMonth() + 1) + '/' + date.getDate() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
       }
 
+      // 選択後は「ラベル／日時」の2行表示。未選択時は従来の1行
+      function setStepLabel(el, label, date, emptyText) {
+        el.textContent = '';
+        if (!date) {
+          el.textContent = emptyText;
+          return;
+        }
+        const l = document.createElement('span');
+        l.className = 'reserve-step-label';
+        l.textContent = label;
+        const v = document.createElement('span');
+        v.className = 'reserve-step-value';
+        v.textContent = formatShort(date);
+        el.appendChild(l);
+        el.appendChild(v);
+      }
+
       function renderStepHeader() {
-        stepStartEl.textContent = startDate ? '① 開始日時：' + formatShort(startDate) : '① 開始日時を選択';
-        stepEndEl.textContent = endDate ? '② 返却日時：' + formatShort(endDate) : '② 返却日時を選択';
+        setStepLabel(stepStartEl, '① 開始日時', startDate, '① 開始日時を選択');
+        setStepLabel(stepEndEl, '② 返却日時', endDate, '② 返却日時を選択');
         stepStartEl.setAttribute('aria-label', startDate ? '開始日時 ' + formatSelected(startDate) + '（押すと再編集）' : '開始日時を選択');
         stepEndEl.setAttribute('aria-label', endDate ? '返却日時 ' + formatSelected(endDate) + '（押すと再編集）' : '返却日時を選択');
         stepStartEl.classList.toggle('is-active', step === 'start');

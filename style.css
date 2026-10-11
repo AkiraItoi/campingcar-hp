@@ -2080,3 +2080,11 @@ body {
   .reserve-day,
   .reserve-selecting-area.is-expanded .reserve-day { min-height: 38px; font-size: 17px; }
 }
+
+/* 日時ボタン：選択後は「ラベル／日時」の2行。左右等幅で、日時を省略・縮小しない */
+.reserve-step { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: normal; }
+.reserve-step-label, .reserve-step-value { display: block; white-space: nowrap; }
+.reserve-step-value { margin-top: 2px; font-size: 1.1em; }
+@media (max-width: 768px) {
+  .reserve-step, .reserve-step.is-done { font-size: 15px; padding: 7px 2px; }
+}
