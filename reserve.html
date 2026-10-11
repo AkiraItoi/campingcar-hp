@@ -630,7 +630,29 @@
         return '予約リクエストに進む前に、料金の計算結果を表示してください。';
       }
 
+      function hasValidRentalDates() {
+        return startDate instanceof Date && !isNaN(startDate.getTime()) &&
+          endDate instanceof Date && !isNaN(endDate.getTime()) &&
+          endDate > startDate;
+      }
+
+      function guideToDateInput() {
+        view = 'selecting';
+        step = startDate instanceof Date && !isNaN(startDate.getTime()) ? 'end' : 'start';
+        renderStepHeader();
+        renderSummary();
+        renderCalendars();
+        updateView();
+        showDateError('先に貸出開始日時と返却日時を入力してください');
+        summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
       reserveRequestBtn.addEventListener('click', (event) => {
+        if (!hasValidRentalDates()) {
+          event.preventDefault();
+          guideToDateInput();
+          return;
+        }
         if (!reservationSummaryText) {
           event.preventDefault();
           resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
