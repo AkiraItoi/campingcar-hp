@@ -113,7 +113,8 @@ body {
   font-size: 1.5em;
 }
 
-.hero h1 {
+.hero h1,
+.hero .hero-registration {
   margin: 18px 0 24px;
   font-size: 30px;
   font-weight: bold;
@@ -986,7 +987,8 @@ body {
     font-size: 34px;
   }
 
-  .hero h1 {
+  .hero h1,
+.hero .hero-registration {
     font-size: 26px;
     line-height: 1.4;
     text-wrap: balance;
@@ -1105,7 +1107,8 @@ body {
     font-size: 56px;
   }
 
-  .hero h1 {
+  .hero h1,
+.hero .hero-registration {
     font-size: 42px;
   }
 
@@ -2484,4 +2487,166 @@ body {
 }
 .site-copyright small {
   font-size: 12px;
+}
+
+/* トップページ：車両の初度登録を赤字・太字で強調 */
+.hero .hero-registration {
+  margin: 0;
+  color: #c0392b;
+  font-weight: 900;
+}
+.hero .hero-registration-note + h1 {
+  margin-top: 6px;
+}
+
+/* 登録年月の右横に添える驚きイラスト。スマホでも横配置を維持 */
+.hero-registration-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: 18px auto 0;
+}
+.hero-registration-note .hero-registration {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+.hero-registration-illustration {
+  order: 1;
+  position: static;
+  display: block;
+  width: clamp(48px, 12vw, 80px);
+  height: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  transform: none;
+}
+
+/* トップページ：元の駐車場画像の運転席を切り出して使う吹き出しリンク（元画像1280x720） */
+.hero .hero-promises { margin-top: 12px; }
+.hero-promise {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+.hero-promise-copy { display: block; min-width: 0; }
+.hero-promise + .hero-promise { margin-top: 14px; }
+.hero .hero-question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  color: #5a351f;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.hero-driver {
+  --driver-size: 64px;
+  position: relative;
+  display: block;
+  width: var(--driver-size);
+  height: calc(var(--driver-size) * 120 / 108);
+  flex: 0 0 var(--driver-size);
+  overflow: hidden;
+  clip-path: polygon(33% 4%, 47% 3%, 66% 7%, 79% 17%, 91% 32%, 91% 49%, 81% 58%, 80% 66%, 93% 69%, 99% 98%, 44% 98%, 15% 92%, 3% 85%, 6% 75%, 19% 72%, 31% 69%, 37% 63%, 30% 53%, 29% 37%, 28% 19%);
+}
+.hero-driver img {
+  position: absolute;
+  display: block;
+  width: calc(var(--driver-size) * 1280 / 108);
+  max-width: none;
+  height: auto;
+  left: calc(var(--driver-size) * -438 / 108);
+  top: calc(var(--driver-size) * -390 / 108);
+}
+.hero-question-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 2px solid #8b6c50;
+  border-radius: 18px;
+  background: #fff;
+}
+.hero-question-bubble::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #8b6c50;
+  border-bottom: 2px solid #8b6c50;
+  background: #fff;
+  transform: rotate(45deg);
+}
+.hero-question:hover .hero-question-bubble { background: #fff0db; }
+.hero-question:hover .hero-question-bubble::before { background: #fff0db; }
+.hero-question:focus-visible { outline: 3px solid #c0392b; outline-offset: 4px; border-radius: 18px; }
+#safety-equipment, #private-campsite { scroll-margin-top: 12px; }
+@media (max-width: 600px) {
+  .hero-driver { --driver-size: clamp(32px, 8vw, 48px); }
+  .hero .hero-question { gap: 6px; font-size: 14px; }
+  .hero-question-bubble { min-width: 0; padding: 6px 8px; overflow-wrap: anywhere; }
+}
+
+/* 将来のプライベートキャンプ場案内への仮の移動先 */
+.private-campsite { padding: 16px 12px; border: 1px solid #d8c6b4; border-radius: 12px; text-align: center; background: #fffaf4; }
+.private-campsite p { margin: 0; font-size: 18px; font-weight: bold; line-height: 1.6; }
+
+/* 紹介コピー：3行の文字と人物に同じ列配置を適用 */
+.hero .hero-copy-group {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  text-align: left;
+  container-type: inline-size;
+}
+.hero-copy-group .hero-registration-note,
+.hero-copy-group .hero-promise {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  justify-content: stretch;
+  width: 100%;
+  gap: 10px;
+}
+.hero-copy-group .hero-registration-note { margin: 18px 0 0; }
+.hero .hero-copy-group .hero-registration {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+  font-size: min(42px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
+}
+.hero-copy-group .hero-registration-illustration {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  width: 80px;
+  height: 76px;
+  object-fit: contain;
+  margin: 0;
+}
+.hero .hero-copy-group .hero-promises { margin: 12px 0 24px; text-align: left; }
+.hero-copy-group .hero-promise-copy { text-align: left; }
+.hero .hero-copy-group .hero-question { justify-content: flex-start; margin: 0; }
+.hero-copy-group .hero-driver { --driver-size: 64px; }
+@media (max-width: 768px) {
+  .hero .hero-copy-group .hero-registration {
+    font-size: min(26px, calc((100vw - 56px) * 1.4 / 2.4 / 10));
+    font-size: min(26px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
+  }
+  .hero-copy-group .hero-registration-illustration { width: 64px; height: 60px; }
+  .hero-copy-group .hero-driver { --driver-size: 48px; }
 }
