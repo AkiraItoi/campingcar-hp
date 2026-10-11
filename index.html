@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261011-full-contact">
+  <link rel="stylesheet" href="style.css?v=20261011-map-spacing">
 </head>
 <body>
 
@@ -318,7 +318,7 @@
         <dd>
           〒411-0845<br>
           静岡県三島市加屋町5-2 デジカーサ101<br>
-          <a class="company-map-link" href="#accessMap">Googleマップ・アクセスはこちら</a>
+          <a class="company-map-link" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%9D%99%E5%B2%A1%E7%9C%8C%E4%B8%89%E5%B3%B6%E5%B8%82%E5%8A%A0%E5%B1%8B%E7%94%BA5-2%20%E3%83%87%E3%82%B8%E3%82%AB%E3%83%BC%E3%82%B5101" target="_blank" rel="noopener noreferrer">Googleマップ・アクセスはこちら</a>
         </dd>
 
         <dt>メール</dt>
@@ -476,24 +476,7 @@
 
     // LINEボタン：正式URL未設定のため外部遷移はせず、準備中メッセージのみ表示する
     const snsLineBtn = document.getElementById('snsLineBtn');
-    const snsLineStatus = document.getElementById('snsLineStatus');
-    if (snsLineBtn && snsLineStatus) {
-      snsLineBtn.addEventListener('click', () => {
-        snsLineStatus.textContent = '準備中';
-      });
-    }
-
-    // 「Googleマップ・アクセスはこちら」：外部マップではなくページ内の地図へスムーススクロールする
-    const companyMapLink = document.querySelector('.company-map-link');
-    const accessMapTarget = document.getElementById('accessMap');
-    if (companyMapLink && accessMapTarget) {
-      companyMapLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        const bar = document.querySelector('.mobile-reservation-bar');
-        const barHeight = bar ? bar.getBoundingClientRect().height : 0;
-        const visibleHeight = window.innerHeight - barHeight;
-        const rect = accessMapTarget.getBoundingClientRect();
-        const targetCenter = rect.top + window.scrollY + rect.height / 2;
+    cotargetCenter = rect.top + window.scrollY + rect.height / 2;
         const scrollTop = Math.max(targetCenter - visibleHeight / 2, 0);
         window.scrollTo({ top: scrollTop, behavior: 'smooth' });
       });
