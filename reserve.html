@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
-  <link rel="stylesheet" href="style.css?v=20261011-4">
+  <link rel="stylesheet" href="style.css?v=20261011-5">
 </head>
 <body class="reserve-page">
 
@@ -64,7 +64,7 @@
       </div>
     </section>
 
-    <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">ホームページに戻る</a>
+    <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
   </main>
 
@@ -247,6 +247,8 @@
       function buildMonthCalendar(year, month) {
         const wrap = document.createElement('div');
         wrap.className = 'reserve-calendar';
+        // 背景色は表示位置ではなく月番号で決める（偶数月=薄茶色／奇数月=白）。スライド中も月に付いて動く
+        wrap.classList.add((month + 1) % 2 === 0 ? 'reserve-calendar-even' : 'reserve-calendar-odd');
 
         const title = document.createElement('p');
         title.className = 'reserve-calendar-title';
