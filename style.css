@@ -2486,11 +2486,12 @@ body {
   font-size: 12px;
 }
 
-/* トップページ：車両の初度登録をメインコピーの補足として表示 */
+/* トップページ：車両の初度登録を赤字・太字で強調 */
 .hero .hero-registration {
   margin: 18px 0 0;
-  font-size: 16px;
-  font-weight: normal;
+  color: #c0392b;
+  font-size: 20px;
+  font-weight: bold;
   line-height: 1.5;
 }
 .hero .hero-registration + h1 {
