@@ -369,12 +369,12 @@ body {
 
   .mobile-reservation-bar .brown {
     background: linear-gradient(180deg, #7a5a43 0%, #4e3326 100%);
-    border: 1px solid #9a7c65;
+    border: 1px solid #8e725e;
   }
 
   .mobile-reservation-bar .carstay {
-    background: linear-gradient(180deg, #7cb2e6 0%, #4d8fcc 100%);
-    border: 1px solid #a9cdee;
+    background: linear-gradient(180deg, #6ea4dc 0%, #3e79b8 100%);
+    border: 1px solid #8fb8e3;
   }
 
   .mobile-reservation-bar .carstay-icon {
@@ -652,7 +652,7 @@ body {
 }
 
 .equipment {
-  background: #6f5645;
+  background: #ad927c;
   padding: 14px 16px;
   text-align: center;
 }
