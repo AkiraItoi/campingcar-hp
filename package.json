@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "google-auth-library": "^11.2.0"
+  },
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/admin.test.js"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}
