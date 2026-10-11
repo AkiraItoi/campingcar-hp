@@ -2441,3 +2441,47 @@ body {
   font-size: clamp(10px, calc((100vw - 60px) / 23.7), 22px);
   font-size: min(22px, calc((100cqw + 20px) / 23.7));
 }
+
+/* オプション予約：ページ公開まで準備中として表示 */
+.reserve-page .reserve-options-btn:disabled {
+  background: #eee;
+  border-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* PC予約カレンダー：2か月を欄幅いっぱいに広げ、日付を読みやすくする */
+@media (min-width: 769px) {
+  .reserve-page .reserve-calendars {
+    max-width: none;
+  }
+  .reserve-page .reserve-calendars-track > .reserve-calendar {
+    padding: 14px;
+  }
+  .reserve-page .reserve-calendar-title,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-calendar-title {
+    font-size: 20px;
+  }
+  .reserve-page .reserve-weekday,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-weekday {
+    font-size: 15px;
+  }
+  .reserve-page .reserve-day,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-day {
+    min-height: 44px;
+    padding: 8px 0;
+    font-size: 18px;
+  }
+}
+
+/* 両ページ共通の著作権表記 */
+.site-copyright {
+  padding: 12px 0 0;
+  color: #7b6858;
+  text-align: center;
+  line-height: 1.5;
+}
+.site-copyright small {
+  font-size: 12px;
+}
