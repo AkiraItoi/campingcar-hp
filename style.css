@@ -113,7 +113,8 @@ body {
   font-size: 1.5em;
 }
 
-.hero h1 {
+.hero h1,
+.hero .hero-registration {
   margin: 18px 0 24px;
   font-size: 30px;
   font-weight: bold;
@@ -986,7 +987,8 @@ body {
     font-size: 34px;
   }
 
-  .hero h1 {
+  .hero h1,
+.hero .hero-registration {
     font-size: 26px;
     line-height: 1.4;
     text-wrap: balance;
@@ -1105,7 +1107,8 @@ body {
     font-size: 56px;
   }
 
-  .hero h1 {
+  .hero h1,
+.hero .hero-registration {
     font-size: 42px;
   }
 
@@ -2490,9 +2493,7 @@ body {
 .hero .hero-registration {
   margin: 18px 0 0;
   color: #c0392b;
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 1.5;
+  font-weight: 900;
 }
 .hero .hero-registration + h1 {
   margin-top: 6px;
