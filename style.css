@@ -2372,3 +2372,23 @@ body {
 .reserve-page .reserve-weekday {
   min-width: 0;
 }
+
+/* スマホは矢印の見た目の大きさを保ち、左右の余白を抑えて日付の幅を確保する */
+@media (max-width: 768px) {
+  .reserve-page .reserve-calendar-body {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .reserve-page .reserve-calendar-nav .reserve-nav-btn {
+    flex-basis: 24px;
+    width: 24px;
+    min-width: 24px;
+  }
+  .reserve-page .reserve-calendar-grid {
+    column-gap: 2px;
+  }
+  .reserve-page .reserve-day {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+}
