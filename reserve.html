@@ -74,7 +74,7 @@
     }
     .reserve-page .reserve-utility-nav {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 4px;
       margin-top: 6px;
     }
@@ -90,7 +90,7 @@
       margin: 0;
       padding: 4px 2px;
       font-family: inherit;
-      font-size: clamp(12px, 3.6vw, 14px);
+      font-size: 14px;
       font-weight: bold;
       line-height: 1.25;
       text-align: center;
@@ -170,7 +170,6 @@
       <a class="reserve-details-toggle" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金設定<br>詳細</a>
       <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプション予約<br><small>（準備中）</small></button>
       <button type="button" class="reserve-details-toggle" id="reserveBankToggle" aria-controls="bank-transfer" aria-expanded="false">振込先</button>
-      <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページ<br>へ戻る</a>
     </nav>
 
     <details class="reserve-bank-transfer" id="bank-transfer">
@@ -188,6 +187,8 @@
       </dl>
       <p id="reserveBankCopyStatus" role="status" aria-live="polite" aria-atomic="true"></p>
     </details>
+
+    <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
     <footer class="site-copyright"><small>© 2026 株式会社SUN AID</small></footer>
 
