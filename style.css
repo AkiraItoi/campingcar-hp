@@ -615,9 +615,9 @@ body {
 }
 
 .slide-in {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 1.2s ease, transform 1.2s ease;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* セクションが画面に入ったら順番に表示 */
@@ -1817,4 +1817,12 @@ body {
     width: 22px; height: 22px; flex-basis: 22px;
   }
   body { padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* お客様の声はスクロール演出に依存せず常時表示 */
+.js-fade .page > section.voice,
+.js-fade .page > section.voice.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
 }
