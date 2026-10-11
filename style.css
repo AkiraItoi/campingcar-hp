@@ -1703,3 +1703,34 @@ body {
 .reserve-action-buttons[hidden] {
   display: none;
 }
+
+/* 予約バー：その他お問い合わせへの入口を追加。既存ボタンの配色は変更しない */
+.mobile-reservation-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mobile-reservation-bar .mobile-contact-btn {
+  grid-column: 3;
+  grid-row: 2;
+  min-width: 0;
+  background: #f9f4ee;
+  border: 2px solid #a98d75;
+  color: #5a351f;
+  font-size: clamp(15px, 1.5vw, 19px);
+  gap: 8px;
+  text-align: center;
+}
+.mobile-reservation-bar .mobile-contact-icon {
+  width: 28px; height: 28px; flex: 0 0 28px;
+}
+@media (max-width: 768px) {
+  .mobile-reservation-bar { grid-template-columns: 0.85fr 1.15fr; }
+  .mobile-reservation-bar .mobile-contact-btn {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 44px;
+    font-size: 17px;
+    padding: 8px 12px;
+  }
+  .mobile-reservation-bar .mobile-contact-icon {
+    width: 22px; height: 22px; flex-basis: 22px;
+  }
+  body { padding-bottom: calc(200px + env(safe-area-inset-bottom, 0px)); }
+}
