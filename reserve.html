@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
-  <link rel="stylesheet" href="style.css?v=20261010-2">
+  <link rel="stylesheet" href="style.css?v=20261011-1">
 </head>
 <body class="reserve-page">
 
@@ -13,28 +13,26 @@
     <section class="price" id="reservePriceSection">
       <div class="reserve-request-notice">
         <h2>予約リクエスト・料金確認</h2>
-        <p class="reserve-request-alert"><strong>この時点では、まだ予約は確定しません。</strong></p>
-        <p class="reserve-request-flow">予約日時を入力した後、予約フォームからリクエストを送信し、当社との日程確認が完了した後に、予約が確定します。</p>
+        <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
+        <p class="reserve-request-flow">下記入力後、当社からの返答の後に確定になります</p>
       </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
-        <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
-        <button type="button" class="reserve-step" id="reserveStepEnd">② 返却日時を選択</button>
+        <button type="button" class="reserve-step is-active" id="reserveStepStart" aria-label="開始日時を選択">① 開始日時を選択</button>
+        <button type="button" class="reserve-step" id="reserveStepEnd" aria-label="返却日時を選択">② 返却日時を選択</button>
       </div>
-
-      <div class="reserve-selected-summary" id="reserveSelectedSummary"></div>
-
-      <button type="button" class="reserve-edit-btn" id="reserveEditBtn" hidden>日時を変更する</button>
 
       <div class="reserve-selecting-area" id="reserveSelectingArea">
         <p class="reserve-date-error" id="reserveDateError" hidden></p>
 
+        <div class="reserve-calendar-body">
         <div class="reserve-calendar-nav">
           <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn">前の2ヶ月</button>
           <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn">次の2ヶ月</button>
         </div>
 
         <div class="reserve-calendars" id="reserveCalendars"></div>
+        </div>
       </div>
 
       <div class="reserve-time-popup" id="reserveTimePopup" hidden>
@@ -202,13 +200,11 @@
       const stepHeaderEl = document.getElementById('reserveStepHeader');
       const stepStartEl = document.getElementById('reserveStepStart');
       const stepEndEl = document.getElementById('reserveStepEnd');
-      const editBtn = document.getElementById('reserveEditBtn');
       const selectingAreaEl = document.getElementById('reserveSelectingArea');
       const dateErrorEl = document.getElementById('reserveDateError');
       const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
       const nextMonthBtn = document.getElementById('reserveNextMonthBtn');
       const calendarsEl = document.getElementById('reserveCalendars');
-      const summaryEl = document.getElementById('reserveSelectedSummary');
       const popupEl = document.getElementById('reserveTimePopup');
       const popupTitleEl = document.getElementById('reserveTimePopupTitle');
       const timeGridEl = document.getElementById('reserveTimeGrid');
@@ -427,11 +423,19 @@
         } else {
           view = 'selecting';
         }
-        renderSummary();
         updateView();
       }
 
+      // 表示用：ボタンに出す短い日時（例 11/10 10:00）
+      function formatShort(date) {
+        return (date.getMonth() + 1) + '/' + date.getDate() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+      }
+
       function renderStepHeader() {
+        stepStartEl.textContent = startDate ? '① 開始日時：' + formatShort(startDate) : '① 開始日時を選択';
+        stepEndEl.textContent = endDate ? '② 返却日時：' + formatShort(endDate) : '② 返却日時を選択';
+        stepStartEl.setAttribute('aria-label', startDate ? '開始日時 ' + formatSelected(startDate) + '（押すと再編集）' : '開始日時を選択');
+        stepEndEl.setAttribute('aria-label', endDate ? '返却日時 ' + formatSelected(endDate) + '（押すと再編集）' : '返却日時を選択');
         stepStartEl.classList.toggle('is-active', step === 'start');
         stepStartEl.classList.toggle('is-done', !!startDate);
         stepEndEl.classList.toggle('is-active', step === 'end');
@@ -440,13 +444,16 @@
 
       function focusCalendar() {
         selectingAreaEl.classList.add('is-expanded');
-        calendarsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 自動スクロールは、操作ボタンが画面外にあるときだけ1回（往復しない・即時）
+        const top = stepHeaderEl.getBoundingClientRect().top;
+        if (top < 0 || top > window.innerHeight * 0.5) {
+          window.scrollTo({ top: window.pageYOffset + top - 8, behavior: 'auto' });
+        }
       }
 
       function setStep(newStep, shouldFocusCalendar) {
         step = newStep;
         renderStepHeader();
-        renderSummary();
         renderCalendars();
         if (shouldFocusCalendar) {
           focusCalendar();
@@ -461,10 +468,8 @@
           selectingAreaEl.classList.remove('is-expanded');
         }
 
-        stepHeaderEl.hidden = complete;
         selectingAreaEl.hidden = complete;
 
-        editBtn.hidden = !complete;
         priceHeadlineEl.hidden = !complete;
         actionButtonsEl.hidden = !complete;
       }
@@ -477,24 +482,9 @@
         editingMode = true;
         clearDateError();
         renderStepHeader();
-        renderSummary();
         renderCalendars();
         updateView();
         focusCalendar();
-      }
-
-      function renderSummary() {
-        const startText = startDate ? formatSelected(startDate) : '未選択';
-        const endText = endDate ? formatSelected(endDate) : '未選択';
-        summaryEl.innerHTML =
-          '<button type="button" class="reserve-summary-card' + (startDate ? ' is-filled' : '') + (view === 'selecting' && step === 'start' ? ' is-editing' : '') + '" data-step="start">' +
-            '<p class="reserve-summary-card-label">① 利用開始</p>' +
-            '<p class="reserve-summary-card-value">' + startText + '</p>' +
-          '</button>' +
-          '<button type="button" class="reserve-summary-card' + (endDate ? ' is-filled' : '') + (view === 'selecting' && step === 'end' ? ' is-editing' : '') + '" data-step="end">' +
-            '<p class="reserve-summary-card-label">② 返却</p>' +
-            '<p class="reserve-summary-card-value">' + endText + '</p>' +
-          '</button>';
       }
 
       // 表示用：時間数を「○日○時間」の形式に変換する（1日＝24時間）。料金計算には使用しない。
@@ -655,11 +645,10 @@
         view = 'selecting';
         step = startDate instanceof Date && !isNaN(startDate.getTime()) ? 'end' : 'start';
         renderStepHeader();
-        renderSummary();
         renderCalendars();
         updateView();
         showDateError('先に貸出開始日時と返却日時を入力してください');
-        summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        stepHeaderEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
       reserveRequestBtn.addEventListener('click', (event) => {
@@ -712,17 +701,16 @@
       });
 
       popupCloseEl.addEventListener('click', closeTimePopup);
-      stepStartEl.addEventListener('click', () => setStep('start', true));
-      stepEndEl.addEventListener('click', () => setStep('end', true));
-      editBtn.addEventListener('click', () => startEditingStep('start'));
-      // 完了表示の日時カード自体を押しても、対応するstepを選択中にして再編集へ入れるようにする
-      summaryEl.addEventListener('click', (event) => {
-        const card = event.target.closest('.reserve-summary-card');
-        if (!card) {
-          return;
+      // 2ボタンが選択操作と選択結果表示を兼ねる。両方選択済みなら再編集、それ以外は通常の切り替え
+      function onStepButton(target) {
+        if (hasValidRentalDates()) {
+          startEditingStep(target);
+        } else {
+          setStep(target, true);
         }
-        startEditingStep(card.dataset.step === 'end' ? 'end' : 'start');
-      });
+      }
+      stepStartEl.addEventListener('click', () => onStepButton('start'));
+      stepEndEl.addEventListener('click', () => onStepButton('end'));
       prevMonthBtn.addEventListener('click', () => {
         calendarOffset = Math.max(0, calendarOffset - visibleMonthCount());
         renderCalendars();
@@ -741,7 +729,6 @@
 
       renderTimeGrid();
       renderStepHeader();
-      renderSummary();
       renderCalendars();
       updateView();
     })();
