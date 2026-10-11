@@ -72,6 +72,38 @@
       outline: 2px solid #8b4f2f;
       outline-offset: 2px;
     }
+    .reserve-page .reserve-utility-nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .reserve-page .reserve-utility-nav > * {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      margin: 0;
+      padding: 4px 2px;
+      font-family: inherit;
+      font-size: clamp(12px, 3.6vw, 14px);
+      font-weight: bold;
+      line-height: 1.25;
+      text-align: center;
+      overflow-wrap: normal;
+    }
+    .reserve-page .reserve-utility-nav small { font-size: 11px; }
+    .reserve-page .reserve-utility-nav > :focus-visible {
+      outline: 2px solid #8b4f2f;
+      outline-offset: 2px;
+    }
+    .reserve-page .reserve-bank-transfer:not([open]) { display: none; }
+    .reserve-page .reserve-bank-transfer summary { display: none; }
+    .reserve-page .reserve-bank-transfer { margin-top: 6px; }
   </style>
 </head>
 <body class="reserve-page">
@@ -113,11 +145,6 @@
 
       <div class="reserve-price-headline" id="reservePriceHeadline" hidden></div>
 
-      <a class="reserve-details-toggle" href="docs/rental-price-list.pdf"
-         target="_blank" rel="noopener noreferrer">料金設定詳細</a>
-
-      <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプション予約（準備中）</button>
-
       <div class="reserve-details-panel" id="reserveDetailsPanel" hidden aria-hidden="true">
         <div class="reserve-result" id="reserveResult"></div>
       </div>
@@ -139,6 +166,13 @@
       </div>
     </section>
 
+    <nav class="reserve-utility-nav" aria-label="予約ページの関連メニュー">
+      <a class="reserve-details-toggle" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金設定<br>詳細</a>
+      <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプション予約<br><small>（準備中）</small></button>
+      <button type="button" class="reserve-details-toggle" id="reserveBankToggle" aria-controls="bank-transfer" aria-expanded="false">振込先</button>
+      <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページ<br>へ戻る</a>
+    </nav>
+
     <details class="reserve-bank-transfer" id="bank-transfer">
       <summary>振込先（振込案内メール受領後）</summary>
       <p><strong>振込案内メールが届いてから、記載の金額をお振込みください。</strong><br>振込手数料はお客様負担です。</p>
@@ -154,8 +188,6 @@
       </dl>
       <p id="reserveBankCopyStatus" role="status" aria-live="polite" aria-atomic="true"></p>
     </details>
-
-    <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
     <footer class="site-copyright"><small>© 2026 株式会社SUN AID</small></footer>
 
@@ -964,10 +996,21 @@
     (() => {
       const bankDetails = document.getElementById('bank-transfer');
       const copyStatus = document.getElementById('reserveBankCopyStatus');
+      const bankToggle = document.getElementById('reserveBankToggle');
+
+      function syncBankToggle() {
+        bankToggle.setAttribute('aria-expanded', String(bankDetails.open));
+      }
+      bankToggle.addEventListener('click', () => {
+        bankDetails.open = !bankDetails.open;
+        syncBankToggle();
+      });
+      bankDetails.addEventListener('toggle', syncBankToggle);
 
       function openBankTransferFromLink() {
         if (window.location.hash !== '#bank-transfer') return;
         bankDetails.open = true;
+        syncBankToggle();
         bankDetails.scrollIntoView({ block: 'start' });
       }
       window.addEventListener('hashchange', openBankTransferFromLink);
