@@ -2450,3 +2450,27 @@ body {
   cursor: not-allowed;
   opacity: 1;
 }
+
+/* PC予約カレンダー：2か月を欄幅いっぱいに広げ、日付を読みやすくする */
+@media (min-width: 769px) {
+  .reserve-page .reserve-calendars {
+    max-width: none;
+  }
+  .reserve-page .reserve-calendars-track > .reserve-calendar {
+    padding: 14px;
+  }
+  .reserve-page .reserve-calendar-title,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-calendar-title {
+    font-size: 20px;
+  }
+  .reserve-page .reserve-weekday,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-weekday {
+    font-size: 15px;
+  }
+  .reserve-page .reserve-day,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-day {
+    min-height: 44px;
+    padding: 8px 0;
+    font-size: 18px;
+  }
+}
