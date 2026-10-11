@@ -290,12 +290,14 @@
         <a class="sns-btn" href="https://www.instagram.com/izucampingcar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <img class="sns-logo" src="img/instagram-glyph-gradient-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
         </a>
-        <!-- 公式LINEのURLが未確定のため、外部遷移はせずクリックで案内メッセージのみ表示する -->
-        <button type="button" class="sns-btn" id="snsLineBtn" aria-label="LINE（準備中）" aria-describedby="snsLineStatus">
-          <img class="sns-logo" src="img/line-brand-icon-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
-        </button>
+        <!-- 公式LINEのURLが未確定のため、外部遷移はせずクリックでボタン直下に案内メッセージのみ表示する -->
+        <div class="sns-line-wrap">
+          <button type="button" class="sns-btn" id="snsLineBtn" aria-label="LINE（準備中）" aria-describedby="snsLineStatus">
+            <img class="sns-logo" src="img/line-brand-icon-official.png" alt="" width="40" height="40" loading="lazy" decoding="async">
+          </button>
+          <p class="sns-line-status" id="snsLineStatus" role="status" aria-live="polite"></p>
+        </div>
       </div>
-      <p class="sns-line-status" id="snsLineStatus" role="status" aria-live="polite"></p>
 
       <!-- 問い合わせ先のURL（フォーム/メール等）を href に設定 -->
       <a class="contact" href="https://docs.google.com/forms/d/e/1FAIpQLScUqp9nXnwH3MR5jsUKwGLK9qe-9ZI--xJEMxWzOf7LN9ZURQ/viewform" target="_blank" rel="noopener noreferrer">お問い合わせフォームはこちら</a>
@@ -471,7 +473,7 @@
     const snsLineStatus = document.getElementById('snsLineStatus');
     if (snsLineBtn && snsLineStatus) {
       snsLineBtn.addEventListener('click', () => {
-        snsLineStatus.textContent = 'LINE公式アカウントは準備中です。';
+        snsLineStatus.textContent = '準備中';
       });
     }
 

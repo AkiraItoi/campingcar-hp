@@ -794,13 +794,23 @@ body {
   object-fit: contain;
 }
 
-/* LINEボタン押下時の案内メッセージ（準備中） */
+/* LINEボタンの真下に配置するためのラップ（他のSNSボタンの配置には影響しない） */
+.sns-line-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LINEボタン押下時の案内メッセージ（準備中）。押す前は非表示、押した後は表示を維持する */
 .sns-line-status {
   margin: 6px 0 0;
-  font-size: 13px;
-  color: #6b5b4d;
+  font-size: 19px;
+  font-weight: bold;
+  color: #c0392b;
   text-align: center;
-  min-height: 1.4em;
+}
+
+.sns-line-status:empty {
+  display: none;
 }
 
 .contact {
