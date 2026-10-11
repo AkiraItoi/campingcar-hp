@@ -127,6 +127,64 @@
     .reserve-page .reserve-bank-transfer:not([open]) { display: none; }
     .reserve-page .reserve-bank-transfer summary { display: none; }
     .reserve-page .reserve-bank-transfer { margin-top: 6px; }
+    /* 日時選択後だけをコンパクトにする。選択中のカレンダーは変更しない。 */
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-request-notice h2,
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-request-flow {
+      display: none;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-request-notice {
+      padding: 6px;
+      margin-bottom: 6px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-request-alert {
+      margin: 0;
+      padding: 5px 4px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-price-headline:not([hidden]) {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 12px;
+      margin: 4px 0 6px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-price-headline p {
+      margin: 0;
+      line-height: 1.2;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-price-headline .reserve-result-price {
+      font-size: 34px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-action-buttons {
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-options-btn {
+      margin: 0;
+      min-height: 40px;
+      padding: 6px 10px;
+    }
+    .reserve-page .reserve-booking-flow {
+      padding: 8px 10px;
+      line-height: 1.4;
+    }
+    .reserve-page .reserve-booking-flow p { margin: 0; }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-confirm-box {
+      padding: 8px 10px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-confirm-check {
+      gap: 8px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) .reserve-confirm-error {
+      margin-top: 4px;
+    }
+    .reserve-page:has(#reserveSelectingArea[hidden]) #reserveRequestBtn {
+      min-height: 44px;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      line-height: 1.3;
+    }
   </style>
 </head>
 <body class="reserve-page">
@@ -175,9 +233,7 @@
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
         <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプションを選ぶ（準備中）</button>
         <section class="reserve-booking-flow" aria-labelledby="reserveBankTransferTitle">
-          <h3 id="reserveBankTransferTitle">ご予約の流れ</h3>
-          <p>お申込み → 振込案内メール → お振込み → 入金確認・予約確定メール</p>
-          <p>振込案内メールを受け取ってからお振込みください。予約枠は当社の入金確認後に確保します（仮押さえなし）。振込手数料はお客様負担です。</p>
+          <p id="reserveBankTransferTitle">お申込み後、振込案内メールをお送りします。案内後にお振込みください。入金確認で予約枠を確保・予約確定します（仮押さえなし）。振込手数料はお客様負担です。</p>
         </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
