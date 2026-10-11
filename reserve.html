@@ -74,7 +74,7 @@
     }
     .reserve-page .reserve-utility-nav {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 4px;
       margin-top: 6px;
     }
@@ -96,7 +96,16 @@
       text-align: center;
       overflow-wrap: normal;
     }
-    .reserve-page .reserve-utility-nav small { font-size: 11px; }
+    .reserve-page .reserve-utility-nav #reserveBankToggle {
+      width: auto;
+      padding: 4px 10px;
+      background: transparent;
+      border-color: transparent;
+      color: #715d4d;
+      font-weight: normal;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
     .reserve-page .reserve-utility-nav > :focus-visible {
       outline: 2px solid #8b4f2f;
       outline-offset: 2px;
@@ -150,6 +159,7 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
+        <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプションを選ぶ（準備中）</button>
         <section class="reserve-booking-flow" aria-labelledby="reserveBankTransferTitle">
           <h3 id="reserveBankTransferTitle">ご予約の流れ</h3>
           <p>お申込み → 振込案内メール → お振込み → 入金確認・予約確定メール</p>
@@ -168,7 +178,6 @@
 
     <nav class="reserve-utility-nav" aria-label="予約ページの関連メニュー">
       <a class="reserve-details-toggle" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金設定<br>詳細</a>
-      <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプション予約<br><small>（準備中）</small></button>
       <button type="button" class="reserve-details-toggle" id="reserveBankToggle" aria-controls="bank-transfer" aria-expanded="false">振込先</button>
     </nav>
 
