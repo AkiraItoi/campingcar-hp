@@ -353,7 +353,39 @@ body {
   /* 左右のスマホ用ラベルを17〜18px程度に統一（左は「公式予約」に短縮して両立させる） */
   .mobile-reservation-bar .btn-label-compact,
   .mobile-reservation-bar .carstay-label-compact {
-    font-size: clamp(17px, 4.6vw, 18px);
+    font-size: clamp(16px, 4.8vw, 18px);
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
+  }
+
+  /* 予約ボタン2つ：控えめなグラデーション・細い縁取り・軽い立体感で質感を揃える */
+  .mobile-reservation-bar .brown,
+  .mobile-reservation-bar .carstay {
+    min-height: 54px;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 2px 5px rgba(0, 0, 0, 0.16);
+  }
+
+  .mobile-reservation-bar .brown {
+    background: linear-gradient(180deg, #7a5a43 0%, #4e3326 100%);
+    border: 1px solid #9a7c65;
+  }
+
+  .mobile-reservation-bar .carstay {
+    background: linear-gradient(180deg, #7cb2e6 0%, #4d8fcc 100%);
+    border: 1px solid #a9cdee;
+  }
+
+  .mobile-reservation-bar .carstay-icon {
+    color: #fff;
+  }
+
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: clamp(26px, 8.5vw, 32px);
+    height: clamp(26px, 8.5vw, 32px);
+    flex: 0 0 clamp(26px, 8.5vw, 32px);
   }
 }
 
@@ -620,7 +652,7 @@ body {
 }
 
 .equipment {
-  background: #b89072;
+  background: #6f5645;
   padding: 14px 16px;
   text-align: center;
 }
