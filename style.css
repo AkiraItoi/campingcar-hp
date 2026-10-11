@@ -2474,3 +2474,14 @@ body {
     font-size: 18px;
   }
 }
+
+/* 両ページ共通の著作権表記 */
+.site-copyright {
+  padding: 12px 0 0;
+  color: #7b6858;
+  text-align: center;
+  line-height: 1.5;
+}
+.site-copyright small {
+  font-size: 12px;
+}
