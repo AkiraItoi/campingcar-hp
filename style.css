@@ -2525,7 +2525,13 @@ body {
 
 /* トップページ：元の駐車場画像の運転席を切り出して使う吹き出しリンク（元画像1280x720） */
 .hero .hero-promises { margin-top: 12px; }
-.hero-promise, .hero-promise-copy { display: block; }
+.hero-promise {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+.hero-promise-copy { display: block; min-width: 0; }
 .hero-promise + .hero-promise { margin-top: 14px; }
 .hero .hero-question {
   display: flex;
@@ -2534,7 +2540,7 @@ body {
   gap: 10px;
   width: fit-content;
   max-width: 100%;
-  margin: 4px auto 0;
+  margin: 0 auto;
   color: #5a351f;
   font-size: 16px;
   font-weight: bold;
@@ -2586,9 +2592,13 @@ body {
 .hero-question:hover .hero-question-bubble { background: #fff0db; }
 .hero-question:hover .hero-question-bubble::before { background: #fff0db; }
 .hero-question:focus-visible { outline: 3px solid #c0392b; outline-offset: 4px; border-radius: 18px; }
-#safety-equipment, #special-memories { scroll-margin-top: 12px; }
+#safety-equipment, #private-campsite { scroll-margin-top: 12px; }
 @media (max-width: 600px) {
-  .hero-driver { --driver-size: 52px; }
-  .hero .hero-question { gap: 8px; font-size: 15px; }
-  .hero-question-bubble { padding: 8px 10px; }
+  .hero-driver { --driver-size: clamp(32px, 8vw, 48px); }
+  .hero .hero-question { gap: 6px; font-size: 14px; }
+  .hero-question-bubble { min-width: 0; padding: 6px 8px; overflow-wrap: anywhere; }
 }
+
+/* 将来のプライベートキャンプ場案内への仮の移動先 */
+.private-campsite { padding: 16px 12px; border: 1px solid #d8c6b4; border-radius: 12px; text-align: center; background: #fffaf4; }
+.private-campsite p { margin: 0; font-size: 18px; font-weight: bold; line-height: 1.6; }
