@@ -755,6 +755,7 @@ body {
 .sns-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 10px;
   margin: 18px 0;
 }
