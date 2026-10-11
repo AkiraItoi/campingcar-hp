@@ -6,6 +6,7 @@
   <title>予約リクエスト・料金確認｜SUN AID</title>
   <link rel="stylesheet" href="style.css?v=20261011-copyright">
   <style>
+    .reserve-page .reserve-booking-flow,
     .reserve-page .reserve-bank-transfer {
       padding: 14px;
       border: 1px solid #d9c6b5;
@@ -17,34 +18,49 @@
       text-align: left;
       overflow-wrap: anywhere;
     }
-    .reserve-page .reserve-bank-transfer h3 {
+    .reserve-page .reserve-booking-flow h3 {
       margin: 0 0 8px;
       font-size: 18px;
     }
-    .reserve-page .reserve-bank-transfer ol {
-      margin: 10px 0 0;
-      padding-left: 1.5em;
+    .reserve-page .reserve-booking-flow p { margin: 8px 0 0; }
+    .reserve-page .reserve-bank-transfer {
+      margin-top: 16px;
+      scroll-margin-top: 16px;
     }
-    .reserve-page .reserve-bank-transfer li + li {
-      margin-top: 6px;
-    }
-    .reserve-page .reserve-bank-transfer p {
-      margin: 10px 0 0;
+    .reserve-page .reserve-bank-transfer summary {
+      cursor: pointer;
       font-weight: bold;
+      min-height: 44px;
+      align-content: center;
     }
+    .reserve-page .reserve-bank-transfer p { margin: 8px 0; }
     .reserve-page .reserve-bank-transfer dl {
       display: grid;
       grid-template-columns: 5em minmax(0, 1fr);
+      gap: 8px 12px;
+      margin: 12px 0 0;
+    }
+    .reserve-page .reserve-bank-transfer dt { font-weight: bold; }
+    .reserve-page .reserve-bank-transfer dd { margin: 0; }
+    .reserve-page .reserve-bank-value {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 6px 12px;
-      margin: 14px 0 0;
-      padding-top: 12px;
-      border-top: 1px solid #d9c6b5;
     }
-    .reserve-page .reserve-bank-transfer dt {
-      font-weight: bold;
+    .reserve-page .reserve-bank-copy {
+      min-height: 44px;
+      padding: 6px 12px;
+      border: 1px solid #a98d75;
+      border-radius: 6px;
+      background: #fff;
+      color: #3a2113;
+      font: inherit;
+      cursor: pointer;
     }
-    .reserve-page .reserve-bank-transfer dd {
-      margin: 0;
+    .reserve-page .reserve-bank-copy:focus-visible {
+      outline: 2px solid #8b4f2f;
+      outline-offset: 2px;
     }
   </style>
 </head>
@@ -56,7 +72,7 @@
       <div class="reserve-request-notice">
         <h2>予約リクエスト・料金確認</h2>
         <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
-        <p class="reserve-request-flow">当社の振込案内メールが届いてからお振込みください。入金確認時に予約枠を確保し、予約が確定します。</p>
+        <p class="reserve-request-flow">お申込み後、振込案内メールをお送りします。当社の入金確認で予約確定となります。</p>
       </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
@@ -97,25 +113,11 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-          <section class="reserve-bank-transfer" aria-labelledby="reserveBankTransferTitle">
-            <h3 id="reserveBankTransferTitle">直接予約・銀行振込の流れ</h3>
-            <p>当社からの振込案内メールが届くまでは、振り込まないでください。</p>
-            <ol>
-              <li><strong>予約申込み：</strong>予約リクエストフォームを送信します。この時点では予約枠は確保されません。</li>
-              <li><strong>振込案内：</strong>当社が申込み内容を確認し、フォームに入力されたメールアドレスへ振込案内をお送りします。</li>
-              <li><strong>銀行振込：</strong>振込案内メールを受け取ってから、案内されたお支払い内容に従ってお振込みください。振込手数料はお客様負担です。</li>
-              <li><strong>予約確定：</strong>当社が入金を確認した時点で初めて予約枠を確保し、予約が確定します。予約確定のメールをお送りします。</li>
-            </ol>
-            <dl aria-label="直接予約の振込先">
-              <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
-              <dt>支店名</dt><dd>法人第二営業部（102）</dd>
-              <dt>預金種目</dt><dd>普通預金</dd>
-              <dt>口座番号</dt><dd>1369217</dd>
-              <dt>口座名義</dt><dd>株式会社SUN AID</dd>
-              <dt>名義カナ</dt><dd>カ）サンエイド</dd>
-            </dl>
-            <p>予約枠の仮押さえは行いません。フォームの送信や振込手続きだけでは、予約枠の確保・予約確定にはなりません。</p>
-          </section>
+        <section class="reserve-booking-flow" aria-labelledby="reserveBankTransferTitle">
+          <h3 id="reserveBankTransferTitle">ご予約の流れ</h3>
+          <p>お申込み → 振込案内メール → お振込み → 入金確認・予約確定メール</p>
+          <p>振込案内メールを受け取ってからお振込みください。予約枠は当社の入金確認後に確保します（仮押さえなし）。振込手数料はお客様負担です。</p>
+        </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
@@ -126,6 +128,23 @@
         <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
       </div>
     </section>
+
+    <details class="reserve-bank-transfer" id="bank-transfer">
+      <summary>振込先を確認する（振込案内メールを受け取った方）</summary>
+      <p><strong>当社の振込案内メールに記載された金額をお振込みください。</strong></p>
+      <p>振込案内メールが届くまでは、お振込みをお待ちください。振込手数料はお客様負担です。</p>
+      <dl aria-label="直接予約の振込先">
+        <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
+        <dt>支店名</dt><dd>法人第二営業部（102）</dd>
+        <dt>預金種目</dt><dd>普通預金</dd>
+        <dt>口座番号</dt>
+        <dd class="reserve-bank-value"><span id="reserveBankAccountNumber">1369217</span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankAccountNumber" aria-label="口座番号をコピー">コピー</button></dd>
+        <dt>口座名義</dt><dd>株式会社SUN AID</dd>
+        <dt>名義カナ</dt>
+        <dd class="reserve-bank-value"><span id="reserveBankAccountKana">カ）サンエイド</span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankAccountKana" aria-label="口座名義カナをコピー">コピー</button></dd>
+      </dl>
+      <p id="reserveBankCopyStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    </details>
 
     <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
@@ -931,5 +950,40 @@
     })();
   </script>
 
+  <script>
+    // 振込先の固定リンクとコピー操作。予約・料金計算のスクリプトから独立させる。
+    (() => {
+      const bankDetails = document.getElementById('bank-transfer');
+      const copyStatus = document.getElementById('reserveBankCopyStatus');
+
+      function openBankTransferFromLink() {
+        if (window.location.hash !== '#bank-transfer') return;
+        bankDetails.open = true;
+        bankDetails.scrollIntoView({ block: 'start' });
+      }
+      window.addEventListener('hashchange', openBankTransferFromLink);
+      openBankTransferFromLink();
+
+      bankDetails.querySelectorAll('[data-bank-copy]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const value = document.getElementById(button.dataset.bankCopy);
+          try {
+            if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+            await navigator.clipboard.writeText(value.textContent.trim());
+            copyStatus.textContent = button.getAttribute('aria-label').replace('をコピー', '') + 'をコピーしました。';
+          } catch {
+            const selection = window.getSelection();
+            if (selection) {
+              const range = document.createRange();
+              range.selectNodeContents(value);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+            copyStatus.textContent = 'コピーできませんでした。表示されている文字を選択してコピーしてください。';
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
