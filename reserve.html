@@ -74,9 +74,10 @@
     }
     .reserve-page .reserve-utility-nav {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 4px;
-      margin-top: 6px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      max-width: 440px;
+      margin: 6px auto 0;
     }
     .reserve-page .reserve-utility-nav > * {
       display: flex;
@@ -97,14 +98,27 @@
       overflow-wrap: normal;
     }
     .reserve-page .reserve-utility-nav #reserveBankToggle {
-      width: auto;
-      padding: 4px 10px;
-      background: transparent;
-      border-color: transparent;
-      color: #715d4d;
-      font-weight: normal;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      width: 100%;
+      flex-direction: row;
+      gap: 8px;
+      padding: 6px 10px;
+      background: #fffaf4;
+      border: 1px solid #d9c6b5;
+      border-radius: 8px;
+      color: #5a351f;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .reserve-page #reserveBankToggle::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-2px) rotate(45deg);
+    }
+    .reserve-page #reserveBankToggle[aria-expanded="true"]::after {
+      transform: translateY(2px) rotate(225deg);
     }
     .reserve-page .reserve-utility-nav > :focus-visible {
       outline: 2px solid #8b4f2f;
@@ -177,8 +191,8 @@
     </section>
 
     <nav class="reserve-utility-nav" aria-label="予約ページの関連メニュー">
-      <a class="reserve-details-toggle" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金設定<br>詳細</a>
-      <button type="button" class="reserve-details-toggle" id="reserveBankToggle" aria-controls="bank-transfer" aria-expanded="false">振込先</button>
+      <a class="reserve-details-toggle" href="docs/rental-price-list.pdf" target="_blank" rel="noopener noreferrer">料金設定詳細</a>
+      <button type="button" class="reserve-details-toggle" id="reserveBankToggle" aria-controls="bank-transfer" aria-expanded="false">振込先を確認</button>
     </nav>
 
     <details class="reserve-bank-transfer" id="bank-transfer">
