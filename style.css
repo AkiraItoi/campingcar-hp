@@ -369,6 +369,12 @@ body {
   font-weight: normal;
 }
 
+/* 車両引渡し場所の見出し：狭い列でも折り返さないよう小さめにする */
+#accessMap h3 {
+  font-size: 18px;
+  white-space: nowrap;
+}
+
 .access-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
