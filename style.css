@@ -701,6 +701,11 @@ body {
   opacity: 0.85;
 }
 
+/* 長い装備名は意味の区切りでのみ折り返す */
+.eq-items .nb {
+  white-space: nowrap;
+}
+
 .equipment-photos {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -966,12 +971,14 @@ body {
   }
 
   .eq-items {
-    font-size: clamp(16px, 5vw, 22px);
-    line-height: 1.5;
+    font-size: clamp(17px, 4.8vw, 20px);
+    line-height: 1.6;
+    line-break: strict;
+    overflow-wrap: break-word;
   }
 
   .eq-note {
-    font-size: 0.7em;
+    font-size: 0.75em;
   }
 
   .eq-label {
