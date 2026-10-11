@@ -228,7 +228,13 @@
       let endDate = null;
       let pendingDateKey = null;
       let calendarOffset = 0;
-      const CALENDAR_MAX_OFFSET = 4;
+      // 表示する月数：スマホ幅（768px以下）は1か月、それより広い画面は従来どおり2か月。
+      // 選択済みの日時・予約状態とは独立しており、表示月数を切り替えても失われない。
+      const CALENDAR_TOTAL_MONTHS = 6;
+      const mobileCalendarQuery = window.matchMedia('(max-width: 768px)');
+      function visibleMonthCount() {
+        return mobileCalendarQuery.matches ? 1 : 2;
+      }
       let reservationSummaryText = null;
       let view = 'selecting'; // 'selecting' | 'complete'
       // true: 完了表示からカード／「日時を変更する」で再編集中。押した側の日時だけを変更し、
@@ -318,12 +324,21 @@
       function renderCalendars() {
         calendarsEl.innerHTML = '';
         const base = new Date();
-        for (let i = 0; i < 2; i++) {
+        const count = visibleMonthCount();
+        const maxOffset = CALENDAR_TOTAL_MONTHS - count;
+        // 2か月表示では2か月単位の位置に揃え、表示範囲を超える位置は範囲内に収める
+        if (count === 2 && calendarOffset % 2 !== 0) {
+          calendarOffset -= 1;
+        }
+        calendarOffset = Math.max(0, Math.min(maxOffset, calendarOffset));
+        for (let i = 0; i < count; i++) {
           const target = new Date(base.getFullYear(), base.getMonth() + calendarOffset + i, 1);
           calendarsEl.appendChild(buildMonthCalendar(target.getFullYear(), target.getMonth()));
         }
+        prevMonthBtn.textContent = count === 1 ? '◀ 前の月' : '前の2ヶ月';
+        nextMonthBtn.textContent = count === 1 ? '次の月 ▶' : '次の2ヶ月';
         prevMonthBtn.disabled = calendarOffset <= 0;
-        nextMonthBtn.disabled = calendarOffset >= CALENDAR_MAX_OFFSET;
+        nextMonthBtn.disabled = calendarOffset >= maxOffset;
       }
 
       function renderTimeGrid() {
@@ -709,13 +724,20 @@
         startEditingStep(card.dataset.step === 'end' ? 'end' : 'start');
       });
       prevMonthBtn.addEventListener('click', () => {
-        calendarOffset = Math.max(0, calendarOffset - 2);
+        calendarOffset = Math.max(0, calendarOffset - visibleMonthCount());
         renderCalendars();
       });
       nextMonthBtn.addEventListener('click', () => {
-        calendarOffset = Math.min(CALENDAR_MAX_OFFSET, calendarOffset + 2);
+        calendarOffset = Math.min(CALENDAR_TOTAL_MONTHS - visibleMonthCount(), calendarOffset + visibleMonthCount());
         renderCalendars();
       });
+
+      // 画面幅の変化（回転・リサイズ）で表示月数が変わったら、カレンダーだけ描き直す
+      if (mobileCalendarQuery.addEventListener) {
+        mobileCalendarQuery.addEventListener('change', renderCalendars);
+      } else if (mobileCalendarQuery.addListener) {
+        mobileCalendarQuery.addListener(renderCalendars);
+      }
 
       renderTimeGrid();
       renderStepHeader();

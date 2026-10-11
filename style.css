@@ -1997,3 +1997,49 @@ body {
   }
   body { padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* 予約カレンダー：スマホ（768px以下）は1か月表示。幅いっぱいに使い、日付を押しやすい大きさにする */
+@media (max-width: 768px) {
+  .reserve-calendars {
+    flex-wrap: nowrap;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+
+  .reserve-calendars .reserve-calendar,
+  .reserve-selecting-area.is-expanded .reserve-calendar {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 10px 8px;
+  }
+
+  .reserve-calendar-title,
+  .reserve-selecting-area.is-expanded .reserve-calendar-title {
+    margin-bottom: 10px;
+    font-size: 17px;
+  }
+
+  .reserve-weekday,
+  .reserve-selecting-area.is-expanded .reserve-weekday {
+    font-size: 12px;
+  }
+
+  .reserve-calendar-grid {
+    gap: 3px;
+  }
+
+  .reserve-day,
+  .reserve-selecting-area.is-expanded .reserve-day {
+    min-height: 40px;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  .reserve-nav-btn {
+    min-height: 44px;
+    font-size: 15px;
+  }
+}
