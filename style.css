@@ -2441,3 +2441,12 @@ body {
   font-size: clamp(10px, calc((100vw - 60px) / 23.7), 22px);
   font-size: min(22px, calc((100cqw + 20px) / 23.7));
 }
+
+/* オプション予約：ページ公開まで準備中として表示 */
+.reserve-page .reserve-options-btn:disabled {
+  background: #eee;
+  border-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 1;
+}
