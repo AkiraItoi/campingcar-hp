@@ -798,6 +798,69 @@
       prevMonthBtn.addEventListener('click', () => slideMonths(-1));
       nextMonthBtn.addEventListener('click', () => slideMonths(1));
 
+
+      // カレンダー内の横スワイプだけを月送りに使う。縦スクロールと通常のタップは維持する。
+      let calendarTouch = null;
+      let suppressCalendarClickUntil = 0;
+      const SWIPE_DIRECTION_THRESHOLD = 10;
+      const SWIPE_MONTH_THRESHOLD = 40;
+
+      calendarsEl.addEventListener('touchstart', (event) => {
+        if (event.touches.length !== 1) {
+          calendarTouch = null;
+          return;
+        }
+        const touch = event.touches[0];
+        calendarTouch = { id: touch.identifier, x: touch.clientX, y: touch.clientY, dx: 0, axis: null };
+      }, { passive: true });
+
+      calendarsEl.addEventListener('touchmove', (event) => {
+        if (!calendarTouch || event.touches.length !== 1) {
+          calendarTouch = null;
+          return;
+        }
+        const touch = event.touches[0];
+        if (touch.identifier !== calendarTouch.id) return;
+        const dx = touch.clientX - calendarTouch.x;
+        const dy = touch.clientY - calendarTouch.y;
+        if (!calendarTouch.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_DIRECTION_THRESHOLD) {
+          calendarTouch.axis = Math.abs(dx) > Math.abs(dy) * 1.25 ? 'horizontal' : 'vertical';
+        }
+        calendarTouch.dx = dx;
+        if (calendarTouch.axis === 'horizontal' && event.cancelable) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      calendarsEl.addEventListener('touchend', (event) => {
+        const gesture = calendarTouch;
+        calendarTouch = null;
+        if (!gesture || gesture.axis !== 'horizontal') return;
+        const touch = Array.from(event.changedTouches).find((item) => item.identifier === gesture.id);
+        if (!touch) return;
+        if (event.cancelable) event.preventDefault();
+        // スワイプ直後に合成されるクリックで、日付の時間選択が開くのを防ぐ。
+        suppressCalendarClickUntil = Date.now() + 500;
+        const dx = touch.clientX - gesture.x;
+        if (Math.abs(dx) >= SWIPE_MONTH_THRESHOLD) {
+          slideMonths(dx < 0 ? 1 : -1);
+        }
+      }, { passive: false });
+
+      calendarsEl.addEventListener('touchcancel', () => {
+        if (calendarTouch && calendarTouch.axis === 'horizontal') {
+          suppressCalendarClickUntil = Date.now() + 500;
+        }
+        calendarTouch = null;
+      }, { passive: true });
+
+      calendarsEl.addEventListener('click', (event) => {
+        if (event.detail !== 0 && Date.now() < suppressCalendarClickUntil) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+
       renderTimeGrid();
       renderStepHeader();
       renderCalendars();
