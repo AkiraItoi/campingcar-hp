@@ -443,6 +443,8 @@ body {
   font-weight: bold;
   line-height: 1.4;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  /* 長い文言でも右下のGoogleマップ標準操作に重ならないよう幅を制限 */
+  max-width: calc(100% - 64px);
 }
 
 .map-open-link:focus-visible {
