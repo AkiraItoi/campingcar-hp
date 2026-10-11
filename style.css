@@ -1816,5 +1816,5 @@ body {
   .mobile-reservation-bar .mobile-contact-icon {
     width: 22px; height: 22px; flex-basis: 22px;
   }
-  body { padding-bottom: calc(200px + env(safe-area-inset-bottom, 0px)); }
+  body { padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
 }
