@@ -2129,12 +2129,21 @@ body {
   border-radius: 10px;
   background: transparent;
 }
-.reserve-page .reserve-calendars-track { display: flex; gap: 10px; will-change: transform; }
+.reserve-page .reserve-calendars-track {
+  --reserve-month-gap: 10px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - var(--reserve-month-gap)) / 2);
+  gap: var(--reserve-month-gap);
+  width: 100%;
+  min-width: 0;
+  will-change: transform;
+}
 .reserve-page .reserve-calendars.is-sliding { pointer-events: none; }
 .reserve-page .reserve-calendars-track > .reserve-calendar,
 .reserve-page .reserve-selecting-area.is-expanded .reserve-calendars-track > .reserve-calendar {
-  flex: 0 0 calc((100% - 10px) / 2);
-  width: calc((100% - 10px) / 2);
+  width: 100%;
+  box-sizing: border-box;
   min-width: 0;
   max-width: none;
   border: none;
@@ -2170,12 +2179,11 @@ body {
   .reserve-page .reserve-step { min-height: 67px; }
 }
 @media (max-width: 768px) {
-  .reserve-page .reserve-calendars-track { gap: 4px; }
+  .reserve-page .reserve-calendars-track { --reserve-month-gap: 4px; }
   .reserve-page .reserve-calendars { max-width: none; }
   .reserve-page .reserve-calendars-track > .reserve-calendar,
   .reserve-page .reserve-selecting-area.is-expanded .reserve-calendars-track > .reserve-calendar {
-    flex-basis: calc((100% - 4px) / 2);
-    width: calc((100% - 4px) / 2);
+    width: 100%;
   }
 }
 
@@ -2347,4 +2355,14 @@ body {
   fill: currentColor;
   stroke: none;
   pointer-events: none;
+}
+
+/* 各月と日付列の幅を均等に固定し、文字の最小幅で片方だけ広がるのを防ぐ */
+.reserve-page .reserve-calendar-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-width: 0;
+}
+.reserve-page .reserve-day,
+.reserve-page .reserve-weekday {
+  min-width: 0;
 }
