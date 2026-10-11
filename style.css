@@ -2522,3 +2522,73 @@ body {
     margin: -36px 0 4px auto;
   }
 }
+
+/* トップページ：元の駐車場画像の運転席を切り出して使う吹き出しリンク（元画像1280x720） */
+.hero .hero-promises { margin-top: 12px; }
+.hero-promise, .hero-promise-copy { display: block; }
+.hero-promise + .hero-promise { margin-top: 14px; }
+.hero .hero-question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 4px auto 0;
+  color: #5a351f;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.hero-driver {
+  --driver-size: 64px;
+  position: relative;
+  display: block;
+  width: var(--driver-size);
+  height: calc(var(--driver-size) * 120 / 108);
+  flex: 0 0 var(--driver-size);
+  overflow: hidden;
+  clip-path: polygon(33% 4%, 47% 3%, 66% 7%, 79% 17%, 91% 32%, 91% 49%, 81% 58%, 80% 66%, 93% 69%, 99% 98%, 44% 98%, 15% 92%, 3% 85%, 6% 75%, 19% 72%, 31% 69%, 37% 63%, 30% 53%, 29% 37%, 28% 19%);
+}
+.hero-driver img {
+  position: absolute;
+  display: block;
+  width: calc(var(--driver-size) * 1280 / 108);
+  max-width: none;
+  height: auto;
+  left: calc(var(--driver-size) * -438 / 108);
+  top: calc(var(--driver-size) * -390 / 108);
+}
+.hero-question-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 2px solid #8b6c50;
+  border-radius: 18px;
+  background: #fff;
+}
+.hero-question-bubble::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #8b6c50;
+  border-bottom: 2px solid #8b6c50;
+  background: #fff;
+  transform: rotate(45deg);
+}
+.hero-question:hover .hero-question-bubble { background: #fff0db; }
+.hero-question:hover .hero-question-bubble::before { background: #fff0db; }
+.hero-question:focus-visible { outline: 3px solid #c0392b; outline-offset: 4px; border-radius: 18px; }
+#safety-equipment, #special-memories { scroll-margin-top: 12px; }
+@media (max-width: 600px) {
+  .hero-driver { --driver-size: 52px; }
+  .hero .hero-question { gap: 8px; font-size: 15px; }
+  .hero-question-bubble { padding: 8px 10px; }
+}
