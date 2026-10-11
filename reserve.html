@@ -27,8 +27,8 @@
 
         <div class="reserve-calendar-body">
         <div class="reserve-calendar-nav">
-          <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn">前の月</button>
-          <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn">次の月</button>
+          <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn" aria-label="前の月" title="前の月"><span aria-hidden="true">◀</span></button>
+          <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn" aria-label="次の月" title="次の月"><span aria-hidden="true">▶</span></button>
         </div>
 
         <div class="reserve-calendars" id="reserveCalendars"></div>
@@ -335,8 +335,6 @@
 
       function updateNavButtons() {
         const maxOffset = CALENDAR_TOTAL_MONTHS - visibleMonthCount();
-        prevMonthBtn.textContent = '前の月';
-        nextMonthBtn.textContent = '次の月';
         prevMonthBtn.disabled = calendarOffset <= 0;
         nextMonthBtn.disabled = calendarOffset >= maxOffset;
       }
