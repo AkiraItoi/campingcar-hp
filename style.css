@@ -2392,8 +2392,16 @@ body {
   .reserve-page .reserve-calendar-grid {
     column-gap: 2px;
   }
-  .reserve-page .reserve-day {
+  /* 2桁の日付も隣のセルと区別できるよう、数字の幅と文字サイズをそろえる */
+  .reserve-page .reserve-day,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-day {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: clamp(11px, 3.2vw, 13px);
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.03em;
+    letter-spacing: normal;
+    line-height: 1.2;
+    white-space: nowrap;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
