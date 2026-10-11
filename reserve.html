@@ -5,6 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
   <link rel="stylesheet" href="style.css?v=20261011-copyright">
+  <style>
+    .reserve-page .reserve-booking-flow,
+    .reserve-page .reserve-bank-transfer {
+      padding: 14px;
+      border: 1px solid #d9c6b5;
+      border-radius: 10px;
+      background: #fffaf4;
+      color: #3a2113;
+      font-size: 16px;
+      line-height: 1.65;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+    .reserve-page .reserve-booking-flow h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .reserve-page .reserve-booking-flow p { margin: 8px 0 0; }
+    .reserve-page .reserve-bank-transfer {
+      margin-top: 16px;
+      scroll-margin-top: 16px;
+    }
+    .reserve-page .reserve-bank-transfer summary {
+      cursor: pointer;
+      font-weight: bold;
+      min-height: 44px;
+      align-content: center;
+    }
+    .reserve-page .reserve-bank-transfer p { margin: 8px 0; }
+    .reserve-page .reserve-bank-transfer dl {
+      display: grid;
+      grid-template-columns: 4em minmax(0, 1fr);
+      gap: 4px 8px;
+      margin: 12px 0 0;
+    }
+    .reserve-page .reserve-bank-transfer dt { font-weight: bold; align-self: center; }
+    .reserve-page .reserve-bank-transfer dd { margin: 0; align-self: center; }
+    .reserve-page .reserve-bank-code { font-size: 14px; white-space: nowrap; }
+    .reserve-page #reserveBankCopyStatus:empty { margin: 0; }
+    @media (max-width: 600px) {
+      .reserve-page .reserve-bank-transfer { padding: 10px; line-height: 1.4; }
+      .reserve-page .reserve-bank-transfer summary { line-height: 1.4; }
+      .reserve-page .reserve-bank-transfer dl { margin-top: 8px; gap: 4px 6px; }
+      .reserve-page .reserve-bank-transfer dt { font-size: 14px; }
+      .reserve-page .reserve-bank-transfer p { margin: 6px 0; }
+    }
+    .reserve-page .reserve-bank-value {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+    }
+    .reserve-page .reserve-bank-copy {
+      min-height: 44px;
+      padding: 6px 8px;
+      border: 1px solid #a98d75;
+      white-space: nowrap;
+      border-radius: 6px;
+      background: #fff;
+      color: #3a2113;
+      font: inherit;
+      cursor: pointer;
+    }
+    .reserve-page .reserve-bank-copy:focus-visible {
+      outline: 2px solid #8b4f2f;
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 <body class="reserve-page">
 
@@ -14,7 +82,7 @@
       <div class="reserve-request-notice">
         <h2>予約リクエスト・料金確認</h2>
         <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
-        <p class="reserve-request-flow">下記入力後、当社からの返答の後に確定になります</p>
+        <p class="reserve-request-flow">お申込み後、振込案内メールをお送りします。当社の入金確認で予約確定となります。</p>
       </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
@@ -55,6 +123,11 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
+        <section class="reserve-booking-flow" aria-labelledby="reserveBankTransferTitle">
+          <h3 id="reserveBankTransferTitle">ご予約の流れ</h3>
+          <p>お申込み → 振込案内メール → お振込み → 入金確認・予約確定メール</p>
+          <p>振込案内メールを受け取ってからお振込みください。予約枠は当社の入金確認後に確保します（仮押さえなし）。振込手数料はお客様負担です。</p>
+        </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
@@ -65,6 +138,22 @@
         <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
       </div>
     </section>
+
+    <details class="reserve-bank-transfer" id="bank-transfer">
+      <summary>振込先（振込案内メール受領後）</summary>
+      <p><strong>振込案内メールが届いてから、記載の金額をお振込みください。</strong><br>振込手数料はお客様負担です。</p>
+      <dl aria-label="直接予約の振込先">
+        <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
+        <dt>支店名</dt><dd class="reserve-bank-value"><span><span id="reserveBankBranchName">法人第二営業部</span><span class="reserve-bank-code">（102）</span></span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankBranchName" aria-label="支店名をコピー">コピー</button></dd>
+        <dt>預金種目</dt><dd>普通預金</dd>
+        <dt>口座番号</dt>
+        <dd class="reserve-bank-value"><span id="reserveBankAccountNumber">1369217</span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankAccountNumber" aria-label="口座番号をコピー">コピー</button></dd>
+        <dt>口座名義</dt><dd>株式会社SUN AID</dd>
+        <dt>名義カナ</dt>
+        <dd class="reserve-bank-value"><span id="reserveBankAccountKana">カ）サンエイド</span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankAccountKana" aria-label="口座名義カナをコピー">コピー</button></dd>
+      </dl>
+      <p id="reserveBankCopyStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    </details>
 
     <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
@@ -870,5 +959,40 @@
     })();
   </script>
 
+  <script>
+    // 振込先の固定リンクとコピー操作。予約・料金計算のスクリプトから独立させる。
+    (() => {
+      const bankDetails = document.getElementById('bank-transfer');
+      const copyStatus = document.getElementById('reserveBankCopyStatus');
+
+      function openBankTransferFromLink() {
+        if (window.location.hash !== '#bank-transfer') return;
+        bankDetails.open = true;
+        bankDetails.scrollIntoView({ block: 'start' });
+      }
+      window.addEventListener('hashchange', openBankTransferFromLink);
+      openBankTransferFromLink();
+
+      bankDetails.querySelectorAll('[data-bank-copy]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const value = document.getElementById(button.dataset.bankCopy);
+          try {
+            if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
+            await navigator.clipboard.writeText(value.textContent.trim());
+            copyStatus.textContent = button.getAttribute('aria-label').replace('をコピー', '') + 'をコピーしました。';
+          } catch {
+            const selection = window.getSelection();
+            if (selection) {
+              const range = document.createRange();
+              range.selectNodeContents(value);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+            copyStatus.textContent = 'コピーできませんでした。表示されている文字を選択してコピーしてください。';
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
