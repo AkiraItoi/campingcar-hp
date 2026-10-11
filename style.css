@@ -1888,32 +1888,33 @@ body {
 .reserve-confirm-check {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
+  gap: 12px;
   margin-top: 12px;
-  font-size: 14px;
+  font-size: 17px;
+  font-weight: bold;
   line-height: 1.65;
 }
 
 .reserve-confirm-check input {
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   margin: 2px 0 0;
   accent-color: #5a351f;
 }
 
 .reserve-confirm-check a {
-  color: #7a3f1f;
+  color: #3a2113;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .reserve-confirm-box {
   padding: 12px 14px;
-  border: 1px solid #d9c6b5;
+  border: 2px solid #a98d75;
   border-radius: 10px;
-  background: #fff;
-  color: #5a351f;
+  background: #fffaf4;
+  color: #3a2113;
   text-align: left;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
@@ -1929,8 +1930,8 @@ body {
 
 .reserve-confirm-error {
   margin: 8px 0 0;
-  color: #6b5b4d;
-  font-size: 14px;
+  color: #3a2113;
+  font-size: 16px;
   line-height: 1.5;
   font-weight: bold;
   text-align: center;
@@ -1962,7 +1963,7 @@ body {
   }
 
   .reserve-confirm-check {
-    font-size: 15px;
+    font-size: 17px;
   }
 
 }
