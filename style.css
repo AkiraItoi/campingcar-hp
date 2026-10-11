@@ -1923,3 +1923,180 @@ body.theme-sky-blue .price-notes a {
 body.theme-sky-blue .price-notes p {
   color: #6f8ca3;
 }
+
+/* ===== 最終配色（experiment/blue-brown-yellow-theme）: 青＋茶＋黄 ===== */
+/* 面積配分の目安 青62%（白・淡青を含む）：茶24%：黄14%。index.html（body.theme-blue-brown-yellow）専用 */
+/* 青 #2C84B8 / #F4FAFD / #DCEFF8 / #194A66、茶 #8C6A4A / #A8825C、黄 #E7B347 / #D9A12E、本文 #365A6D */
+
+body.theme-blue-brown-yellow {
+  color: #365A6D;
+}
+
+body.theme-blue-brown-yellow .page,
+body.theme-blue-brown-yellow .hero {
+  background: #F4FAFD;
+}
+
+/* 見出し：茶色（自然感・落ち着き） */
+body.theme-blue-brown-yellow .page h2,
+body.theme-blue-brown-yellow .price-subtitle,
+body.theme-blue-brown-yellow .price-info-title,
+body.theme-blue-brown-yellow .company-info dt {
+  color: #8C6A4A;
+}
+
+/* 主要CTA：黄色 */
+body.theme-blue-brown-yellow .brown,
+body.theme-blue-brown-yellow .mobile-reservation-bar .brown {
+  background: #E7B347;
+  color: #194A66;
+  box-shadow: inset 0 -3px 0 #D9A12E;
+}
+
+body.theme-blue-brown-yellow .brown .btn-icon {
+  color: #194A66;
+}
+
+body.theme-blue-brown-yellow .mobile-reservation-bar {
+  background: rgba(244, 250, 253, 0.98);
+  box-shadow: inset 0 2px 0 #2C84B8;
+}
+
+body.theme-blue-brown-yellow .mobile-reservation-title {
+  color: #365A6D;
+}
+
+/* 地図 */
+body.theme-blue-brown-yellow .map-embed-wrap {
+  background: #DCEFF8;
+}
+
+body.theme-blue-brown-yellow .map-open-link {
+  color: #194A66;
+}
+
+body.theme-blue-brown-yellow .map-open-link:focus-visible {
+  outline: 2px solid #2C84B8;
+}
+
+body.theme-blue-brown-yellow .menu-mark {
+  color: #194A66;
+}
+
+/* 補助ボタン：茶色 */
+body.theme-blue-brown-yellow .special-btn {
+  background: #8C6A4A;
+}
+
+body.theme-blue-brown-yellow .questionnaire-list img {
+  border: 1px solid #DCEFF8;
+}
+
+body.theme-blue-brown-yellow .circle {
+  background: #194A66;
+}
+
+/* 設備欄：茶色の面 */
+body.theme-blue-brown-yellow .equipment {
+  background: #8C6A4A;
+}
+
+body.theme-blue-brown-yellow .eq-items {
+  color: #FFFFFF;
+}
+
+/* 各セクションのカード：白＋淡青 */
+body.theme-blue-brown-yellow .free {
+  background: #DCEFF8;
+  border: 1px solid #DCEFF8;
+}
+
+body.theme-blue-brown-yellow .company,
+body.theme-blue-brown-yellow .price {
+  background: #FFFFFF;
+  border: 1px solid #DCEFF8;
+}
+
+body.theme-blue-brown-yellow .sns-btn {
+  border: 1px solid #A8825C;
+  color: #8C6A4A;
+}
+
+body.theme-blue-brown-yellow .sns-btn:focus-visible {
+  outline: 3px solid #2C84B8;
+}
+
+body.theme-blue-brown-yellow .contact {
+  background: #194A66;
+}
+
+body.theme-blue-brown-yellow .company-info dd {
+  color: #365A6D;
+}
+
+body.theme-blue-brown-yellow .company-info dd a,
+body.theme-blue-brown-yellow .price-notes a {
+  color: #194A66;
+}
+
+/* 料金表 */
+body.theme-blue-brown-yellow .price-table th,
+body.theme-blue-brown-yellow .price-table td,
+body.theme-blue-brown-yellow .price-season-list li,
+body.theme-blue-brown-yellow .price-info {
+  border: 1px solid #DCEFF8;
+}
+
+body.theme-blue-brown-yellow .price-table thead th {
+  background: #DCEFF8;
+  color: #194A66;
+  border-bottom-color: #2C84B8;
+}
+
+body.theme-blue-brown-yellow .price-table tbody th {
+  background: #F4FAFD;
+  color: #194A66;
+}
+
+body.theme-blue-brown-yellow .price-table td,
+body.theme-blue-brown-yellow .price-info-text {
+  color: #365A6D;
+}
+
+body.theme-blue-brown-yellow .price-table .price-amount,
+body.theme-blue-brown-yellow .price-season-list li {
+  color: #194A66;
+}
+
+body.theme-blue-brown-yellow .price-season-note,
+body.theme-blue-brown-yellow .price-notes p,
+body.theme-blue-brown-yellow .price-document-note {
+  color: #4A6B7E;
+}
+
+/* キャンペーン：黄色で注目 */
+body.theme-blue-brown-yellow .price-info--campaign {
+  background: linear-gradient(135deg, #FFF8E8, #F8E2AE);
+  border: 2px solid #D9A12E;
+  box-shadow: 0 4px 14px rgba(217, 161, 46, 0.25);
+}
+
+body.theme-blue-brown-yellow .price-info--campaign::before {
+  background: linear-gradient(90deg, #D9A12E, #E7B347, #D9A12E);
+}
+
+body.theme-blue-brown-yellow .price-info--campaign .price-info-title {
+  color: #194A66;
+}
+
+body.theme-blue-brown-yellow .price-document-link {
+  background: #8C6A4A;
+}
+
+body.theme-blue-brown-yellow .price-document-link:hover {
+  background: #194A66;
+}
+
+body.theme-blue-brown-yellow .price-document-link:focus-visible {
+  outline: 3px solid #2C84B8;
+}
