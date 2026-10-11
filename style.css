@@ -2499,28 +2499,28 @@ body {
   margin-top: 6px;
 }
 
-/* 登録年月に添える、いたずら風の驚きイラスト */
+/* 登録年月の右横に添える驚きイラスト。スマホでも横配置を維持 */
 .hero-registration-note {
-  position: relative;
-  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   max-width: 100%;
   margin: 18px auto 0;
 }
-.hero-registration-illustration {
-  position: absolute;
-  right: -100px;
-  top: -40px;
-  width: 112px;
-  height: auto;
-  transform: rotate(8deg);
+.hero-registration-note .hero-registration {
+  min-width: 0;
+  flex: 0 1 auto;
 }
-@media (max-width: 600px) {
-  .hero-registration-illustration {
-    position: static;
-    display: block;
-    width: 90px;
-    margin: -36px 0 4px auto;
-  }
+.hero-registration-illustration {
+  order: 1;
+  position: static;
+  display: block;
+  width: clamp(48px, 12vw, 80px);
+  height: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  transform: none;
 }
 
 /* トップページ：元の駐車場画像の運転席を切り出して使う吹き出しリンク（元画像1280x720） */
