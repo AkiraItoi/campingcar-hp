@@ -2280,6 +2280,11 @@ body {
   pointer-events: none;
 }
 .reserve-page .reserve-calendar-nav .reserve-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  -webkit-appearance: none;
   flex: 0 0 24px;
   width: 24px;
   min-width: 24px;
@@ -2288,19 +2293,28 @@ body {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #5a351f;
-  font-family: sans-serif;
-  font-size: 20px;
+  color: #58768d;
   line-height: 1;
   cursor: pointer;
   pointer-events: auto;
 }
 .reserve-page .reserve-calendar-nav .reserve-nav-btn:disabled {
-  color: #b8a897;
+  color: #a5b5c1;
   cursor: default;
   opacity: 0.45;
 }
 .reserve-page .reserve-calendar-nav .reserve-nav-btn:focus-visible {
-  outline: 2px solid #5a351f;
+  outline: 2px solid #58768d;
   outline-offset: -2px;
+}
+
+/* 暖色の茶色・オレンジに合わせ、彩度を抑えた青のSVGを全画面幅で共通使用する */
+.reserve-page .reserve-calendar-nav .reserve-nav-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  fill: currentColor;
+  stroke: none;
+  pointer-events: none;
 }
