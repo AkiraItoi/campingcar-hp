@@ -369,6 +369,12 @@ body {
   font-weight: normal;
 }
 
+/* 車両引渡し場所の見出し：狭い列でも折り返さないよう小さめにする */
+#accessMap h3 {
+  font-size: 18px;
+  white-space: nowrap;
+}
+
 .access-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -437,6 +443,8 @@ body {
   font-weight: bold;
   line-height: 1.4;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  /* 長い文言でも右下のGoogleマップ標準操作に重ならないよう幅を制限 */
+  max-width: calc(100% - 64px);
 }
 
 .map-open-link:focus-visible {
@@ -1754,4 +1762,172 @@ body {
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+/* ===== 青色テーマ実験（experiment/sky-blue-theme）: index.html専用の配色オーバーライド ===== */
+/* body.theme-sky-blue でスコープしているため、reserve.html（body.reserve-page）には一切影響しない */
+/* 既存セレクタ定義には手を加えず、色プロパティのみを追記で上書きする */
+
+body.theme-sky-blue html, body.theme-sky-blue body {
+  color: #5c7992;
+}
+
+body.theme-sky-blue .hero {
+  background: #f3f9fd;
+}
+
+body.theme-sky-blue .brown {
+  background: #17486b;
+}
+
+body.theme-sky-blue .mobile-reservation-title {
+  color: #5c7992;
+}
+
+body.theme-sky-blue .map-embed-wrap {
+  background: #eef5fb;
+}
+
+body.theme-sky-blue .map-open-link {
+  color: #17486b;
+}
+
+body.theme-sky-blue .map-open-link:focus-visible {
+  outline: 2px solid #17486b;
+}
+
+body.theme-sky-blue .menu-mark {
+  color: #0c2d42;
+}
+
+body.theme-sky-blue .questionnaire-list img {
+  border: 1px solid #c3dcee;
+}
+
+body.theme-sky-blue .equipment {
+  background: #5f93b8;
+}
+
+body.theme-sky-blue .free {
+  background: #f3f9fd;
+  border: 1px solid #cfe3f2;
+}
+
+body.theme-sky-blue .sns-btn {
+  border: 1px solid #a9cfe8;
+  color: #3a7aa6;
+}
+
+body.theme-sky-blue .sns-btn:focus-visible {
+  outline: 3px solid #3a7aa6;
+}
+
+body.theme-sky-blue .contact {
+  background: #17486b;
+}
+
+body.theme-sky-blue .company {
+  background: #f3f9fd;
+  border: 1px solid #cfe3f2;
+}
+
+body.theme-sky-blue .company-info dt {
+  color: #3a7aa6;
+}
+
+body.theme-sky-blue .company-info dd {
+  color: #3a4f5e;
+}
+
+body.theme-sky-blue .company-info dd a {
+  color: #17486b;
+}
+
+body.theme-sky-blue .price {
+  background: #f3f9fd;
+  border: 1px solid #cfe3f2;
+}
+
+body.theme-sky-blue .price-subtitle {
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-table th, body.theme-sky-blue .price-table td {
+  border: 1px solid #cfe3f2;
+}
+
+body.theme-sky-blue .price-table thead th {
+  background: #e0edf7;
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-table tbody th {
+  background: #f3f9fd;
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-table td {
+  color: #3a4f5e;
+}
+
+body.theme-sky-blue .price-table .price-amount {
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-season-list li {
+  border: 1px solid #cfe3f2;
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-season-note {
+  color: #6f8ca3;
+}
+
+body.theme-sky-blue .price-info {
+  border: 1px solid #cfe3f2;
+}
+
+body.theme-sky-blue .price-info-title {
+  color: #17486b;
+}
+
+body.theme-sky-blue .price-info-text {
+  color: #3a4f5e;
+}
+
+body.theme-sky-blue .price-info--campaign {
+  background: linear-gradient(135deg, #e8f4fb, #bfe0f2);
+  border: 2px solid #2f82b8;
+}
+
+body.theme-sky-blue .price-info--campaign::before {
+  background: linear-gradient(90deg, #1f6fa8, #7ec8ea, #1f6fa8);
+}
+
+body.theme-sky-blue .price-info--campaign .price-info-title {
+  color: #0f3f5c;
+}
+
+body.theme-sky-blue .price-document-link {
+  background: #17486b;
+}
+
+body.theme-sky-blue .price-document-link:hover {
+  background: #1f5a85;
+}
+
+body.theme-sky-blue .price-document-link:focus-visible {
+  outline: 3px solid #4fa3d1;
+}
+
+body.theme-sky-blue .price-document-note {
+  color: #4f6b80;
+}
+
+body.theme-sky-blue .price-notes a {
+  color: #1c5480;
+}
+
+body.theme-sky-blue .price-notes p {
+  color: #6f8ca3;
 }

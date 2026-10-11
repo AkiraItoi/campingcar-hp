@@ -6,7 +6,7 @@
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
   <link rel="stylesheet" href="style.css?v=20261010-1">
 </head>
-<body>
+<body class="theme-sky-blue">
 
   <p class="version-tag" id="versionTag"></p>
 
@@ -43,25 +43,25 @@
   </div>
 
   <div id="accessMap">
+    <h3>車両引渡し場所</h3>
     <!-- Googleマップをページ内に埋め込む -->
     <div class="map-embed-wrap">
       <p class="map-address-overlay">
-        〒411-0845<br>
-        静岡県三島市加屋町5-2<br>
-        デジカーサ101
+        〒411-0907 静岡県駿東郡清水町伏見38-1<br>
+        島田産婦人科医院 第3駐車場
       </p>
-      <!-- Googleマップ埋め込み（所在地：静岡県三島市加屋町5-2 デジカーサ101） -->
+      <!-- Googleマップ埋め込み（車両引渡し場所：島田産婦人科医院 第3駐車場） -->
       <iframe class="map-embed"
-              src="https://maps.google.com/maps?q=35.1158736,138.9059811&amp;hl=ja&amp;z=17&amp;output=embed"
-              title="株式会社SUN AID 所在地の地図"
+              src="https://maps.google.com/maps?q=35.111148957290496,138.90046732372795&amp;hl=ja&amp;z=17&amp;output=embed"
+              title="車両引渡し場所の地図"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen></iframe>
       <a class="map-open-link"
-         href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9"
+         href="https://www.google.com/maps/dir/?api=1&amp;destination=35.111148957290496,138.90046732372795&amp;travelmode=driving"
          target="_blank"
          rel="noopener noreferrer">
-        Googleマップ
+        車両引渡し場所へのルートを見る
       </a>
     </div>
   </div>
@@ -318,7 +318,7 @@
         <dd>
           〒411-0845<br>
           静岡県三島市加屋町5-2 デジカーサ101<br>
-          <a class="company-map-link" href="#accessMap">Googleマップ・アクセスはこちら</a>
+          <a class="company-map-link" href="https://maps.app.goo.gl/CKUbqm36iwk78uSy9" target="_blank" rel="noopener noreferrer">Googleマップを開く</a>
         </dd>
 
         <dt>メール</dt>
@@ -474,22 +474,6 @@
     if (snsLineBtn && snsLineStatus) {
       snsLineBtn.addEventListener('click', () => {
         snsLineStatus.textContent = '準備中';
-      });
-    }
-
-    // 「Googleマップ・アクセスはこちら」：外部マップではなくページ内の地図へスムーススクロールする
-    const companyMapLink = document.querySelector('.company-map-link');
-    const accessMapTarget = document.getElementById('accessMap');
-    if (companyMapLink && accessMapTarget) {
-      companyMapLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        const bar = document.querySelector('.mobile-reservation-bar');
-        const barHeight = bar ? bar.getBoundingClientRect().height : 0;
-        const visibleHeight = window.innerHeight - barHeight;
-        const rect = accessMapTarget.getBoundingClientRect();
-        const targetCenter = rect.top + window.scrollY + rect.height / 2;
-        const scrollTop = Math.max(targetCenter - visibleHeight / 2, 0);
-        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
       });
     }
   </script>
