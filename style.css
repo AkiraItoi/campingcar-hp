@@ -1312,13 +1312,13 @@ body {
   }
 
   .price-document-links {
-    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .price-document-link {
     min-height: 50px;
-    font-size: 15px;
+    padding: 10px 6px;
+    font-size: 14px;
   }
 }
 
