@@ -3,34 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>空き状況・料金を確認する</title>
-  <link rel="stylesheet" href="style.css?v=20261009-2">
+  <title>予約リクエスト・料金確認｜SUN AID</title>
+  <link rel="stylesheet" href="style.css?v=20261011-confirm1line">
 </head>
 <body class="reserve-page">
 
   <main class="page">
 
     <section class="price" id="reservePriceSection">
-      <h2 class="reserve-title">空き状況と料金を確認</h2>
-
-      <div class="reserve-step-header" id="reserveStepHeader">
-        <button type="button" class="reserve-step is-active" id="reserveStepStart">① 開始日時を選択</button>
-        <button type="button" class="reserve-step" id="reserveStepEnd">② 返却日時を選択</button>
+      <div class="reserve-request-notice">
+        <h2>予約リクエスト・料金確認</h2>
+        <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
+        <p class="reserve-request-flow">下記入力後、当社からの返答の後に確定になります</p>
       </div>
 
-      <div class="reserve-selected-summary" id="reserveSelectedSummary"></div>
-
-      <button type="button" class="reserve-edit-btn" id="reserveEditBtn" hidden>日時を変更する</button>
+      <div class="reserve-step-header" id="reserveStepHeader">
+        <button type="button" class="reserve-step is-active" id="reserveStepStart" aria-label="開始日時を選択">① 開始日時を選択</button>
+        <button type="button" class="reserve-step" id="reserveStepEnd" aria-label="返却日時を選択">② 返却日時を選択</button>
+      </div>
 
       <div class="reserve-selecting-area" id="reserveSelectingArea">
         <p class="reserve-date-error" id="reserveDateError" hidden></p>
 
+        <div class="reserve-calendar-body">
         <div class="reserve-calendar-nav">
-          <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn">前の2ヶ月</button>
-          <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn">次の2ヶ月</button>
+          <button type="button" class="reserve-nav-btn" id="reservePrevMonthBtn" aria-label="前の月" title="前の月"><svg class="reserve-nav-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M16 4L6 12L16 20Z" /></svg></button>
+          <button type="button" class="reserve-nav-btn" id="reserveNextMonthBtn" aria-label="次の月" title="次の月"><svg class="reserve-nav-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M8 4L18 12L8 20Z" /></svg></button>
         </div>
 
         <div class="reserve-calendars" id="reserveCalendars"></div>
+        </div>
       </div>
 
       <div class="reserve-time-popup" id="reserveTimePopup" hidden>
@@ -51,10 +53,18 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
-        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストへ進む</a>
-        <a class="special-btn" href="index.html">トップページへ戻る</a>
+        <div class="reserve-confirm-box" id="reserveConfirmBox">
+          <div class="reserve-confirm-check">
+            <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
+            <span id="reserveConfirmText"><a href="docs/rental-terms.pdf" target="_blank" rel="noopener noreferrer">貸渡約款（個人情報の取扱いを含む）</a>と<a href="index.html#cancel-fee" target="_blank" rel="noopener noreferrer">キャンセル規定</a>を確認しました。</span>
+          </div>
+          <p class="reserve-confirm-error" id="reserveConfirmError">各内容を確認し、チェックを入れてください。</p>
+        </div>
+        <a class="special-btn" id="reserveRequestBtn" href="#">予約リクエストフォームへ進む</a>
       </div>
     </section>
+
+    <a class="reserve-home-btn" id="reserveHomeBtn" href="index.html">トップページに戻る</a>
 
   </main>
 
@@ -191,13 +201,11 @@
       const stepHeaderEl = document.getElementById('reserveStepHeader');
       const stepStartEl = document.getElementById('reserveStepStart');
       const stepEndEl = document.getElementById('reserveStepEnd');
-      const editBtn = document.getElementById('reserveEditBtn');
       const selectingAreaEl = document.getElementById('reserveSelectingArea');
       const dateErrorEl = document.getElementById('reserveDateError');
       const prevMonthBtn = document.getElementById('reservePrevMonthBtn');
       const nextMonthBtn = document.getElementById('reserveNextMonthBtn');
       const calendarsEl = document.getElementById('reserveCalendars');
-      const summaryEl = document.getElementById('reserveSelectedSummary');
       const popupEl = document.getElementById('reserveTimePopup');
       const popupTitleEl = document.getElementById('reserveTimePopupTitle');
       const timeGridEl = document.getElementById('reserveTimeGrid');
@@ -206,6 +214,9 @@
       const actionButtonsEl = document.getElementById('reserveActionButtons');
       const resultEl = document.getElementById('reserveResult');
       const reserveRequestBtn = document.getElementById('reserveRequestBtn');
+      const reserveConfirmBox = document.getElementById('reserveConfirmBox');
+      const reserveConfirmCheck = document.getElementById('reserveConfirmCheck');
+      const reserveConfirmError = document.getElementById('reserveConfirmError');
 
       const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -214,7 +225,11 @@
       let endDate = null;
       let pendingDateKey = null;
       let calendarOffset = 0;
-      const CALENDAR_MAX_OFFSET = 4;
+      // 表示する月数：スマホ・PCとも2か月を横並び（月送りも2か月単位）。
+      const CALENDAR_TOTAL_MONTHS = 6;
+      function visibleMonthCount() {
+        return 2;
+      }
       let reservationSummaryText = null;
       let view = 'selecting'; // 'selecting' | 'complete'
       // true: 完了表示からカード／「日時を変更する」で再編集中。押した側の日時だけを変更し、
@@ -232,6 +247,8 @@
       function buildMonthCalendar(year, month) {
         const wrap = document.createElement('div');
         wrap.className = 'reserve-calendar';
+        // 背景色は表示位置ではなく月番号で決める（偶数月=薄茶色／奇数月=白）。スライド中も月に付いて動く
+        wrap.classList.add((month + 1) % 2 === 0 ? 'reserve-calendar-even' : 'reserve-calendar-odd');
 
         const title = document.createElement('p');
         title.className = 'reserve-calendar-title';
@@ -297,19 +314,104 @@
           grid.appendChild(btn);
         }
 
+        // どの月も6行（42マス）にそろえ、5行の月と6行の月で高さが変わらないようにする
+        for (let i = startOffset + daysInMonth; i < 42; i++) {
+          const blank = document.createElement('span');
+          blank.className = 'reserve-day reserve-day-blank';
+          grid.appendChild(blank);
+        }
+
         wrap.appendChild(grid);
         return wrap;
       }
 
-      function renderCalendars() {
-        calendarsEl.innerHTML = '';
-        const base = new Date();
-        for (let i = 0; i < 2; i++) {
-          const target = new Date(base.getFullYear(), base.getMonth() + calendarOffset + i, 1);
-          calendarsEl.appendChild(buildMonthCalendar(target.getFullYear(), target.getMonth()));
-        }
+      const MONTH_SLIDE_MS = 260;
+      let slideFinish = null; // アニメーション中だけ、即時完了させる関数が入る
+
+      function monthCalendarAt(index) {
+        const target = new Date(new Date().getFullYear(), new Date().getMonth() + index, 1);
+        return buildMonthCalendar(target.getFullYear(), target.getMonth());
+      }
+
+      function updateNavButtons() {
+        const maxOffset = CALENDAR_TOTAL_MONTHS - visibleMonthCount();
         prevMonthBtn.disabled = calendarOffset <= 0;
-        nextMonthBtn.disabled = calendarOffset >= CALENDAR_MAX_OFFSET;
+        nextMonthBtn.disabled = calendarOffset >= maxOffset;
+      }
+
+      // 左右2か月を静止表示する（月送りの途中状態は slideMonths が扱う）
+      function renderCalendars() {
+        if (slideFinish) {
+          slideFinish();
+        }
+        const maxOffset = CALENDAR_TOTAL_MONTHS - visibleMonthCount();
+        calendarOffset = Math.max(0, Math.min(maxOffset, calendarOffset));
+        calendarsEl.innerHTML = '';
+        calendarsEl.classList.remove('is-sliding');
+        const track = document.createElement('div');
+        track.className = 'reserve-calendars-track';
+        for (let i = 0; i < 2; i++) {
+          track.appendChild(monthCalendarAt(calendarOffset + i));
+        }
+        calendarsEl.appendChild(track);
+        updateNavButtons();
+      }
+
+      // 月送り：1か月分だけ横へ滑らせて止める。枠の高さ（6行固定）は変わらない
+      function slideMonths(direction) {
+        if (slideFinish) {
+          slideFinish(); // 連打時は前のアニメーションを即座に完了させてから次へ
+        }
+        const maxOffset = CALENDAR_TOTAL_MONTHS - visibleMonthCount();
+        const nextOffset = calendarOffset + direction;
+        if (nextOffset < 0 || nextOffset > maxOffset) {
+          return;
+        }
+        const from = calendarOffset;
+        calendarOffset = nextOffset;
+        updateNavButtons();
+
+        const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const first = direction > 0 ? from : from - 1; // 3か月ぶんを並べる先頭の月
+        calendarsEl.innerHTML = '';
+        const track = document.createElement('div');
+        track.className = 'reserve-calendars-track';
+        for (let i = 0; i < 3; i++) {
+          track.appendChild(monthCalendarAt(first + i));
+        }
+        calendarsEl.appendChild(track);
+        calendarsEl.classList.add('is-sliding');
+
+        const settle = () => {
+          slideFinish = null;
+          track.removeEventListener('transitionend', onEnd);
+          clearTimeout(timer);
+          calendarsEl.classList.remove('is-sliding');
+          calendarsEl.innerHTML = '';
+          const fixed = document.createElement('div');
+          fixed.className = 'reserve-calendars-track';
+          for (let i = 0; i < 2; i++) {
+            fixed.appendChild(monthCalendarAt(calendarOffset + i));
+          }
+          calendarsEl.appendChild(fixed);
+        };
+        const onEnd = (e) => { if (e.target === track) { settle(); } };
+        const timer = setTimeout(settle, MONTH_SLIDE_MS + 120);
+        slideFinish = settle;
+
+        if (reduced) {
+          settle();
+          return;
+        }
+        const step = track.children[1].offsetLeft - track.children[0].offsetLeft;
+        const startX = direction > 0 ? 0 : -step;
+        const endX = direction > 0 ? -step : 0;
+        track.style.transition = 'none';
+        track.style.transform = 'translateX(' + startX + 'px)';
+        track.getBoundingClientRect(); // 開始位置を確定させる
+        track.style.transition = 'transform ' + MONTH_SLIDE_MS + 'ms ease';
+        track.style.transform = 'translateX(' + endX + 'px)';
+        track.addEventListener('transitionend', onEnd);
       }
 
       function renderTimeGrid() {
@@ -367,11 +469,9 @@
           }
           clearDateError();
           startDate = picked;
-          if (editingMode) {
-            // 再編集：開始日時だけを変更する。返却日時は保持し、返却選択へは自動移動しない
-          } else {
-            // 初回入力：返却日時の選択へ自動的に進む
-            endDate = null;
+          // 返却日時が未入力の場合だけ、返却日時の選択へ自動的に進む。
+          // 返却日時を先に入力した場合や再編集では、入力済みの日時を保持する。
+          if (!editingMode && !endDate) {
             step = 'end';
           }
         } else {
@@ -388,7 +488,6 @@
 
         closeTimePopup();
         renderStepHeader();
-        renderSummary();
         renderCalendars();
         calcPrice();
 
@@ -402,27 +501,57 @@
         updateView();
       }
 
+      // 表示用：ボタンに出す短い日時（例 11/10 10:00）
+      function formatShort(date) {
+        return (date.getMonth() + 1) + '/' + date.getDate() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+      }
+
+      // 選択後は「ラベル／日時」の2行表示。未選択時は従来の1行
+      function setStepLabel(el, label, date, emptyText) {
+        el.textContent = '';
+        if (!date) {
+          el.textContent = emptyText;
+          return;
+        }
+        const l = document.createElement('span');
+        l.className = 'reserve-step-label';
+        l.textContent = label;
+        const v = document.createElement('span');
+        v.className = 'reserve-step-value';
+        v.textContent = formatShort(date);
+        el.appendChild(l);
+        el.appendChild(v);
+      }
+
       function renderStepHeader() {
+        setStepLabel(stepStartEl, '① 開始日時', startDate, '① 開始日時を選択');
+        setStepLabel(stepEndEl, '② 返却日時', endDate, '② 返却日時を選択');
+        stepStartEl.setAttribute('aria-label', startDate ? '開始日時 ' + formatSelected(startDate) + '（押すと再編集）' : '開始日時を選択');
+        stepEndEl.setAttribute('aria-label', endDate ? '返却日時 ' + formatSelected(endDate) + '（押すと再編集）' : '返却日時を選択');
         stepStartEl.classList.toggle('is-active', step === 'start');
         stepStartEl.classList.toggle('is-done', !!startDate);
         stepEndEl.classList.toggle('is-active', step === 'end');
         stepEndEl.classList.toggle('is-done', !!endDate);
       }
 
-      function setStep(newStep) {
+      // 日時選択中はページを動かさない：自動スクロール・表示サイズの切り替えは行わない
+      function focusCalendar() {}
+
+      function setStep(newStep, shouldFocusCalendar) {
         step = newStep;
         renderStepHeader();
         renderCalendars();
+        if (shouldFocusCalendar) {
+          focusCalendar();
+        }
       }
 
       // 選択中／完了表示の切り替え。表示の出し分けのみで、日時計算・料金計算は一切行わない
       function updateView() {
         const complete = view === 'complete';
 
-        stepHeaderEl.hidden = complete;
         selectingAreaEl.hidden = complete;
 
-        editBtn.hidden = !complete;
         priceHeadlineEl.hidden = !complete;
         actionButtonsEl.hidden = !complete;
       }
@@ -437,20 +566,7 @@
         renderStepHeader();
         renderCalendars();
         updateView();
-      }
-
-      function renderSummary() {
-        const startText = startDate ? formatSelected(startDate) : '未選択';
-        const endText = endDate ? formatSelected(endDate) : '未選択';
-        summaryEl.innerHTML =
-          '<button type="button" class="reserve-summary-card' + (startDate ? ' is-filled' : '') + '" data-step="start">' +
-            '<p class="reserve-summary-card-label">① 利用開始</p>' +
-            '<p class="reserve-summary-card-value">' + startText + '</p>' +
-          '</button>' +
-          '<button type="button" class="reserve-summary-card' + (endDate ? ' is-filled' : '') + '" data-step="end">' +
-            '<p class="reserve-summary-card-label">② 返却</p>' +
-            '<p class="reserve-summary-card-value">' + endText + '</p>' +
-          '</button>';
+        focusCalendar();
       }
 
       // 表示用：時間数を「○日○時間」の形式に変換する（1日＝24時間）。料金計算には使用しない。
@@ -601,40 +717,150 @@
         return '予約リクエストに進む前に、料金の計算結果を表示してください。';
       }
 
+      function hasValidRentalDates() {
+        return startDate instanceof Date && !isNaN(startDate.getTime()) &&
+          endDate instanceof Date && !isNaN(endDate.getTime()) &&
+          endDate > startDate;
+      }
+
+      function guideToDateInput() {
+        view = 'selecting';
+        step = startDate instanceof Date && !isNaN(startDate.getTime()) ? 'end' : 'start';
+        renderStepHeader();
+        renderCalendars();
+        updateView();
+        showDateError('先に貸出開始日時と返却日時を入力してください');
+        stepHeaderEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
       reserveRequestBtn.addEventListener('click', (event) => {
-        event.preventDefault();
+        if (!hasValidRentalDates()) {
+          event.preventDefault();
+          guideToDateInput();
+          return;
+        }
         if (!reservationSummaryText) {
+          event.preventDefault();
           resultEl.innerHTML = '<p class="reserve-result-detail">' + buildReservationGuidanceMessage() + '</p>';
           return;
         }
+        if (!reserveConfirmCheck.checked) {
+          event.preventDefault();
+          reserveConfirmBox.classList.add('is-emphasized');
+          reserveConfirmError.classList.add('is-emphasized');
+          reserveConfirmCheck.focus({ preventScroll: true });
+          reserveConfirmError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        reserveConfirmBox.classList.remove('is-emphasized');
+        reserveConfirmError.classList.remove('is-emphasized');
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
-        window.open(formUrl, '_blank', 'noopener,noreferrer');
+        // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
+        // 予約URLはこのクリックの間だけhrefに設定し、遷移が始まった直後に必ず元へ戻す。
+        // （日時変更・同意解除後に、古い予約URLがDOMに残らないようにする）
+        reserveRequestBtn.href = formUrl;
+        reserveRequestBtn.target = '_blank';
+        reserveRequestBtn.rel = 'noopener noreferrer';
+        setTimeout(resetReserveRequestLink, 0);
+      });
+
+      function resetReserveRequestLink() {
+        reserveRequestBtn.setAttribute('href', '#');
+        reserveRequestBtn.removeAttribute('target');
+        reserveRequestBtn.removeAttribute('rel');
+      }
+
+      // 中クリック等では予約URLを持たない状態のため、何も開かない（予約は通常のクリックのみ）
+      reserveRequestBtn.addEventListener('auxclick', (event) => {
+        event.preventDefault();
+      });
+
+      reserveConfirmCheck.addEventListener('change', () => {
+        if (reserveConfirmCheck.checked) {
+          reserveConfirmBox.classList.remove('is-emphasized');
+          reserveConfirmError.classList.remove('is-emphasized');
+        }
       });
 
       popupCloseEl.addEventListener('click', closeTimePopup);
-      stepStartEl.addEventListener('click', () => setStep('start'));
-      stepEndEl.addEventListener('click', () => setStep('end'));
-      editBtn.addEventListener('click', () => startEditingStep('start'));
-      // 完了表示の日時カード自体を押しても、対応するstepを選択中にして再編集へ入れるようにする
-      summaryEl.addEventListener('click', (event) => {
-        const card = event.target.closest('.reserve-summary-card');
-        if (!card) {
+      // 2ボタンが選択操作と選択結果表示を兼ねる。両方選択済みなら再編集、それ以外は通常の切り替え
+      function onStepButton(target) {
+        if (hasValidRentalDates()) {
+          startEditingStep(target);
+        } else {
+          setStep(target, true);
+        }
+      }
+      stepStartEl.addEventListener('click', () => onStepButton('start'));
+      stepEndEl.addEventListener('click', () => onStepButton('end'));
+      prevMonthBtn.addEventListener('click', () => slideMonths(-1));
+      nextMonthBtn.addEventListener('click', () => slideMonths(1));
+
+
+      // カレンダー内の横スワイプだけを月送りに使う。縦スクロールと通常のタップは維持する。
+      let calendarTouch = null;
+      let suppressCalendarClickUntil = 0;
+      const SWIPE_DIRECTION_THRESHOLD = 10;
+      const SWIPE_MONTH_THRESHOLD = 40;
+
+      calendarsEl.addEventListener('touchstart', (event) => {
+        if (event.touches.length !== 1) {
+          calendarTouch = null;
           return;
         }
-        startEditingStep(card.dataset.step === 'end' ? 'end' : 'start');
-      });
-      prevMonthBtn.addEventListener('click', () => {
-        calendarOffset = Math.max(0, calendarOffset - 2);
-        renderCalendars();
-      });
-      nextMonthBtn.addEventListener('click', () => {
-        calendarOffset = Math.min(CALENDAR_MAX_OFFSET, calendarOffset + 2);
-        renderCalendars();
-      });
+        const touch = event.touches[0];
+        calendarTouch = { id: touch.identifier, x: touch.clientX, y: touch.clientY, dx: 0, axis: null };
+      }, { passive: true });
+
+      calendarsEl.addEventListener('touchmove', (event) => {
+        if (!calendarTouch || event.touches.length !== 1) {
+          calendarTouch = null;
+          return;
+        }
+        const touch = event.touches[0];
+        if (touch.identifier !== calendarTouch.id) return;
+        const dx = touch.clientX - calendarTouch.x;
+        const dy = touch.clientY - calendarTouch.y;
+        if (!calendarTouch.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_DIRECTION_THRESHOLD) {
+          calendarTouch.axis = Math.abs(dx) > Math.abs(dy) * 1.25 ? 'horizontal' : 'vertical';
+        }
+        calendarTouch.dx = dx;
+        if (calendarTouch.axis === 'horizontal' && event.cancelable) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      calendarsEl.addEventListener('touchend', (event) => {
+        const gesture = calendarTouch;
+        calendarTouch = null;
+        if (!gesture || gesture.axis !== 'horizontal') return;
+        const touch = Array.from(event.changedTouches).find((item) => item.identifier === gesture.id);
+        if (!touch) return;
+        if (event.cancelable) event.preventDefault();
+        // スワイプ直後に合成されるクリックで、日付の時間選択が開くのを防ぐ。
+        suppressCalendarClickUntil = Date.now() + 500;
+        const dx = touch.clientX - gesture.x;
+        if (Math.abs(dx) >= SWIPE_MONTH_THRESHOLD) {
+          slideMonths(dx < 0 ? 1 : -1);
+        }
+      }, { passive: false });
+
+      calendarsEl.addEventListener('touchcancel', () => {
+        if (calendarTouch && calendarTouch.axis === 'horizontal') {
+          suppressCalendarClickUntil = Date.now() + 500;
+        }
+        calendarTouch = null;
+      }, { passive: true });
+
+      calendarsEl.addEventListener('click', (event) => {
+        if (event.detail !== 0 && Date.now() < suppressCalendarClickUntil) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
 
       renderTimeGrid();
       renderStepHeader();
-      renderSummary();
       renderCalendars();
       updateView();
     })();

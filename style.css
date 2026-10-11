@@ -353,7 +353,39 @@ body {
   /* 左右のスマホ用ラベルを17〜18px程度に統一（左は「公式予約」に短縮して両立させる） */
   .mobile-reservation-bar .btn-label-compact,
   .mobile-reservation-bar .carstay-label-compact {
-    font-size: clamp(17px, 4.6vw, 18px);
+    font-size: clamp(16px, 4.8vw, 18px);
+    letter-spacing: 0.02em;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
+  }
+
+  /* 予約ボタン2つ：控えめなグラデーション・細い縁取り・軽い立体感で質感を揃える */
+  .mobile-reservation-bar .brown,
+  .mobile-reservation-bar .carstay {
+    min-height: 54px;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 2px 5px rgba(0, 0, 0, 0.16);
+  }
+
+  .mobile-reservation-bar .brown {
+    background: linear-gradient(180deg, #7a5a43 0%, #4e3326 100%);
+    border: 1px solid #8e725e;
+  }
+
+  .mobile-reservation-bar .carstay {
+    background: linear-gradient(180deg, #6ea4dc 0%, #3e79b8 100%);
+    border: 1px solid #8fb8e3;
+  }
+
+  .mobile-reservation-bar .carstay-icon {
+    color: #fff;
+  }
+
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: clamp(26px, 8.5vw, 32px);
+    height: clamp(26px, 8.5vw, 32px);
+    flex: 0 0 clamp(26px, 8.5vw, 32px);
   }
 }
 
@@ -367,6 +399,20 @@ body {
   /* 見出しを現在の2倍（16px→32px）に */
   font-size: 32px;
   font-weight: normal;
+}
+
+/* 車両引渡し場所の見出し：地図の正方形の内側（上部の帯）に置く。列が写真より縦に伸びないようにする */
+#accessMap h3 {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.map-address-overlay p {
+  margin: 0;
 }
 
 .access-grid {
@@ -405,20 +451,67 @@ body {
   border: 0;
 }
 
+/* 住所は地図の上部に配置し、下部のGoogleマップ操作UI（ズーム等）を隠さないようにする */
 .map-address-overlay {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
   z-index: 1;
   margin: 0;
-  padding: 4px 6px;
-  background: rgba(0, 0, 0, 0.56);
+  padding: 5px 7px;
+  background: rgba(0, 0, 0, 0.62);
   color: #fff;
-  font-size: 11px;
-  line-height: 1.3;
+  font-size: 12px;
+  line-height: 1.4;
   text-align: left;
   pointer-events: none;
+}
+
+/* 地図内に重ねる小さな外部リンク。住所（上部）・Googleマップ標準操作（右下）と重ならない左下に配置 */
+.map-open-link {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 1;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #5a351f;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.4;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  /* 長い文言でも右下のGoogleマップ標準操作に重ならないよう幅を制限 */
+  max-width: calc(100% - 64px);
+}
+
+.map-open-link:focus-visible {
+  outline: 2px solid #5a351f;
+  outline-offset: 2px;
+}
+
+/* 地図が小さい幅（320px前後のスマホ、768px前後の4列表示）では、見出し・住所・経路リンクが重ならないよう文字を少し小さくする */
+@media (max-width: 400px), (min-width: 700px) and (max-width: 1000px) {
+  #accessMap h3 {
+    font-size: 12.5px;
+  }
+
+  .map-address-overlay {
+    font-size: 10.5px;
+    line-height: 1.25;
+    padding: 4px 6px;
+  }
+
+  .map-open-link {
+    left: 4px;
+    bottom: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    line-height: 1.3;
+    max-width: calc(100% - 56px);
+  }
 }
 
 .station-photo {
@@ -560,9 +653,9 @@ body {
 }
 
 .slide-in {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 1.2s ease, transform 1.2s ease;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* セクションが画面に入ったら順番に表示 */
@@ -620,7 +713,7 @@ body {
 }
 
 .equipment {
-  background: #b89072;
+  background: #ad927c;
   padding: 14px 16px;
   text-align: center;
 }
@@ -657,7 +750,7 @@ body {
 .eq-items {
   align-self: flex-end;
   margin-top: 4px;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.6;
   text-align: right;
   color: #f7f2ec;
@@ -665,8 +758,13 @@ body {
 
 /* 設備欄の補足注記は本文より少し小さく表示する */
 .eq-note {
-  font-size: 0.75em;
-  opacity: 0.85;
+  font-size: 0.8em;
+  opacity: 0.9;
+}
+
+/* 長い装備名は意味の区切りでのみ折り返す */
+.eq-items .nb {
+  white-space: nowrap;
 }
 
 .equipment-photos {
@@ -706,10 +804,24 @@ body {
   line-height: 1.8;
 }
 
+/* 見出しの幅（h2）を基準に、14文字の「」付き見出しが1行ずつ収まる大きさにする（cqw非対応の古いブラウザは従来のpx/vw指定） */
+.free h2 {
+  container-type: inline-size;
+}
+
 .free-offer {
   display: block;
   font-size: 48px;
+  font-size: clamp(16px, 6.5cqw, 48px);
+  letter-spacing: 0;
   line-height: 1.3;
+}
+
+/* 3行目は意味のまとまり（「寝具、」と「キャンプ・BBQ道具も借りたい」）の間でだけ折り返す */
+.free-offer .nb,
+.free-sub .nb {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 /* 「是非ご相談ください」は「明日から」と同じ大きさ */
@@ -721,17 +833,21 @@ body {
   text-align: center;
 }
 
+/* キャッチコピー下の説明文：太字・中央揃え・割引キャンペーン「最大20%引きに！」と同じ赤（.price-campaign-highlight の #c0392b） */
 .free-sub {
   display: block;
-  margin-top: 6px;
-  font-size: 19.8px;
-  font-weight: normal;
+  margin-top: 8px;
+  font-size: clamp(20px, 5.6vw, 30px);
+  font-weight: bold;
+  text-align: center;
+  color: #c0392b;
 }
 
 /* SNSボタン：PC・スマートフォンとも3ボタン横一列・均等幅 */
 .sns-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 10px;
   margin: 18px 0;
 }
@@ -771,16 +887,23 @@ body {
   object-fit: contain;
 }
 
-/* LINEボタンのみ：ロゴの右横に「準備中」を横並び・中央揃えで表示 */
-.sns-btn--line {
-  gap: 4px;
-  padding-inline: 4px;
+/* LINEボタンの真下に配置するためのラップ（他のSNSボタンの配置には影響しない） */
+.sns-line-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
-.sns-label {
-  font-size: clamp(10px, 2.6vw, 13px);
-  line-height: 1;
-  white-space: nowrap;
+/* LINEボタン押下時の案内メッセージ（準備中）。押す前は非表示、押した後は表示を維持する */
+.sns-line-status {
+  margin: 6px 0 0;
+  font-size: 19px;
+  font-weight: bold;
+  color: #c0392b;
+  text-align: center;
+}
+
+.sns-line-status:empty {
+  display: none;
 }
 
 .contact {
@@ -934,25 +1057,27 @@ body {
   }
 
   .eq-items {
-    font-size: clamp(16px, 5vw, 22px);
-    line-height: 1.5;
+    font-size: clamp(17px, 4.8vw, 20px);
+    line-height: 1.6;
+    line-break: strict;
+    overflow-wrap: break-word;
   }
 
   .eq-note {
-    font-size: 0.7em;
+    font-size: 0.75em;
   }
 
   .eq-label {
     font-size: 34px;
   }
 
+  /* 13文字の見出しが320px幅でも1行に収まる大きさ（以前の「明日から」より長い文言のため） */
   .free-offer {
-    font-size: clamp(32px, 11vw, 48px);
+    /* 画面幅から左右の余白（約58px）を引いた幅に14文字が収まる大きさ */
+    font-size: clamp(16px, calc((100vw - 58px) / 15.4), 48px);
+    font-size: clamp(16px, 6.5cqw, 48px);
   }
 
-  .free-sub {
-    font-size: 18.5px;
-  }
 
   /* スマホではCTAを1行で読みやすく表示する */
   .free-content .free-cta {
@@ -1045,22 +1170,6 @@ body {
     transform: none !important;
   }
 }
-.map-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 6px;
-  padding: 6px 8px;
-  background: #e8dfd3;
-  color: #5a351f;
-  text-decoration: none;
-  border-radius: 10px;
-  font-size: clamp(11px, 1.1vw, 14px);
-  font-weight: bold;
-  line-height: 1.3;
-  text-align: center;
-  word-break: break-word;
-}
 /* 一時テスト：すべてのフェードイン演出を止める */
 .hero-image {
   opacity: 1 !important;
@@ -1109,12 +1218,6 @@ body {
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 0.06em;
-}
-
-/* 予約ページの見出し「空き状況と料金を確認」：スマホ幅でも1行に収める */
-.price h2.reserve-title {
-  font-size: clamp(20px, 6.5vw, 28px);
-  white-space: normal;
 }
 
 .price-desc {
@@ -1182,6 +1285,11 @@ body {
   min-width: 260px;
 }
 
+/* 「計算ルール」表：列見出し「内容」のみ中央揃え（左上の空欄セル・本文は対象外） */
+.price-table-rules thead th:last-child {
+  text-align: center;
+}
+
 .price-season-list {
   display: flex;
   flex-wrap: wrap;
@@ -1213,7 +1321,7 @@ body {
   border-radius: 10px;
   padding: 14px 16px;
   margin-bottom: 12px;
-  text-align: left;
+  text-align: center;
 }
 
 .price-info-title {
@@ -1228,6 +1336,38 @@ body {
   font-size: 13px;
   line-height: 1.8;
   color: #4a4038;
+}
+
+/* 割引キャンペーンのみ：リボン風バナー装飾（既存配色のオレンジ・ゴールド系） */
+.price-info--campaign {
+  position: relative;
+  padding-top: 18px;
+  background: linear-gradient(135deg, #fff6e6, #ffe3ad);
+  border: 2px solid #d99a3f;
+  box-shadow: 0 4px 14px rgba(179, 122, 36, 0.25);
+  overflow: hidden;
+}
+
+.price-info--campaign::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #c9882e, #f6c875, #c9882e);
+}
+
+.price-info--campaign .price-info-title {
+  font-size: clamp(18px, 5.2vw, 23px);
+  font-weight: 900;
+  color: #8a4a12;
+  line-height: 1.4;
+}
+
+.price-campaign-highlight {
+  color: #c0392b;
+  font-size: 1.15em;
 }
 
 .price-document-links {
@@ -1312,13 +1452,13 @@ body {
   }
 
   .price-document-links {
-    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .price-document-link {
     min-height: 50px;
-    font-size: 15px;
+    padding: 10px 6px;
+    font-size: 14px;
   }
 }
 
@@ -1417,6 +1557,44 @@ body {
 .reserve-summary-card.is-filled .reserve-summary-card-value {
   font-size: 18px;
   color: #5a351f;
+}
+
+.reserve-summary-card.is-editing {
+  border: 2px solid #5a351f;
+  box-shadow: 0 0 0 3px rgba(90, 53, 31, 0.12);
+}
+
+.reserve-selecting-area {
+  padding: 12px;
+  border: 2px solid #d9c4a8;
+  border-radius: 12px;
+  background: #fffdf9;
+  scroll-margin-top: 12px;
+}
+
+.reserve-selecting-area.is-expanded {
+  border-color: #5a351f;
+  box-shadow: 0 8px 24px rgba(90, 53, 31, 0.18);
+}
+
+.reserve-selecting-area.is-expanded .reserve-calendar {
+  flex-basis: 300px;
+  max-width: 340px;
+  padding: 14px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-calendar-title {
+  font-size: 17px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-weekday {
+  font-size: 13px;
+}
+
+.reserve-selecting-area.is-expanded .reserve-day {
+  min-height: 38px;
+  padding: 8px 0;
+  font-size: 16px;
 }
 
 .reserve-date-error {
@@ -1702,4 +1880,564 @@ body {
 
 .reserve-action-buttons[hidden] {
   display: none;
+}
+
+/* お客様の声はスクロール演出に依存せず常時表示 */
+.js-fade .page > section.voice,
+.js-fade .page > section.voice.is-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* 日時確定後の主操作を、説明文なしでも次の行動と分かる大きさで維持する */
+#reserveRequestBtn {
+  min-height: 58px;
+  padding: 15px 18px;
+  font-size: 18px;
+  box-shadow: 0 7px 18px rgba(90, 53, 31, 0.2);
+}
+
+/* 予約リクエスト送信前の確認 */
+.reserve-request-notice {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #d9c6b5;
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #5a351f;
+  text-align: center;
+}
+
+.reserve-request-notice h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  letter-spacing: normal;
+}
+
+.reserve-request-alert {
+  margin: 0 0 8px;
+  padding: 9px 10px;
+  border-left: 4px solid #8b4f2f;
+  background: #f3e7db;
+  font-size: 17px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.reserve-request-flow {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.reserve-confirm-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.65;
+}
+
+.reserve-confirm-check input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 2px 0 0;
+  accent-color: #5a351f;
+}
+
+.reserve-confirm-check a {
+  color: #3a2113;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.reserve-confirm-box {
+  padding: 12px 14px;
+  border: 2px solid #a98d75;
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #3a2113;
+  text-align: left;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.reserve-confirm-box.is-emphasized {
+  border-color: #e5a3a3;
+  background: #fff0f0;
+}
+
+.reserve-confirm-box .reserve-confirm-check {
+  margin-top: 0;
+}
+
+.reserve-confirm-error {
+  margin: 8px 0 0;
+  color: #3a2113;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: bold;
+  text-align: center;
+  transform-origin: center;
+  transition: color 0.2s ease, font-size 0.2s ease, transform 0.2s ease;
+}
+
+.reserve-confirm-error.is-emphasized {
+  color: #c0392b;
+  font-size: 22px;
+  transform: scale(1.1);
+}
+
+@media (max-width: 430px) {
+  .reserve-request-notice {
+    padding: 12px;
+  }
+
+  .reserve-request-notice h2 {
+    font-size: 22px;
+  }
+
+  .reserve-request-alert {
+    font-size: 16px;
+  }
+
+  .reserve-request-flow {
+    font-size: 15px;
+  }
+
+  .reserve-confirm-check {
+    font-size: 17px;
+  }
+
+}
+
+/* 予約バー：その他お問い合わせへの入口を追加。既存ボタンの配色は変更しない */
+.mobile-reservation-bar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.mobile-reservation-bar .mobile-contact-btn {
+  grid-column: 3;
+  grid-row: 2;
+  min-width: 0;
+  background: #f9f4ee;
+  border: 2px solid #a98d75;
+  color: #5a351f;
+  font-size: clamp(15px, 1.5vw, 19px);
+  gap: 8px;
+  text-align: center;
+}
+.mobile-reservation-bar .mobile-contact-icon {
+  width: 28px; height: 28px; flex: 0 0 28px;
+}
+@media (max-width: 768px) {
+  .mobile-reservation-bar { grid-template-columns: 0.85fr 1.15fr; }
+  .mobile-reservation-bar .mobile-contact-btn {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 44px;
+    font-size: 17px;
+    padding: 8px 12px;
+  }
+  .mobile-reservation-bar .mobile-contact-icon {
+    width: 22px; height: 22px; flex-basis: 22px;
+  }
+  body { padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* 予約カレンダー：スマホ（768px以下）は1か月表示。幅いっぱいに使い、日付を押しやすい大きさにする */
+@media (max-width: 768px) {
+  .reserve-calendars {
+    flex-wrap: nowrap;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+
+  .reserve-calendars .reserve-calendar,
+  .reserve-selecting-area.is-expanded .reserve-calendar {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 10px 8px;
+  }
+
+  .reserve-calendar-title,
+  .reserve-selecting-area.is-expanded .reserve-calendar-title {
+    margin-bottom: 10px;
+    font-size: 17px;
+  }
+
+  .reserve-weekday,
+  .reserve-selecting-area.is-expanded .reserve-weekday {
+    font-size: 12px;
+  }
+
+  .reserve-calendar-grid {
+    gap: 3px;
+  }
+
+  .reserve-day,
+  .reserve-selecting-area.is-expanded .reserve-day {
+    min-height: 40px;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  .reserve-nav-btn {
+    min-height: 44px;
+    font-size: 15px;
+  }
+}
+
+/* 予約UI再設計：2ボタンが選択操作と選択結果表示を兼ねる。スマホで一画面に収めるため余白を圧縮 */
+.reserve-step-header { margin: 0 0 10px; }
+.reserve-step { font-size: 15px; padding: 11px 6px; line-height: 1.3; white-space: nowrap; }
+.reserve-step.is-done { font-size: 15px; }
+.reserve-calendar-body { position: relative; }
+
+@media (max-width: 768px) {
+  .reserve-page .page { padding: 8px 6px; }
+  .reserve-page .price { padding: 6px; }
+  .reserve-request-notice { padding: 6px; margin-bottom: 8px; }
+  .reserve-request-notice h2 { margin: 0 0 6px; font-size: 18px; }
+  .reserve-request-alert { margin: 0 0 4px; padding: 5px 4px; border-left-width: 3px; font-size: clamp(13.2px, 4.2vw, 17px); line-height: 1.35; white-space: nowrap; }
+  .reserve-request-flow { font-size: clamp(13px, 3.7vw, 15px); line-height: 1.4; }
+  .reserve-step-header { gap: 6px; margin: 0 0 8px; }
+  .reserve-step { font-size: clamp(13px, 3.9vw, 16px); padding: 9px 2px; }
+  .reserve-step.is-done { font-size: clamp(13px, 3.9vw, 16px); }
+  .reserve-selecting-area,
+  .reserve-selecting-area.is-expanded { padding: 6px; border-width: 1px; }
+  .reserve-date-error { margin: 0 0 6px; padding: 6px 10px; font-size: 13px; }
+  /* 2か月を横並び（縦に積まない・横スクロールなし）。月送りは2か月単位 */
+  .reserve-calendar-nav { margin: 0 0 4px; gap: 6px; }
+  .reserve-nav-btn { flex: 1; min-height: 36px; padding: 0; font-size: 14px; }
+  .reserve-calendars { flex-wrap: nowrap; gap: 4px; margin-bottom: 0; }
+  .reserve-calendars .reserve-calendar,
+  .reserve-selecting-area.is-expanded .reserve-calendar { flex: 1 1 0; width: auto; min-width: 0; max-width: none; padding: 2px; border: none; }
+  .reserve-calendar-title,
+  .reserve-selecting-area.is-expanded .reserve-calendar-title { margin: 0 0 2px; line-height: 28px; font-size: 14px; }
+  .reserve-weekday,
+  .reserve-selecting-area.is-expanded .reserve-weekday { font-size: 11px; line-height: 18px; overflow: hidden; }
+  .reserve-calendar-grid { gap: 1px; }
+  .reserve-day,
+  .reserve-selecting-area.is-expanded .reserve-day { min-height: 36px; font-size: 13px; }
+}
+
+/* 日時ボタン：選択後は「ラベル／日時」の2行。左右等幅で、日時を省略・縮小しない */
+.reserve-step { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: normal; }
+.reserve-step-label, .reserve-step-value { display: block; white-space: nowrap; }
+.reserve-step-value { margin-top: 2px; font-size: 1.1em; }
+@media (max-width: 768px) {
+  .reserve-step, .reserve-step.is-done { font-size: 15px; padding: 7px 2px; }
+}
+
+/* ===== 予約ページ専用（.reserve-page配下のみ） ===== */
+/* 月ごとの背景色：奇数月=白／偶数月=薄茶色（トップページ料金表見出しと同じ#f3e7db）。色は月に付いて動く */
+.reserve-page .reserve-calendars {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 530px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: transparent;
+}
+.reserve-page .reserve-calendars-track {
+  --reserve-month-gap: 10px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - var(--reserve-month-gap)) / 2);
+  gap: var(--reserve-month-gap);
+  width: 100%;
+  min-width: 0;
+  will-change: transform;
+}
+.reserve-page .reserve-calendars.is-sliding { pointer-events: none; }
+.reserve-page .reserve-calendars-track > .reserve-calendar,
+.reserve-page .reserve-selecting-area.is-expanded .reserve-calendars-track > .reserve-calendar {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: none;
+  border: none;
+  border-radius: 8px;
+}
+.reserve-page .reserve-calendars-track > .reserve-calendar-odd { background: #ffffff; }
+.reserve-page .reserve-calendars-track > .reserve-calendar-even { background: #f3e7db; }
+.reserve-page .reserve-day { color: #3a2113; }
+.reserve-page .reserve-weekday { color: #5f4a38; }
+.reserve-page .reserve-day.reserve-day-disabled { color: #96846f; text-decoration: line-through; text-decoration-color: rgba(122, 100, 80, 0.45); }
+.reserve-page .reserve-day.reserve-day-selected-start,
+.reserve-page .reserve-day.reserve-day-selected-end { background: #5a351f; color: #fff; font-weight: bold; text-decoration: none; }
+/* 日時ボタンの高さは未選択時から2行ぶんで固定し、選択前後でレイアウトを動かさない */
+.reserve-page .reserve-step { min-height: 59px; }
+.reserve-page { overflow-anchor: none; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+
+.reserve-page .reserve-home-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border: 1px solid #f6c875;
+  border-radius: 8px;
+  background: #f6c875;
+  color: #3a2113;
+  font-size: 15px;
+  font-weight: bold;
+  text-decoration: none;
+}
+@media (min-width: 769px) {
+  .reserve-page .reserve-step { min-height: 67px; }
+}
+@media (max-width: 768px) {
+  .reserve-page .reserve-calendars-track { --reserve-month-gap: 4px; }
+  .reserve-page .reserve-calendars { max-width: none; }
+  .reserve-page .reserve-calendars-track > .reserve-calendar,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-calendars-track > .reserve-calendar {
+    width: 100%;
+  }
+}
+
+/* 余白の整理：日時選択中に、戻るボタンまで一画面に収める（要素の大きさ・文字サイズは変えない） */
+.reserve-page .page > section.price { margin-top: 0; margin-bottom: 0; }
+.reserve-page .reserve-details-toggle { margin-bottom: 8px; padding: 8px 10px; }
+@media (max-width: 768px) {
+  .reserve-page .page > section.price { padding: 6px; }
+  .reserve-page .reserve-home-btn { min-height: 40px; margin-top: 6px; padding: 6px 12px; }
+  .reserve-page .reserve-nav-btn { min-height: 32px; }
+  .reserve-page .reserve-calendar-nav { margin-bottom: 3px; }
+  .reserve-page .reserve-selecting-area { padding: 4px; }
+}
+
+/* 画面高が低い小型スマホ（例 320x568）：見出しは<title>と重複するため省き、日時選択中の縦スクロールを避ける */
+@media (max-width: 768px) and (max-height: 600px) {
+  .reserve-page .reserve-request-notice h2 { display: none; }
+}
+
+@media (max-width: 768px) and (max-height: 600px) {
+  .reserve-page .page { padding-top: 6px; padding-bottom: 0; }
+  .reserve-page { padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px)); }
+  .reserve-page .page > section.price { padding: 4px; }
+  .reserve-page .reserve-request-notice { margin-bottom: 6px; }
+  .reserve-page .reserve-step-header { margin-bottom: 6px; }
+  .reserve-page .reserve-details-toggle { margin-bottom: 6px; padding: 7px 10px; }
+  .reserve-page .reserve-home-btn { margin-top: 4px; min-height: 38px; }
+}
+
+/* 5行の月の6行目（空マス）もPCで日付と同じ高さにそろえ、月送りで枠の高さを変えない */
+@media (min-width: 769px) {
+  .reserve-page .reserve-day { min-height: 23px; }
+}
+@media (max-width: 768px) and (max-height: 600px) {
+  .reserve-page .reserve-request-notice { padding: 4px 6px; }
+  .reserve-page .reserve-step-header { margin-bottom: 5px; }
+  .reserve-page .reserve-calendar-nav { margin-bottom: 2px; }
+  .reserve-page .reserve-home-btn { min-height: 36px; }
+}
+
+/* ===== トップページ専用：スマホ表示の最終調整（予約ページ reserve.html には影響しない） ===== */
+
+/* キャンペーン見出し：2行目「口コミ投稿で最大20%引きに！」を途中で折り返さない */
+.price-campaign-line {
+  white-space: nowrap;
+}
+
+/* 料金表：スマホでは横スクロールをやめ、折り返して全列を画面内に収める */
+@media (max-width: 600px) {
+  .price-table-wrap {
+    overflow-x: visible;
+  }
+
+  .price-table thead th,
+  .price-table tbody th,
+  .price-table td {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    padding: 8px 6px;
+  }
+
+  /* 基本料金表：料金区分と「750円／1時間」を語の途中で折り返さない */
+  .price-table-basic th,
+  .price-table-basic td {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .price-table .price-amount {
+    white-space: nowrap;
+  }
+
+  .price-table-rules td {
+    min-width: 0;
+  }
+
+  /* キャンペーン見出し：最も狭い320px幅でも2行目が1行に収まる大きさにする */
+  .price-info--campaign .price-info-title {
+    font-size: clamp(15px, 4.8vw, 23px);
+  }
+
+  .price-info--campaign {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
+/* スマホ下部固定バー：上段2ボタン＋下段1ボタンの構成のまま高さを圧縮（約128px→約108px） */
+@media (max-width: 768px) {
+  .mobile-reservation-bar {
+    gap: 6px 8px;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-reservation-bar .brown,
+  .mobile-reservation-bar .carstay {
+    min-height: 48px;
+  }
+
+  .mobile-reservation-bar .mobile-contact-btn {
+    min-height: 42px;
+    padding: 4px 12px;
+  }
+
+  .mobile-reservation-bar .btn-icon,
+  .mobile-reservation-bar .carstay-icon {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+  }
+
+  /* バー高さ（約108px）＋余白12px＋iPhoneのホームバー領域を本文末尾に確保。予約ページは対象外 */
+  body:not(.reserve-page) {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* 予約カレンダー：月送りは左右端の中央に配置し、日付とは別の余白を使う */
+.reserve-page .reserve-calendar-body {
+  position: relative;
+  padding: 0 32px;
+}
+.reserve-page .reserve-calendar-nav {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.reserve-page .reserve-calendar-nav .reserve-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 32px;
+  width: 32px;
+  min-width: 32px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #58768d;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.reserve-page .reserve-calendar-nav .reserve-nav-btn:disabled {
+  color: #a5b5c1;
+  cursor: default;
+  opacity: 0.45;
+}
+.reserve-page .reserve-calendar-nav .reserve-nav-btn:focus-visible {
+  outline: 2px solid #58768d;
+  outline-offset: -2px;
+}
+
+/* 暖色の茶色・オレンジに合わせ、彩度を抑えた青のSVGを全画面幅で共通使用する */
+.reserve-page .reserve-calendar-nav .reserve-nav-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  fill: currentColor;
+  stroke: none;
+  pointer-events: none;
+}
+
+/* 各月と日付列の幅を均等に固定し、文字の最小幅で片方だけ広がるのを防ぐ */
+.reserve-page .reserve-calendar-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-width: 0;
+}
+.reserve-page .reserve-day,
+.reserve-page .reserve-weekday {
+  min-width: 0;
+}
+
+/* スマホは矢印の見た目の大きさを保ち、左右の余白を抑えて日付の幅を確保する */
+@media (max-width: 768px) {
+  .reserve-page .reserve-calendar-body {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .reserve-page .reserve-calendar-nav .reserve-nav-btn {
+    flex-basis: 24px;
+    width: 24px;
+    min-width: 24px;
+  }
+  .reserve-page .reserve-calendar-grid {
+    column-gap: 2px;
+  }
+  /* 2桁の日付も隣のセルと区別できるよう、数字の幅と文字サイズをそろえる */
+  .reserve-page .reserve-day,
+  .reserve-page .reserve-selecting-area.is-expanded .reserve-day {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: clamp(11px, 3.2vw, 13px);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: normal;
+    line-height: 1.2;
+    white-space: nowrap;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* トップページ：3行目「寝具・キャンプ・BBQ道具も借りたい」を1行に。見出し幅（h2）を基準に収まる大きさにする */
+.free-offer .free-offer-line3 {
+  display: block;
+  white-space: nowrap;
+  font-size: calc((100vw - 58px) / 20);
+  font-size: min(1em, 5cqw);
+}
+
+/* キャンセル料金へのアンカー移動：見出しが画面最上端に貼り付かない余白 */
+.price-subtitle#cancel-fee {
+  scroll-margin-top: 12px;
+}
+
+/* 予約ページ：確認案内（各内容を確認し、チェックを入れてください。）を欄幅に合わせて1行に収める */
+.reserve-confirm-box {
+  container-type: inline-size;
+}
+
+.reserve-page .reserve-confirm-error {
+  margin: 8px -10px 0;
+  white-space: nowrap;
+  font-size: clamp(11px, calc((100vw - 60px) / 21.5), 16px);
+  font-size: min(16px, calc((100cqw + 20px) / 21.5));
+}
+
+.reserve-page .reserve-confirm-error.is-emphasized {
+  font-size: clamp(10px, calc((100vw - 60px) / 23.7), 22px);
+  font-size: min(22px, calc((100cqw + 20px) / 23.7));
 }
