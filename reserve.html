@@ -36,22 +36,32 @@
     .reserve-page .reserve-bank-transfer p { margin: 8px 0; }
     .reserve-page .reserve-bank-transfer dl {
       display: grid;
-      grid-template-columns: 5em minmax(0, 1fr);
-      gap: 8px 12px;
+      grid-template-columns: 4em minmax(0, 1fr);
+      gap: 4px 8px;
       margin: 12px 0 0;
     }
-    .reserve-page .reserve-bank-transfer dt { font-weight: bold; }
-    .reserve-page .reserve-bank-transfer dd { margin: 0; }
+    .reserve-page .reserve-bank-transfer dt { font-weight: bold; align-self: center; }
+    .reserve-page .reserve-bank-transfer dd { margin: 0; align-self: center; }
+    .reserve-page .reserve-bank-code { font-size: 14px; white-space: nowrap; }
+    .reserve-page #reserveBankCopyStatus:empty { margin: 0; }
+    @media (max-width: 600px) {
+      .reserve-page .reserve-bank-transfer { padding: 10px; line-height: 1.4; }
+      .reserve-page .reserve-bank-transfer summary { line-height: 1.4; }
+      .reserve-page .reserve-bank-transfer dl { margin-top: 8px; gap: 4px 6px; }
+      .reserve-page .reserve-bank-transfer dt { font-size: 14px; }
+      .reserve-page .reserve-bank-transfer p { margin: 6px 0; }
+    }
     .reserve-page .reserve-bank-value {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 6px 12px;
+      gap: 6px;
     }
     .reserve-page .reserve-bank-copy {
       min-height: 44px;
-      padding: 6px 12px;
+      padding: 6px 8px;
       border: 1px solid #a98d75;
+      white-space: nowrap;
       border-radius: 6px;
       background: #fff;
       color: #3a2113;
@@ -130,12 +140,11 @@
     </section>
 
     <details class="reserve-bank-transfer" id="bank-transfer">
-      <summary>振込先を確認する（振込案内メールを受け取った方）</summary>
-      <p><strong>当社の振込案内メールに記載された金額をお振込みください。</strong></p>
-      <p>振込案内メールが届くまでは、お振込みをお待ちください。振込手数料はお客様負担です。</p>
+      <summary>振込先（振込案内メール受領後）</summary>
+      <p><strong>振込案内メールが届いてから、記載の金額をお振込みください。</strong><br>振込手数料はお客様負担です。</p>
       <dl aria-label="直接予約の振込先">
         <dt>銀行名</dt><dd>GMOあおぞらネット銀行</dd>
-        <dt>支店名</dt><dd>法人第二営業部（102）</dd>
+        <dt>支店名</dt><dd class="reserve-bank-value"><span><span id="reserveBankBranchName">法人第二営業部</span><span class="reserve-bank-code">（102）</span></span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankBranchName" aria-label="支店名をコピー">コピー</button></dd>
         <dt>預金種目</dt><dd>普通預金</dd>
         <dt>口座番号</dt>
         <dd class="reserve-bank-value"><span id="reserveBankAccountNumber">1369217</span><button type="button" class="reserve-bank-copy" data-bank-copy="reserveBankAccountNumber" aria-label="口座番号をコピー">コピー</button></dd>
