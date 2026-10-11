@@ -471,11 +471,9 @@
           }
           clearDateError();
           startDate = picked;
-          if (editingMode) {
-            // 再編集：開始日時だけを変更する。返却日時は保持し、返却選択へは自動移動しない
-          } else {
-            // 初回入力：返却日時の選択へ自動的に進む
-            endDate = null;
+          // 返却日時が未入力の場合だけ、返却日時の選択へ自動的に進む。
+          // 返却日時を先に入力した場合や再編集では、入力済みの日時を保持する。
+          if (!editingMode && !endDate) {
             step = 'end';
           }
         } else {
