@@ -2266,7 +2266,7 @@ body {
 /* 予約カレンダー：月送りは左右端の中央に配置し、日付とは別の余白を使う */
 .reserve-page .reserve-calendar-body {
   position: relative;
-  padding: 0 24px;
+  padding: 0 32px;
 }
 .reserve-page .reserve-calendar-nav {
   position: absolute;
@@ -2285,9 +2285,9 @@ body {
   justify-content: center;
   appearance: none;
   -webkit-appearance: none;
-  flex: 0 0 24px;
-  width: 24px;
-  min-width: 24px;
+  flex: 0 0 32px;
+  width: 32px;
+  min-width: 32px;
   min-height: 44px;
   padding: 0;
   border: none;
@@ -2311,9 +2311,9 @@ body {
 /* 暖色の茶色・オレンジに合わせ、彩度を抑えた青のSVGを全画面幅で共通使用する */
 .reserve-page .reserve-calendar-nav .reserve-nav-icon {
   display: block;
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
   fill: currentColor;
   stroke: none;
   pointer-events: none;
