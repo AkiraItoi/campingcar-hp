@@ -5,6 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>予約リクエスト・料金確認｜SUN AID</title>
   <link rel="stylesheet" href="style.css?v=20261011-copyright">
+  <style>
+    .reserve-page .reserve-bank-transfer {
+      padding: 14px;
+      border: 1px solid #d9c6b5;
+      border-radius: 10px;
+      background: #fffaf4;
+      color: #3a2113;
+      font-size: 16px;
+      line-height: 1.65;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+    .reserve-page .reserve-bank-transfer h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+    .reserve-page .reserve-bank-transfer ol {
+      margin: 0;
+      padding-left: 1.5em;
+    }
+    .reserve-page .reserve-bank-transfer li + li {
+      margin-top: 6px;
+    }
+    .reserve-page .reserve-bank-transfer p {
+      margin: 10px 0 0;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body class="reserve-page">
 
@@ -14,7 +42,7 @@
       <div class="reserve-request-notice">
         <h2>予約リクエスト・料金確認</h2>
         <p class="reserve-request-alert"><strong>この時点ではまだ予約は確定していません。</strong></p>
-        <p class="reserve-request-flow">下記入力後、当社からの返答の後に確定になります</p>
+        <p class="reserve-request-flow">直接予約は、当社の入金確認時に確定します。</p>
       </div>
 
       <div class="reserve-step-header" id="reserveStepHeader">
@@ -55,6 +83,16 @@
       </div>
 
       <div class="reserve-action-buttons" id="reserveActionButtons" hidden>
+          <section class="reserve-bank-transfer" aria-labelledby="reserveBankTransferTitle">
+            <h3 id="reserveBankTransferTitle">直接予約・銀行振込の流れ</h3>
+            <ol>
+              <li><strong>予約申込み：</strong>予約リクエストフォームを送信します。</li>
+              <li><strong>振込案内：</strong>当社からの案内で、振込先とお支払い内容をご確認ください。</li>
+              <li><strong>銀行振込：</strong>案内に従ってお振込みください。</li>
+              <li><strong>予約確定：</strong>当社が入金を確認した時点で予約が確定します。</li>
+            </ol>
+            <p>フォームの送信や振込手続きだけでは、予約は確定しません。</p>
+          </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
             <input type="checkbox" id="reserveConfirmCheck" aria-labelledby="reserveConfirmText">
