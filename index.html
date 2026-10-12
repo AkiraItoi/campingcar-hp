@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261012-hero-aligned">
+  <link rel="stylesheet" href="style.css?v=20261012-beginner-faq">
 </head>
 <body>
 
@@ -103,9 +103,64 @@
 </div>
     </section>
 
-    <!-- Q&Aは外部noteへ遷移させず、内容確定後にHP内へ実装する -->
-    <section class="qa" hidden aria-hidden="true">
-      <h2>この車を借りるメリットを教えて！</h2>
+    <section class="qa" id="qa" aria-labelledby="qa-title">
+      <h2 id="qa-title">はじめての方によくある質問</h2>
+      <p class="qa-intro">キャンピングカーの利用が初めての方からよくいただく質問をまとめました。</p>
+
+      <div class="qa-list">
+        <details class="qa-item">
+          <summary>キャンピングカーを初めて利用します。大丈夫ですか？</summary>
+          <div class="qa-answer">
+            <p>初めて利用されたお客様の声も掲載しています。車両にはバックモニター、コーナーセンサー、ドライブレコーダーなどを装備しています。これらは運転を補助する装置で、安全運転を保証するものではありません。車両の仕様を確認し、無理のない計画でご利用ください。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>運転にはどの免許が必要ですか？</summary>
+          <div class="qa-answer">
+            <p>必要な免許条件は、免許証に記載された条件と車両総重量をご確認ください。免許取得時期によって運転できる車両の範囲が異なります。ご自身で判断が難しい場合は、予約前にお問い合わせください。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>エンジンを止めたままエアコンを使えますか？</summary>
+          <div class="qa-answer">
+            <p>家庭用エアコンは、バッテリーが十分に充電されていれば、エンジンを止めた状態で一晩使用できます。使用できる時間は充電量や使用状況によって変わります。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>車内にはどんな設備や備品がありますか？</summary>
+          <div class="qa-answer">
+            <p>車内には食器、救急箱、テレビ、水道、冷蔵庫、電子レンジ、簡易トイレ、FFヒーター、家庭用エアコンなどを備えています。寝具、椅子・テーブル、BBQセットは有料オプションです。</p>
+            <p><a href="#equipment">設備一覧を見る</a></p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>車両の受け渡し場所はどこですか？</summary>
+          <div class="qa-answer">
+            <p>静岡県駿東郡清水町の島田産婦人科医院 第3駐車場でお渡しします。三島駅北口での受け渡しもできます。</p>
+            <p><a href="#access">場所と地図を見る</a></p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>予約リクエストを送れば、予約は確定しますか？</summary>
+          <div class="qa-answer">
+            <p>予約リクエストの送信時点では、まだ予約は確定しません。振込案内メールをお送りしますので、お振込み後、当社で入金を確認した時点で予約確定となります。仮押さえはありません。</p>
+            <p><a href="reserve.html">空き状況と予約の流れを見る</a></p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>利用料金はどのように決まりますか？</summary>
+          <div class="qa-answer">
+            <p>最初の24時間までは1日料金で、24時間を超えた分は1時間単位で加算します。土日祝日やシーズン期は料金が異なります。予約ページで利用日時を選ぶと概算料金を確認できます。</p>
+            <p><a href="#price">料金表を見る</a></p>
+          </div>
+        </details>
+      </div>
     </section>
 
     <section class="voice">
@@ -128,7 +183,7 @@
       </div>
     </section>
 
-    <section class="equipment">
+    <section class="equipment" id="equipment">
       <div class="eq-list">
         <div class="eq-row" id="safety-equipment">
           <span class="eq-label">どこよりも、安全</span>
