@@ -61,14 +61,6 @@
     let pauseUntil = 0;
     const pause = () => {pauseUntil = Date.now() + 10000;};
     ['pointerdown','touchstart','wheel','focusin','mouseenter'].forEach(type => rail.addEventListener(type, pause, {passive:true}));
-    const observer = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      if (document.hidden || Date.now() < pauseUntil) return;
-      const first = rail.firstElementChild;
-      const step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(rail).gap || '0');
-      if (rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4) rail.scrollTo({left:0, behavior:'smooth'});
-      else rail.scrollBy({left:step, behavior:'smooth'});
-    }, {threshold:0.2});
     // タイマーは見えている間だけ進める。
     let visible = false;
     const visibility = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }, {threshold:0.2});
