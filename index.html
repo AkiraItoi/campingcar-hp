@@ -27,10 +27,10 @@
       <div class="hero-copy-group">
       <div class="hero-registration-note">
         <p class="hero-registration"><span class="nb">初度登録：</span><span class="nb">2023年6月</span></p>
-        <span class="hero-question hero-registration-question">
+        <a class="hero-question hero-registration-question" href="#qa-vehicle-difference" aria-label="この車の特長をQ&Aで見る">
           <span class="hero-registration-person" aria-hidden="true"><img src="img/registration-surprise-matched.png" alt="" decoding="async"></span>
           <span class="hero-question-bubble">新しい！</span>
-        </span>
+        </a>
       </div>
       <h1 class="hero-promises" aria-label="最高の安全装備で、特別な思い出を">
         <span class="hero-promise">
@@ -111,7 +111,7 @@
       <p class="qa-intro">SUN AIDのキャンピングカーならではの特長と、ご利用前に知っておいていただきたいことをご紹介します。</p>
 
       <div class="qa-list">
-        <details class="qa-item">
+        <details class="qa-item" id="qa-vehicle-difference">
           <summary>この車は、他のキャンピングカーと何が違いますか？</summary>
           <div class="qa-answer">
             <p>エアサスペンション、強化ブレーキ、強化バッテリーを備えています。他のキャブコンを運転した経験がある方には、走行時の安定感や乗り心地の違いを感じていただけると思います。高速道路での横風や大型車とのすれ違い、トンネル出口で受ける風の影響を抑え、後部座席の揺れも少なく、移動中も快適に過ごせます。</p>
@@ -447,6 +447,16 @@
     }
     return false;
   }
+  function openQaItemFromHash() {
+    var id = decodeURIComponent((location.hash || '').slice(1));
+    var target = id ? document.getElementById(id) : null;
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
+    }
+  }
+  window.addEventListener('DOMContentLoaded', openQaItemFromHash);
+  window.addEventListener('hashchange', openQaItemFromHash);
+
   window.addEventListener('pageshow', function () {
     setTimeout(function () {
       if (!scrollToHashTarget()) {
