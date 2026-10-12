@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261012-hero-aligned">
+  <link rel="stylesheet" href="style.css?v=20261012-beginner-faq">
 </head>
 <body>
 
@@ -103,9 +103,40 @@
 </div>
     </section>
 
-    <!-- Q&Aは外部noteへ遷移させず、内容確定後にHP内へ実装する -->
-    <section class="qa" hidden aria-hidden="true">
-      <h2>この車を借りるメリットを教えて！</h2>
+    <section class="qa" id="qa" aria-labelledby="qa-title">
+      <h2 id="qa-title">この車を借りるメリットを教えて！</h2>
+      <p class="qa-intro">SUN AIDのキャンピングカーならではの特長と、ご利用前に知っておいていただきたいことをご紹介します。</p>
+
+      <div class="qa-list">
+        <details class="qa-item">
+          <summary>この車は、他のキャンピングカーと何が違いますか？</summary>
+          <div class="qa-answer">
+            <p>エアサスペンション、強化ブレーキ、強化バッテリーを備えています。他のキャブコンを運転した経験がある方には、走行時の安定感や乗り心地の違いを感じていただけると思います。高速道路での横風や大型車とのすれ違い、トンネル出口で受ける風の影響を抑え、後部座席の揺れも少なく、移動中も快適に過ごせます。</p>
+            <p>強化バッテリーが十分に充電されていれば、エンジンを止めた状態で家庭用エアコンを一晩使用できます。貸出時は充電量を100％近くにしてお渡しします。寒い時期はFFヒーターで車内を暖められます。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>キャンピングカーが初めてでも大丈夫ですか？</summary>
+          <div class="qa-answer">
+            <p>貸出時に運転や設備の注意点をご説明します。必要に応じて、一緒に試運転していただくこともできます。運転の際はゆっくり安全運転を心がけ、特に車高にご注意ください。コーナーセンサーも備えています。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>受け取りや返却の時間は希望できますか？</summary>
+          <div class="qa-answer">
+            <p>車両1台・担当者1名で運営しているため、ご希望の時間帯に対応できない場合があります。ご希望日時を伺い、対応可能な時間をご案内します。何卒ご理解くださいますようお願いいたします。</p>
+          </div>
+        </details>
+
+        <details class="qa-item">
+          <summary>他店より料金が安く感じますが、なぜですか？</summary>
+          <div class="qa-answer">
+            <p>車両1台・担当者1名の小規模な運営体制で、運営にかかる費用を抑えているためです。その分、ご利用いただきやすい料金にしています。</p>
+          </div>
+        </details>
+      </div>
     </section>
 
     <section class="voice">
@@ -128,7 +159,7 @@
       </div>
     </section>
 
-    <section class="equipment">
+    <section class="equipment" id="equipment">
       <div class="eq-list">
         <div class="eq-row" id="safety-equipment">
           <span class="eq-label">どこよりも、安全</span>

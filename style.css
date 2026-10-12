@@ -2650,3 +2650,97 @@ body {
   .hero-copy-group .hero-registration-illustration { width: 64px; height: 60px; }
   .hero-copy-group .hero-driver { --driver-size: 48px; }
 }
+
+/* 初めての方向けQ&A */
+.qa {
+  margin: 20px 0;
+  padding: 20px 16px;
+  border: 1px solid #e5d6c8;
+  border-radius: 14px;
+  background: #fff;
+  color: #4a382c;
+}
+.qa h2 {
+  margin: 0 0 8px;
+  color: #5a351f;
+  font-size: 22px;
+  line-height: 1.45;
+  text-align: left;
+}
+.qa-intro {
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+.qa-list {
+  display: grid;
+  gap: 10px;
+}
+.qa-item {
+  overflow: hidden;
+  border: 1px solid #e5d6c8;
+  border-radius: 9px;
+  background: #fffaf5;
+}
+.qa-item summary {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  color: #4a2d1c;
+  font-weight: bold;
+  line-height: 1.55;
+  cursor: pointer;
+  list-style: none;
+}
+.qa-item summary::-webkit-details-marker {
+  display: none;
+}
+.qa-item summary::after {
+  flex: 0 0 auto;
+  content: "+";
+  color: #8c6a4a;
+  font-family: sans-serif;
+  font-size: 22px;
+  font-weight: normal;
+}
+.qa-item[open] summary::after {
+  content: "−";
+}
+.qa-answer {
+  padding: 0 14px 14px;
+  line-height: 1.75;
+}
+.qa-answer p {
+  margin: 0 0 8px;
+}
+.qa-answer p:last-child {
+  margin-bottom: 0;
+}
+.qa-answer a {
+  color: #5a351f;
+  font-weight: bold;
+  text-underline-offset: 3px;
+}
+.qa-item summary:focus-visible,
+.qa-answer a:focus-visible {
+  outline: 2px solid #8c6a4a;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .qa {
+    margin: 16px 0;
+    padding: 16px 12px;
+  }
+  .qa h2 {
+    font-size: 20px;
+  }
+  .qa-item summary {
+    min-height: 48px;
+    padding: 10px 12px;
+  }
+  .qa-answer {
+    padding: 0 12px 12px;
+  }
+}
