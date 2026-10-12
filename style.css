@@ -2769,3 +2769,20 @@ body {
     padding: 0 12px 12px;
   }
 }
+
+/* 安全装備の案内とQ&A内の既存キャラクター */
+.hero .hero-question.hero-safety-link {
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.qa-safety-person {
+  float: left;
+  margin: 4px 14px 8px 0;
+}
+.qa-safety-answer::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+#qa-safety-equipment { scroll-margin-top: 16px; }
