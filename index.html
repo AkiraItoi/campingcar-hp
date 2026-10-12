@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
-  <link rel="stylesheet" href="style.css?v=20261012-beginner-faq">
+  <link rel="stylesheet" href="style.css?v=20261012-safety-faq">
 </head>
 <body>
 
@@ -35,10 +35,7 @@
       <h1 class="hero-promises" aria-label="最高の安全装備で、特別な思い出を">
         <span class="hero-promise">
           <span class="hero-promise-copy"><span class="nb">最高の</span><span class="nb">安全装備で</span></span>
-          <a class="hero-question" href="#safety-equipment">
-            <span class="hero-driver" aria-hidden="true"><img src="img/park-image.jpg" alt="" decoding="async"></span>
-            <span class="hero-question-bubble">なにがあるの？</span>
-          </a>
+          <a class="hero-question hero-safety-link" href="#qa-safety-equipment">なにがあるの？</a>
         </span>
         <span class="hero-promise">
           <span class="hero-promise-copy"><span class="nb">特別な</span><span class="nb">思い出を</span></span>
@@ -116,6 +113,16 @@
           <div class="qa-answer">
             <p>車両が新しいだけでなく、2024年時点で最新の車両で、エアサスペンション、強化ブレーキ、強化バッテリーを備えています。その運転時の安心感は、他のキャブコンを運転した経験がある方には、違いがはっきり分かると思います。街中の運転やブレーキ時に安定感を感じるだけでなく、高速道路で大型車とのすれ違いやトンネル出口で受ける煽りの影響をかなり抑えられています。また後部座席の揺れも少なく、乗っている方も移動中を快適に過ごせます。その結果、道中がただの移動時間でなく、全ての時間が楽しい旅の時間になります。</p>
             <p>強化バッテリーが十分に充電されていれば、エンジンを止めた状態で家庭用エアコンを一晩使用できます。貸出時は充電量を100％近くにしてお渡しします。寒い時期はFFヒーターで車内を暖かく快適に過ごせます。</p>
+          </div>
+        </details>
+
+        <details class="qa-item" id="qa-safety-equipment">
+          <summary>最高の安全装備とは具体的に何のことですか？</summary>
+          <div class="qa-answer qa-safety-answer">
+            <span class="hero-driver qa-safety-person" aria-hidden="true"><img src="img/park-image.jpg" alt="" loading="lazy" decoding="async"></span>
+            <p>上述の車両の新しさ、エアサスペンション、強化ブレーキ、強化バッテリーのほか、コーナーセンサー、バックモニター、外付けの居眠りセンサーを備えています。</p>
+            <p>キャンピングカーでは、駐車場などで車体をぶつけたり、擦ったりしないよう注意が必要です。装備だけで接触を完全に防ぐことはできませんし、センサーを100％信頼できるわけでもありません。それでも、車体の周囲を確認する助けになるセンサーやモニターは、キャンピングカーには特に必要な装備と考え、設置しています。必ず目視でも周囲の安全をご確認ください。</p>
+            <p>外付けの居眠りセンサーも、居眠り運転を完全に防げるものではありません。眠気を感じたら運転を続けず、安全な場所に停車して仮眠を取ってください。そのうえで、万が一の際に少しでも運転のサポートになればと考え、設置しています。</p>
           </div>
         </details>
 
@@ -432,6 +439,9 @@
   </div>
 
   <script>
+    document.querySelector('.hero-safety-link').addEventListener('click', function () {
+      document.getElementById('qa-safety-equipment').open = true;
+    });
     if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
   }
