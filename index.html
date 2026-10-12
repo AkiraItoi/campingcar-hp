@@ -27,10 +27,10 @@
       <div class="hero-copy-group">
       <div class="hero-registration-note">
         <p class="hero-registration"><span class="nb">初度登録：</span><span class="nb">2023年6月</span></p>
-        <span class="hero-question hero-registration-question">
+        <a class="hero-question hero-registration-question" href="#qa-vehicle-difference" aria-label="車両の特長をQ&Aで見る">
           <span class="hero-registration-person" aria-hidden="true"><img src="img/registration-surprise-matched.png" alt="" decoding="async"></span>
           <span class="hero-question-bubble">新しい！</span>
-        </span>
+        </a>
       </div>
       <h1 class="hero-promises" aria-label="最高の安全装備で、特別な思い出を">
         <span class="hero-promise">
@@ -111,11 +111,11 @@
       <p class="qa-intro">SUN AIDのキャンピングカーならではの特長と、ご利用前に知っておいていただきたいことをご紹介します。</p>
 
       <div class="qa-list">
-        <details class="qa-item">
+        <details class="qa-item" id="qa-vehicle-difference">
           <summary>この車は、他のキャンピングカーと何が違いますか？</summary>
           <div class="qa-answer">
-            <p>エアサスペンション、強化ブレーキ、強化バッテリーを備えています。他のキャブコンを運転した経験がある方には、走行時の安定感や乗り心地の違いを感じていただけると思います。高速道路での横風や大型車とのすれ違い、トンネル出口で受ける風の影響を抑え、後部座席の揺れも少なく、移動中も快適に過ごせます。</p>
-            <p>強化バッテリーが十分に充電されていれば、エンジンを止めた状態で家庭用エアコンを一晩使用できます。貸出時は充電量を100％近くにしてお渡しします。寒い時期はFFヒーターで車内を暖められます。</p>
+            <p>車両が新しいだけでなく、2024年時点で最新の車両で、エアサスペンション、強化ブレーキ、強化バッテリーを備えています。その運転時の安心感は、他のキャブコンを運転した経験がある方には、違いがはっきり分かると思います。街中の運転やブレーキ時に安定感を感じるだけでなく、高速道路で大型車とのすれ違いやトンネル出口で受ける煽りの影響をかなり抑えられています。また後部座席の揺れも少なく、乗っている方も移動中を快適に過ごせます。その結果、道中がただの移動時間でなく、全ての時間が楽しい旅の時間になります。</p>
+            <p>強化バッテリーが十分に充電されていれば、エンジンを止めた状態で家庭用エアコンを一晩使用できます。貸出時は充電量を100％近くにしてお渡しします。寒い時期はFFヒーターで車内を暖かく快適に過ごせます。</p>
           </div>
         </details>
 
@@ -442,6 +442,7 @@
     var id = decodeURIComponent((location.hash || '').slice(1));
     var el = id ? document.getElementById(id) : null;
     if (el) {
+      if (el.tagName === 'DETAILS') el.open = true;
       el.scrollIntoView({ block: 'start' });
       return true;
     }
@@ -455,6 +456,9 @@
     }, 0);
   });
   window.addEventListener('load', function () {
+    scrollToHashTarget();
+  });
+  window.addEventListener('hashchange', function () {
     scrollToHashTarget();
   });
     document.addEventListener('DOMContentLoaded', function () {
