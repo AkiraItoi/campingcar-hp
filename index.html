@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>株式会社SUN AID｜伊豆・三島のキャンピングカーレンタル</title>
   <link rel="stylesheet" href="style.css?v=20261012-beginner-faq">
+  <link rel="stylesheet" href="spots.css">
 </head>
 <body>
 
@@ -189,6 +190,19 @@
 
     <section class="private-campsite" id="private-campsite">
       <p>プライベートキャンプ場の案内を準備中</p>
+    </section>
+
+    <section class="spots" id="recommended-spots" hidden aria-labelledby="spots-heading">
+      <h2 id="spots-heading">実際に行ってよかった！<br>車中泊スポット・キャンプ場・遊び場</h2>
+      <p class="spots-intro">私たちが実際に訪れ、おすすめしたい場所をご紹介します。</p>
+      <div class="spots-group" id="spots-stay-group" hidden>
+        <h3>車中泊スポット・キャンプ場</h3>
+        <div class="spots-rail" id="spots-stay" aria-label="おすすめの車中泊スポット・キャンプ場"></div>
+      </div>
+      <div class="spots-group" id="spots-play-group" hidden>
+        <h3>日中の遊び場</h3>
+        <div class="spots-rail" id="spots-play" aria-label="おすすめの日中の遊び場"></div>
+      </div>
     </section>
 
     <section class="price" id="price">
@@ -431,6 +445,7 @@
     </a>
   </div>
 
+  <script src="spots.js" defer></script>
   <script>
     if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
