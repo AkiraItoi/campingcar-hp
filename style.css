@@ -2629,14 +2629,39 @@ body {
   white-space: nowrap;
   font-size: min(42px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
 }
-.hero-copy-group .hero-registration-illustration {
+.hero-copy-group .hero-registration-question {
   grid-column: 2;
   grid-row: 1;
   justify-self: start;
-  width: 80px;
-  height: 76px;
-  object-fit: contain;
-  margin: 0;
+}
+.hero-copy-group .hero-registration-person {
+  --registration-person-size: 64px;
+  position: relative;
+  display: block;
+  width: var(--registration-person-size);
+  height: calc(var(--registration-person-size) * 120 / 108);
+  flex: 0 0 var(--registration-person-size);
+  overflow: hidden;
+}
+.hero-copy-group .hero-registration-person img {
+  position: absolute;
+  display: block;
+  width: calc(var(--registration-person-size) * 1293 / 590);
+  max-width: none;
+  height: auto;
+  left: calc(var(--registration-person-size) * -337 / 590);
+  top: calc(var(--registration-person-size) * -414 / 590);
+}
+/* 元画像に含まれていた吹き出しの先端だけを隠し、人物を切り出す */
+.hero-copy-group .hero-registration-person::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 9px;
+  background: #fffaf4;
+  pointer-events: none;
 }
 .hero .hero-copy-group .hero-promises { margin: 12px 0 24px; text-align: left; }
 .hero-copy-group .hero-promise-copy { text-align: left; }
@@ -2647,6 +2672,6 @@ body {
     font-size: min(26px, calc((100vw - 56px) * 1.4 / 2.4 / 10));
     font-size: min(26px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
   }
-  .hero-copy-group .hero-registration-illustration { width: 64px; height: 60px; }
+  .hero-copy-group .hero-registration-person { --registration-person-size: 48px; }
   .hero-copy-group .hero-driver { --driver-size: 48px; }
 }
