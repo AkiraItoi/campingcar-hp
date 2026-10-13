@@ -2,23 +2,24 @@
   {
     "title": "刈谷ハイウェイオアシス",
     "category": "stay",
-    "comment": "ゴーカートが100円！大人気です。車中泊したら朝一狙い！",
+    "images": [
+      "/img/spots/IMG_3747.jpeg",
+      "/img/spots/IMG_3749.jpeg"
+    ],
+    "comment": "ゴーカートが100円！大人気です。車中泊したら朝一狙い！日帰り温泉は漫画も充実、食事も美味しい。夜の観覧車は足元までのスケルトン車両で夜景が絶景、トイレは古代ローマ感、日本の文化も大切にしている。こんなに素晴らしいハイウェイオアシスはなかなか気がします。",
     "url": "https://kariya-oasis.com/",
     "private": false,
-    "published": false,
-    "images": [
-      "/img/spots/IMG_3747.jpeg"
-    ]
+    "published": false
   },
   {
     "title": "道の駅 湯の花 観光案内所",
     "category": "stay",
+    "images": [
+      "/img/spots/IMG_3758.jpeg"
+    ],
     "comment": "南伊豆の車中泊はここ一択！広い！トイレがデカくてキレイ！明るい！自販機充実！",
     "url": "https://maps.app.goo.gl/TTvUy4H3ViV6X2CYA?g_st=ic",
     "private": false,
-    "published": false,
-    "images": [
-      "/img/spots/IMG_3758.jpeg"
-    ]
+    "published": false
   }
 ]
