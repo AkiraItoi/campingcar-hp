@@ -2769,3 +2769,6 @@ body {
     padding: 0 12px 12px;
   }
 }
+
+/* 安全装備のQ&Aへの移動位置 */
+#qa-safety-equipment { scroll-margin-top: 16px; }

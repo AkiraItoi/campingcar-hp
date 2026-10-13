@@ -1,76 +1,182 @@
 'use strict';
+
 (async function () {
   const section = document.getElementById('recommended-spots');
   if (!section) return;
+
   let spots;
   try {
-    const response = await fetch('/data/spots.json', {cache:'no-cache'});
+    const response = await fetch('/data/spots.json', { cache: 'no-cache' });
     if (!response.ok) return;
     spots = await response.json();
-  } catch { return; }
+  } catch {
+    return;
+  }
   if (!Array.isArray(spots)) return;
 
   const categories = {
-    stay: {rail: document.getElementById('spots-stay'), group: document.getElementById('spots-stay-group'), label:'車中泊スポット・キャンプ場'},
-    play: {rail: document.getElementById('spots-play'), group: document.getElementById('spots-play-group'), label:'日中の遊び場'}
+    stay: {
+      rail: document.getElementById('spots-stay'),
+      group: document.getElementById('spots-stay-group'),
+      label: '車中泊スポット'
+    },
+    camp: {
+      rail: document.getElementById('spots-camp'),
+      group: document.getElementById('spots-camp-group'),
+      label: 'キャンプ場'
+    },
+    play: {
+      rail: document.getElementById('spots-play'),
+      group: document.getElementById('spots-play-group'),
+      label: '遊び場'
+    }
   };
+
   const safeUrl = value => {
     try {
       const url = new URL(value);
       return url.protocol === 'https:' ? url.href : null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   };
-  const safeImage = value => typeof value === 'string' && /^\/?img\/spots\/[a-zA-Z0-9/_-]+\.(?:jpg|jpeg|png|webp)$/i.test(value)
-    ? '/' + value.replace(/^\//, '') : null;
+
+  const safeImage = value =>
+    typeof value === 'string' &&
+    /^\/?img\/spots\/[a-zA-Z0-9/_-]+\.(?:jpg|jpeg|png|webp)$/i.test(value)
+      ? '/' + value.replace(/^\//, '')
+      : null;
 
   for (const item of spots) {
     if (!item || item.published !== true || !categories[item.category]) continue;
+
     const title = typeof item.title === 'string' ? item.title.trim() : '';
     const comment = typeof item.comment === 'string' ? item.comment.trim() : '';
-    const url = safeUrl(item.url), image = safeImage(item.image);
+    const url = safeUrl(item.url);
+    const image = safeImage(item.image);
     if (!title || !comment || !url || !image) continue;
 
     const card = document.createElement('article');
     card.className = 'spots-card';
+    if (item.private === true) card.classList.add('is-private');
+
     const link = document.createElement('a');
-    link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     link.setAttribute('aria-label', title + ' の公式サイトを開く');
+
     const photo = document.createElement('img');
-    photo.src = image; photo.alt = title + ' の写真'; photo.loading = 'lazy'; photo.decoding = 'async';
+    photo.src = image;
+    photo.alt = title + ' の写真';
+    photo.loading = 'lazy';
+    photo.decoding = 'async';
+
     const body = document.createElement('div');
     body.className = 'spots-card-body';
+
     const tag = document.createElement('span');
-    tag.className = 'spots-card-tag'; tag.textContent = categories[item.category].label;
-    const heading = document.createElement('h4'); heading.textContent = title;
-    const description = document.createElement('p'); description.textContent = comment;
+    tag.className = 'spots-card-tag';
+    tag.textContent = categories[item.category].label;
+    body.append(tag);
+
+    if (item.private === true) {
+      const privateTag = document.createElement('span');
+      privateTag.className = 'spots-card-private';
+      privateTag.textContent = 'プライベートキャンプ場';
+      body.append(privateTag);
+    }
+
+    const heading = document.createElement('h4');
+    heading.textContent = title;
+
+    const description = document.createElement('p');
+    description.textContent = comment;
+
     const more = document.createElement('span');
-    more.className = 'spots-card-link'; more.textContent = '公式サイトを見る ↗';
-    body.append(tag, heading, description, more);
-    link.append(photo, body); card.append(link);
+    more.className = 'spots-card-link';
+    more.textContent = '公式サイトを見る ↗';
+
+    body.append(heading, description, more);
+    link.append(photo, body);
+    card.append(link);
     categories[item.category].rail.append(card);
   }
-  const active = Object.values(categories).filter(({rail}) => rail.children.length);
+
+  const active = Object.values(categories).filter(({ rail }) => rail.children.length);
   if (!active.length) return;
-  active.forEach(({group}) => { group.hidden = false; });
+
+  active.forEach(({ group }) => {
+    group.hidden = false;
+  });
   section.hidden = false;
 
-  // 操作中は自動送りを止める。動きを減らす設定も尊重する。
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  active.forEach(({rail}) => {
-    if (rail.children.length < 2) return;
-    let pauseUntil = 0;
-    const pause = () => {pauseUntil = Date.now() + 10000;};
-    ['pointerdown','touchstart','wheel','focusin','mouseenter'].forEach(type => rail.addEventListener(type, pause, {passive:true}));
-    // タイマーは見えている間だけ進める。
+
+  active.forEach(({ rail }) => {
+    const originals = Array.from(rail.children);
+    if (originals.length < 2) return;
+
+    const clones = originals.map(card => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      const cloneLink = clone.querySelector('a');
+      if (cloneLink) cloneLink.tabIndex = -1;
+      rail.append(clone);
+      return clone;
+    });
+
+    const loopDistance = clones[0].offsetLeft - originals[0].offsetLeft;
+    if (loopDistance <= 0) return;
+
+    let stopped = false;
     let visible = false;
-    const visibility = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }, {threshold:0.2});
-    visibility.observe(rail);
-    setInterval(() => {
-      if (!visible || document.hidden || Date.now() < pauseUntil) return;
-      const first = rail.firstElementChild;
-      const step = first.getBoundingClientRect().width + parseFloat(getComputedStyle(rail).gap || '0');
-      if (rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 4) rail.scrollTo({left:0, behavior:'smooth'});
-      else rail.scrollBy({left:step, behavior:'smooth'});
-    }, 4500);
+    let frameId = 0;
+    let lastTime = performance.now();
+    const pixelsPerSecond = 24;
+
+    const stopAutoMove = () => {
+      if (stopped) return;
+      stopped = true;
+      cancelAnimationFrame(frameId);
+    };
+
+    rail.addEventListener('pointerdown', stopAutoMove, { passive: true });
+    rail.addEventListener('touchstart', stopAutoMove, { passive: true });
+    rail.addEventListener('focusin', stopAutoMove);
+    rail.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') stopAutoMove();
+    });
+    rail.addEventListener('wheel', event => {
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey) {
+        stopAutoMove();
+      }
+    }, { passive: true });
+
+    const animate = now => {
+      if (stopped) return;
+      const elapsed = Math.min(now - lastTime, 50);
+      lastTime = now;
+
+      if (visible && !document.hidden) {
+        rail.scrollLeft += pixelsPerSecond * elapsed / 1000;
+        if (rail.scrollLeft >= loopDistance) {
+          rail.scrollLeft -= loopDistance;
+        }
+      }
+      frameId = requestAnimationFrame(animate);
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+      lastTime = performance.now();
+    }, { threshold: 0.2 });
+    observer.observe(rail);
+
+    document.addEventListener('visibilitychange', () => {
+      lastTime = performance.now();
+    });
+
+    frameId = requestAnimationFrame(animate);
   });
 })();
