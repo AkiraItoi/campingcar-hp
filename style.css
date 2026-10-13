@@ -2627,7 +2627,6 @@ body {
   margin: 0;
   text-align: left;
   white-space: nowrap;
-  font-size: min(42px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
 }
 .hero-copy-group .hero-registration-question {
   grid-column: 2;
@@ -2658,10 +2657,6 @@ body {
 .hero .hero-copy-group .hero-question { justify-content: flex-start; margin: 0; }
 .hero-copy-group .hero-driver { --driver-size: 64px; }
 @media (max-width: 768px) {
-  .hero .hero-copy-group .hero-registration {
-    font-size: min(26px, calc((100vw - 56px) * 1.4 / 2.4 / 10));
-    font-size: min(26px, calc((100cqw - 10px) * 1.4 / 2.4 / 10));
-  }
   .hero-copy-group .hero-registration-person { --registration-person-size: 48px; }
   .hero-copy-group .hero-driver { --driver-size: 48px; }
 }
