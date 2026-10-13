@@ -2554,17 +2554,17 @@ body {
   width: var(--driver-size);
   height: calc(var(--driver-size) * 120 / 108);
   flex: 0 0 var(--driver-size);
-  overflow: hidden;
-  clip-path: polygon(33% 4%, 47% 3%, 66% 7%, 79% 17%, 91% 32%, 91% 49%, 81% 58%, 80% 66%, 93% 69%, 99% 98%, 44% 98%, 15% 92%, 3% 85%, 6% 75%, 19% 72%, 31% 69%, 37% 63%, 30% 53%, 29% 37%, 28% 19%);
+  overflow: visible;
 }
 .hero-driver img {
   position: absolute;
+  inset: 0;
   display: block;
-  width: calc(var(--driver-size) * 1280 / 108);
-  max-width: none;
-  height: auto;
-  left: calc(var(--driver-size) * -438 / 108);
-  top: calc(var(--driver-size) * -390 / 108);
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
 }
 .hero-question-bubble {
   position: relative;
@@ -2641,27 +2641,17 @@ body {
   width: var(--registration-person-size);
   height: calc(var(--registration-person-size) * 120 / 108);
   flex: 0 0 var(--registration-person-size);
-  overflow: hidden;
+  overflow: visible;
 }
 .hero-copy-group .hero-registration-person img {
   position: absolute;
+  inset: 0;
   display: block;
-  width: calc(var(--registration-person-size) * 1293 / 590);
-  max-width: none;
-  height: auto;
-  left: calc(var(--registration-person-size) * -337 / 590);
-  top: calc(var(--registration-person-size) * -414 / 590);
-}
-/* 元画像に含まれていた吹き出しの先端だけを隠し、人物を切り出す */
-.hero-copy-group .hero-registration-person::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 14px;
-  height: 9px;
-  background: #fffaf4;
-  pointer-events: none;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
 }
 .hero .hero-copy-group .hero-promises { margin: 12px 0 24px; text-align: left; }
 .hero-copy-group .hero-promise-copy { text-align: left; }
