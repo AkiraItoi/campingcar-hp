@@ -1,6 +1,8 @@
 /** SUN AID private backend. Secrets and file IDs belong in Script Properties only. */
 var ALLOWED_ACTORS = ['sunaid20220708@gmail.com', 'info@izutrip.com'];
 var HISTORY_HEADERS = ['attemptId', 'applicationId', 'actor', 'envelope', 'status', 'preparedAt', 'sentAt', 'detail', 'resolvedAt', 'startedAt'];
+var CONFIRM_HEADERS = ['applicationId', 'eventId', 'marker', 'fingerprint', 'confirmedAt', 'confirmedBy', 'start', 'end', 'name'];
+var CONFIRM_SHEET = 'SUN_AID_予約確定履歴';
 var BANK_LINK = 'https://campingcar-hp.vercel.app/reserve.html#bank-transfer';
 function fault(code, status) { var e = new Error(code); e.status = status || 400; throw e; }
 function props() { return PropertiesService.getScriptProperties(); }
@@ -51,9 +53,30 @@ function history() {
   if (JSON.stringify(sheet.getRange(1, 1, 1, HISTORY_HEADERS.length).getValues()[0]) !== JSON.stringify(HISTORY_HEADERS)) fault('HISTORY_SCHEMA_MISMATCH', 503);
   return sheet;
 }
-/** Run manually as info@izutrip.com once; never modifies the response tab. */
+function reservationCalendar() {
+  var id = props().getProperty('RESERVATION_CALENDAR_ID');
+  if (!id) fault('CALENDAR_CONFIG_REQUIRED', 503);
+  var calendar = CalendarApp.getCalendarById(id);
+  if (!calendar) fault('CALENDAR_ACCESS_REQUIRED', 503);
+  return calendar;
+}
+function confirmationSheet() {
+  var sheet = book().getSheetByName(CONFIRM_SHEET);
+  if (!sheet) fault('SETUP_REQUIRED', 503);
+  if (JSON.stringify(sheet.getRange(1, 1, 1, CONFIRM_HEADERS.length).getValues()[0]) !== JSON.stringify(CONFIRM_HEADERS)) fault('CONFIRM_SCHEMA_MISMATCH', 503);
+  return sheet;
+}
+function confirmations() {
+  var sheet = confirmationSheet(), n = sheet.getLastRow();
+  if (n > 5000) fault('HISTORY_TOO_LARGE', 503);
+  return n < 2 ? [] : sheet.getRange(2, 1, n - 1, CONFIRM_HEADERS.length).getValues().map(function(r) {
+    return {applicationId:r[0], eventId:r[1], marker:r[2], fingerprint:r[3], confirmedAt:r[4], confirmedBy:r[5], start:r[6], end:r[7], name:r[8]};
+  });
+}
+/** Run manually as info@izutrip.com once. Checks private calendar access, creates the audit tab, and never modifies responses. */
 function setup() {
   senderOptions();
+  reservationCalendar();
   var spreadsheet = book();
   var sheet = spreadsheet.getSheetByName('SUN_AID_送信履歴');
   if (!sheet) {
@@ -61,6 +84,12 @@ function setup() {
     sheet.appendRow(HISTORY_HEADERS); sheet.setFrozenRows(1); SpreadsheetApp.flush();
   }
   history();
+  var confirmed = spreadsheet.getSheetByName(CONFIRM_SHEET);
+  if (!confirmed) {
+    confirmed = spreadsheet.insertSheet(CONFIRM_SHEET);
+    confirmed.appendRow(CONFIRM_HEADERS); confirmed.setFrozenRows(1); SpreadsheetApp.flush();
+  }
+  confirmationSheet();
 }
 function attempts() {
   var sheet = history(), n = sheet.getLastRow();
@@ -131,16 +160,72 @@ function applications() {
 function customerEnabled() { return props().getProperty('ENABLE_CUSTOMER_SEND') === 'true'; }
 function list() {
   var records = attempts();
+  var confirmed = confirmations();
   var testAttempt = latest(records, 'test');
   return {customerSendEnabled:customerEnabled(), testAttempt:testAttempt ? {attemptId:testAttempt.id, status:state(testAttempt), sentAt:testAttempt.sentAt} : null, applications:applications().reverse().map(function(item) {
     var a = latest(records, item.id);
     item.status = state(a); item.sentAt = a ? a.sentAt : ''; item.attemptId = a ? a.id : '';
+    var booking = confirmed.filter(function(r) { return r.applicationId === item.id; })[0];
+    item.reservationStatus = booking ? 'confirmed' : 'unconfirmed';
+    item.reservationConfirmedAt = booking ? booking.confirmedAt : '';
     item.lastAmount = a ? a.envelope.amount : null;
     item.history = records.filter(function(r) { return r.applicationId === item.id; }).map(function(r) {
       return {id:r.id, status:state(r), preparedAt:r.preparedAt, sentAt:r.sentAt, amount:r.envelope.amount, email:r.envelope.email, actor:r.actor, detail:r.detail, resolvedAt:r.resolvedAt};
     });
     return item;
   })};
+}
+function eventMarker(applicationId) { return 'SUN_AID_APPLICATION:' + hash(applicationId); }
+function reservationEvent(calendar, item, marker) {
+  var startMs = parseDate(item.start), endMs = parseDate(item.end);
+  if (startMs === null || endMs === null || endMs <= startMs) fault('INVALID_APPLICATION');
+  var start = new Date(startMs), end = new Date(endMs);
+  var nearby = calendar.getEvents(new Date(startMs - 86400000), new Date(endMs + 86400000));
+  var existing = nearby.filter(function(event) { return String(event.getDescription() || '').indexOf(marker) >= 0; })[0];
+  if (existing) return {event:existing, alreadyExists:true};
+  var overlap = nearby.filter(function(event) { return event.getStartTime().getTime() < endMs && event.getEndTime().getTime() > startMs; })[0];
+  if (overlap) fault('RESERVATION_CONFLICT', 409);
+  var description = [
+    '予約内容',
+    '利用者：' + cleanLine(item.name),
+    'メール：' + cleanLine(item.email),
+    '利用日時：' + item.start + ' 〜 ' + item.end + '（日本時間）',
+    '申込内容：', item.raw,
+    '', marker
+  ].join('\n');
+  var event = calendar.createEvent('レンタル予約：' + cleanLine(item.name) + ' 様', start, end, {description:description});
+  event.setVisibility(CalendarApp.Visibility.PRIVATE);
+  return {event:event, alreadyExists:false};
+}
+function confirmReservation(data, actor) {
+  var item = applications().filter(function(a) { return a.id === data.applicationId; })[0];
+  if (!item || item.issues.length) fault('INVALID_APPLICATION');
+  var prior = confirmations().filter(function(r) { return r.applicationId === item.id; })[0];
+  if (prior) {
+    if (prior.fingerprint !== item.fingerprint) fault('APPLICATION_CHANGED', 409);
+    return {status:'confirmed', confirmedAt:prior.confirmedAt, alreadyConfirmed:true};
+  }
+  if (data.confirmed !== true || data.paymentChecked !== true) fault('PAYMENT_CONFIRMATION_REQUIRED');
+  // Do not confirm a stale application after its source response was edited.
+  var current = applications().filter(function(a) { return a.id === item.id; })[0];
+  if (!current || current.fingerprint !== item.fingerprint) fault('APPLICATION_CHANGED', 409);
+  var calendar = reservationCalendar();
+  var marker = eventMarker(item.id);
+  var result = reservationEvent(calendar, item, marker);
+  var confirmedAt = new Date().toISOString();
+  confirmationSheet().appendRow([item.id, result.event.getId(), marker, item.fingerprint, confirmedAt, actor, item.start, item.end, item.name]);
+  SpreadsheetApp.flush();
+  return {status:'confirmed', confirmedAt:confirmedAt, calendarEventId:result.event.getId(), recoveredExistingEvent:result.alreadyExists};
+}
+/** Public endpoint returns only occupied date ranges; never event names, descriptions, emails, or IDs. */
+function availability() {
+  var calendar = reservationCalendar();
+  var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd').split('-').map(Number);
+  var start = new Date(Date.UTC(today[0], today[1] - 1, today[2]) - 9 * 3600000);
+  var end = new Date(start.getTime() + 190 * 86400000);
+  return calendar.getEvents(start, end).map(function(event) {
+    return {start:event.getStartTime().toISOString(), end:event.getEndTime().toISOString()};
+  });
 }
 function buildEnvelope(item, amount, test) {
   if (!Number.isSafeInteger(amount) || amount <= 0 || amount > 999999999) fault('INVALID_AMOUNT');
@@ -214,6 +299,8 @@ function resolveUnknown(data, actor) {
 }
 function dispatch(action, data, actor) {
   if (action === 'list') return list();
+  if (action === 'availability') return availability();
+  if (action === 'confirmReservation') return confirmReservation(data, actor);
   if (action === 'preview') return preview(data, actor, false);
   if (action === 'previewTest') return preview(data, actor, true);
   if (action === 'send') return send(data, actor, false);
