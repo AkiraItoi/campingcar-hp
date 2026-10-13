@@ -71,18 +71,17 @@
 
     const card = document.createElement('article');
     card.className = 'spots-card';
+    card.dataset.commentToggle = 'true';
+    card.tabIndex = 0;
+    card.setAttribute('aria-expanded', 'false');
     if (item.private === true) card.classList.add('is-private');
 
     const gallery = document.createElement('div');
     gallery.className = 'spots-card-gallery';
     gallery.dataset.index = '0';
 
-    const photoLink = document.createElement('a');
-    photoLink.className = 'spots-card-photo-link';
-    photoLink.href = url;
-    photoLink.target = '_blank';
-    photoLink.rel = 'noopener noreferrer';
-    photoLink.setAttribute('aria-label', title + ' の公式サイトを開く');
+    const photoFrame = document.createElement('div');
+    photoFrame.className = 'spots-card-photo-frame';
 
     const photoStack = document.createElement('div');
     photoStack.className = 'spots-card-photos';
@@ -101,8 +100,8 @@
       photoStack.append(photo);
     });
 
-    photoLink.append(photoStack);
-    gallery.append(photoLink);
+    photoFrame.append(photoStack);
+    gallery.append(photoFrame);
 
     if (images.length > 1) {
       const previous = document.createElement('button');
@@ -127,13 +126,6 @@
       gallery.append(previous, next, count);
     }
 
-    const contentLink = document.createElement('a');
-    contentLink.className = 'spots-card-content';
-    contentLink.href = url;
-    contentLink.target = '_blank';
-    contentLink.rel = 'noopener noreferrer';
-    contentLink.setAttribute('aria-label', title + ' の公式サイトを開く');
-
     const body = document.createElement('div');
     body.className = 'spots-card-body';
 
@@ -152,16 +144,25 @@
     const heading = document.createElement('h4');
     heading.textContent = title;
 
-    const description = document.createElement('p');
-    description.textContent = comment;
+    const hint = document.createElement('span');
+    hint.className = 'spots-card-comment-toggle';
+    hint.textContent = 'コメントを見る';
 
-    const more = document.createElement('span');
+    const description = document.createElement('p');
+    description.className = 'spots-card-comment';
+    description.textContent = comment;
+    description.hidden = true;
+
+    const more = document.createElement('a');
     more.className = 'spots-card-link';
+    more.href = url;
+    more.target = '_blank';
+    more.rel = 'noopener noreferrer';
+    more.setAttribute('aria-label', title + ' の公式サイトを開く');
     more.textContent = '公式サイトを見る ↗';
 
-    body.append(heading, description, more);
-    contentLink.append(body);
-    card.append(gallery, contentLink);
+    body.append(heading, hint, description, more);
+    card.append(gallery, body);
     categories[item.category].rail.append(card);
   }
 
@@ -173,45 +174,79 @@
   });
   section.hidden = false;
 
+  const toggleComment = card => {
+    const comment = card.querySelector('.spots-card-comment');
+    const hint = card.querySelector('.spots-card-comment-toggle');
+    if (!comment || !hint) return;
+
+    const opening = comment.hidden;
+    comment.hidden = !opening;
+    card.classList.toggle('is-comment-open', opening);
+    card.setAttribute('aria-expanded', String(opening));
+    hint.textContent = opening ? 'コメントを閉じる' : 'コメントを見る';
+  };
+
   section.addEventListener('click', event => {
-    const button = event.target.closest('[data-gallery-move]');
-    if (!button) return;
+    const galleryButton = event.target.closest('[data-gallery-move]');
+    if (galleryButton) {
+      const gallery = galleryButton.closest('.spots-card-gallery');
+      const photos = Array.from(gallery.querySelectorAll('img'));
+      const count = gallery.querySelector('.spots-gallery-count');
+      const currentIndex = Number(gallery.dataset.index || 0);
+      const nextIndex = (currentIndex + Number(galleryButton.dataset.galleryMove) + photos.length) % photos.length;
+      const nextPhoto = photos[nextIndex];
 
-    const gallery = button.closest('.spots-card-gallery');
-    const photos = Array.from(gallery.querySelectorAll('img'));
-    const count = gallery.querySelector('.spots-gallery-count');
-    const currentIndex = Number(gallery.dataset.index || 0);
-    const nextIndex = (currentIndex + Number(button.dataset.galleryMove) + photos.length) % photos.length;
-    const nextPhoto = photos[nextIndex];
+      if (!nextPhoto.src && nextPhoto.dataset.src) {
+        nextPhoto.src = nextPhoto.dataset.src;
+      }
 
-    if (!nextPhoto.src && nextPhoto.dataset.src) {
-      nextPhoto.src = nextPhoto.dataset.src;
+      photos[currentIndex].classList.remove('is-active');
+      nextPhoto.classList.add('is-active');
+      gallery.dataset.index = String(nextIndex);
+      if (count) count.textContent = (nextIndex + 1) + ' / ' + photos.length;
+      return;
     }
 
-    photos[currentIndex].classList.remove('is-active');
-    nextPhoto.classList.add('is-active');
-    gallery.dataset.index = String(nextIndex);
-    if (count) count.textContent = (nextIndex + 1) + ' / ' + photos.length;
+    if (event.target.closest('a')) return;
+    const card = event.target.closest('.spots-card[data-comment-toggle]');
+    if (card) toggleComment(card);
+  });
+
+  section.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.target.closest('a, button')) return;
+
+    const card = event.target.closest('.spots-card[data-comment-toggle]');
+    if (!card) return;
+    event.preventDefault();
+    toggleComment(card);
   });
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   active.forEach(({ rail }) => {
     const originals = Array.from(rail.children);
-    if (originals.length < 2) return;
+    const continuous = originals.length >= 4;
+    let loopDistance = 0;
 
-    const clones = originals.map(card => {
-      const clone = card.cloneNode(true);
-      clone.setAttribute('aria-hidden', 'true');
-      clone.querySelectorAll('a, button').forEach(control => {
-        control.tabIndex = -1;
+    if (continuous) {
+      const clones = originals.map(card => {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.tabIndex = -1;
+        clone.querySelectorAll('a, button').forEach(control => {
+          control.tabIndex = -1;
+        });
+        rail.append(clone);
+        return clone;
       });
-      rail.append(clone);
-      return clone;
-    });
 
-    const loopDistance = clones[0].offsetLeft - originals[0].offsetLeft;
-    if (loopDistance <= 0) return;
+      loopDistance = clones[0].offsetLeft - originals[0].offsetLeft;
+      if (loopDistance <= 0) return;
+    }
+
+    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    if (!continuous && maxScroll <= 0) return;
 
     let stopped = false;
     let visible = false;
@@ -244,8 +279,12 @@
 
       if (visible && !document.hidden) {
         rail.scrollLeft += pixelsPerSecond * elapsed / 1000;
-        if (rail.scrollLeft >= loopDistance) {
+
+        if (continuous && rail.scrollLeft >= loopDistance) {
           rail.scrollLeft -= loopDistance;
+        } else if (!continuous && rail.scrollLeft >= maxScroll - 1) {
+          stopped = true;
+          return;
         }
       }
       frameId = requestAnimationFrame(animate);
