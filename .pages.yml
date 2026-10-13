@@ -32,12 +32,18 @@ content:
               label: キャンプ場
             - name: play
               label: 遊び場
+            - name: gourmet
+              label: 足で知った、本当のグルメ情報
 
-      - name: image
-        label: 写真
+      - name: images
+        label: 写真（最大6枚）
         type: image
         required: true
+        description: 1枚目がカードの代表写真になります。
         options:
+          multiple:
+            max: 6
+          unique: true
           extensions: [jpg, jpeg, png, webp]
           rename: false
 
@@ -51,7 +57,7 @@ content:
       - name: url
         label: 施設の公式サイトURL
         type: string
-        required: true
+        description: 下書き時は空欄でも保存できます。HP掲載前に入力してください。
         pattern:
           regex: "^https://.+"
           message: "https://で始まる公式サイトURLを入力してください"
