@@ -2762,3 +2762,21 @@ body {
 
 /* 安全装備のQ&Aへの移動位置 */
 #qa-safety-equipment { scroll-margin-top: 16px; }
+
+
+/* 「どんな特別があるの？」の吹き出し用：子ども2人の上半身イラスト */
+.hero .hero-kids-driver {
+  --driver-size: 104px;
+  width: var(--driver-size);
+  height: calc(var(--driver-size) * 2 / 3);
+  flex-basis: var(--driver-size);
+}
+.hero .hero-kids-driver img {
+  position: static;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@media (max-width: 768px) {
+  .hero-copy-group .hero-kids-driver { --driver-size: clamp(58px, 15vw, 76px); }
+}
