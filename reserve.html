@@ -185,6 +185,10 @@
       padding: 8px 10px;
       line-height: 1.3;
     }
+    .reserve-page .reserve-day-has-booking:not(.reserve-day-disabled):not(.reserve-day-selected-start):not(.reserve-day-selected-end) {
+      background: #fff1eb;
+      box-shadow: inset 0 0 0 1px #c77b61;
+    }
   </style>
 </head>
 <body class="reserve-page">
@@ -436,6 +440,9 @@
         return 2;
       }
       let reservationSummaryText = null;
+      let availabilityRanges = [];
+      let availabilityLoaded = false;
+      let availabilityFailed = false;
       let view = 'selecting'; // 'selecting' | 'complete'
       // true: 完了表示からカード／「日時を変更する」で再編集中。押した側の日時だけを変更し、
       // もう一方の確定済み日時は保持する（初回のシーケンシャル入力時はfalseのまま）
@@ -443,6 +450,33 @@
 
       function pad(n) {
         return String(n).padStart(2, '0');
+      }
+
+      // The reservation form submits Japan-local times without an offset; compare using the same JST rule.
+      function reservationMillis(date) {
+        return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()) - 9 * 60 * 60 * 1000;
+      }
+      function overlapsBooking(startMs, endMs) {
+        return availabilityRanges.some((range) => startMs < Date.parse(range.end) && endMs > Date.parse(range.start));
+      }
+      function pointIsBooked(timeMs) {
+        return availabilityRanges.some((range) => timeMs >= Date.parse(range.start) && timeMs < Date.parse(range.end));
+      }
+      async function loadAvailability() {
+        try {
+          const response = await fetch('/api/availability', { cache: 'no-store' });
+          const data = await response.json();
+          if (!response.ok || !Array.isArray(data.bookings)) throw new Error('availability unavailable');
+          availabilityRanges = data.bookings.filter((r) => Number.isFinite(Date.parse(r.start)) && Number.isFinite(Date.parse(r.end)) && Date.parse(r.end) > Date.parse(r.start));
+          availabilityLoaded = true;
+          availabilityFailed = false;
+          clearDateError();
+          renderCalendars();
+          if (pendingDateKey) renderTimeGrid();
+        } catch {
+          availabilityFailed = true;
+          showDateError('空き状況を読み込めません。時間をおいてページを再読み込みしてください。');
+        }
       }
 
       function formatSelected(date) {
@@ -492,6 +526,15 @@
           btn.type = 'button';
           btn.className = 'reserve-day';
           btn.textContent = String(d);
+
+          const dayStart = Date.UTC(year, month, d) - 9 * 60 * 60 * 1000;
+          const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+          const dayHasBooking = availabilityRanges.some((range) => dayStart < Date.parse(range.end) && dayEnd > Date.parse(range.start));
+          if (dayHasBooking) {
+            btn.classList.add('reserve-day-has-booking');
+            btn.title = 'この日は予約済みの時間帯があります';
+            btn.setAttribute('aria-label', d + '日、予約済みの時間帯あり');
+          }
 
           const isPast = cellDate < today;
           const isBeforeStart = step === 'end' && startDate &&
@@ -631,6 +674,14 @@
             btn.classList.add('reserve-time-pm');
           }
           btn.textContent = h + '時';
+          if (pendingDateKey) {
+            const picked = new Date(pendingDateKey.year, pendingDateKey.month, pendingDateKey.day, h, 0, 0, 0);
+            const pickedMs = reservationMillis(picked);
+            const blocked = step === 'start'
+              ? (pointIsBooked(pickedMs) || (endDate && overlapsBooking(pickedMs, reservationMillis(endDate))))
+              : (startDate ? overlapsBooking(reservationMillis(startDate), pickedMs) : pointIsBooked(pickedMs));
+            if (blocked) { btn.disabled = true; btn.title = '予約済みの時間帯と重なります'; }
+          }
           btn.addEventListener('click', () => selectTime(h));
           timeGridEl.appendChild(btn);
         }
@@ -650,6 +701,7 @@
         pendingDateKey = { year, month, day };
         popupTitleEl.textContent = year + '年' + (month + 1) + '月' + day + '日の時間を選択（' + (step === 'start' ? '開始' : '返却') + '）';
         popupEl.hidden = false;
+        renderTimeGrid();
       }
 
       function closeTimePopup() {
@@ -663,6 +715,13 @@
         }
 
         const picked = new Date(pendingDateKey.year, pendingDateKey.month, pendingDateKey.day, hour, 0, 0, 0);
+        const pickedMs = reservationMillis(picked);
+        if ((step === 'start' && pointIsBooked(pickedMs)) ||
+            (step === 'end' && startDate && overlapsBooking(reservationMillis(startDate), pickedMs))) {
+          closeTimePopup();
+          showDateError('選択した利用時間は予約済みです。別の時間を選んでください。');
+          return;
+        }
 
         if (step === 'start') {
           // 開始日時が返却日時以後になる組み合わせは確定しない。
@@ -939,9 +998,19 @@
       }
 
       reserveRequestBtn.addEventListener('click', (event) => {
+        if (!availabilityLoaded || availabilityFailed) {
+          event.preventDefault();
+          showDateError('空き状況を確認できません。時間をおいてページを再読み込みしてください。');
+          return;
+        }
         if (!hasValidRentalDates()) {
           event.preventDefault();
           guideToDateInput();
+          return;
+        }
+        if (overlapsBooking(reservationMillis(startDate), reservationMillis(endDate))) {
+          event.preventDefault();
+          showDateError('選択した日時は予約済みです。別の日時を選んでください。');
           return;
         }
         if (!reservationSummaryText) {
@@ -1068,6 +1137,7 @@
       renderStepHeader();
       renderCalendars();
       updateView();
+      loadAvailability();
     })();
   </script>
 
