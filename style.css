@@ -2779,8 +2779,8 @@ body {
 /* スマホ：紹介コピーを人物の左側の列内で1行に収める */
 @media (max-width: 600px) {
   .hero .hero-copy-group .hero-registration {
-    font-size: clamp(14px, 4.8vw, 22px);
-    font-size: min(22px, 5.2cqw);
+    font-size: clamp(18px, 6vw, 26px);
+    font-size: min(26px, 6.3cqw);
   }
   .hero-copy-group .hero-promise:first-child .hero-promise-copy {
     font-size: clamp(15px, 5.2vw, 24px);
@@ -2811,4 +2811,20 @@ body {
   #price .price-table-basic tbody td:last-child {
     white-space: nowrap;
   }
+}
+
+/* 紹介コピーの下に、柔らかな書体のメッセージを添える */
+.hero .hero-tagline {
+  margin: 0;
+  padding: 0 8px 18px;
+  font-family: "Yu Kyokasho", "YuKyokasho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: clamp(18px, 4.8vw, 26px);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+  color: #8b6049;
+  text-align: center;
+}
+.hero-tagline span {
+  display: inline-block;
 }
