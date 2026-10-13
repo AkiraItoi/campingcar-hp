@@ -12,13 +12,19 @@ const errors = {
   MAILBOX_CHECK_REQUIRED:'送信済みフォルダを確認してチェックを入れてください。', SENDER_NOT_CONFIGURED:'info@から送信できるGoogle設定が未完了です。',
   BACKEND_UNAVAILABLE:'送信処理に接続できません。外部設定・接続状況を確認してください。', BACKEND_ERROR:'処理を完了できませんでした。送信操作中なら再送せず、一覧の状態を確認してください。'
 };
+errors.CALENDAR_CONFIG_REQUIRED = 'Googleカレンダー「予約」のIDが未設定です。設定手順書を確認してください。';
+errors.CALENDAR_ACCESS_REQUIRED = 'Apps Script実行アカウントに、Googleカレンダー「予約」の編集権限がありません。';
+errors.RESERVATION_CONFLICT = 'その日時はGoogleカレンダーですでに埋まっています。入金を返金または調整し、申込者へ連絡してください。';
+errors.PAYMENT_CONFIRMATION_REQUIRED = '入金確認のチェックを入れてから実行してください。';
+errors.ACTION_RESULT_UNKNOWN = '処理結果を確認できませんでした。一覧を再読込みしてください。未確定ならもう一度実行できます。同じ申込みの予定は重複登録されません。';
+errors.APPLICATION_CHANGED = '申込内容が変更されました。一覧を再読込みして内容を確認してください。';
 let user = null, items = [], current = null, pending = null, test = false, customerEnabled = false, sending = false, testAttempt = null;
 async function api(action, data) {
   const options = {credentials:'same-origin', cache:'no-store', headers:{}};
   if (data !== undefined) { options.method = 'POST'; options.headers['Content-Type'] = 'application/json'; options.headers['X-Admin-Csrf'] = user?.csrf || ''; options.body = JSON.stringify(data); }
   let response, result;
   try { response = await fetch('/api/admin?action=' + action, options); result = await response.json(); }
-  catch { throw new Error(['send','sendTest'].includes(action) ? errors.SEND_RESULT_UNKNOWN : errors.BACKEND_UNAVAILABLE); }
+  catch { throw new Error(['send','sendTest'].includes(action) ? errors.SEND_RESULT_UNKNOWN : action === 'confirmReservation' ? errors.ACTION_RESULT_UNKNOWN : errors.BACKEND_UNAVAILABLE); }
   if (!response.ok) throw new Error(errors[result.error] || '処理できませんでした。状態を再確認してください。');
   return result;
 }
@@ -37,6 +43,8 @@ async function load() {
     const identity = node('td', item.name); identity.append(node('small', item.submittedAt), node('small', item.email || 'メールアドレスなし'));
     const dates = node('td', item.start || '開始日時なし'); dates.append(node('small', '→ ' + (item.end || '返却日時なし')));
     const status = node('td'); status.append(node('span', labels[item.status] || item.status, 'status ' + item.status));
+    status.append(node('small', item.reservationStatus === 'confirmed' ? '予約確定済み' : '未確定'));
+    if (item.reservationConfirmedAt) status.append(node('small', new Date(item.reservationConfirmedAt).toLocaleString('ja-JP', {timeZone:'Asia/Tokyo'}) + ' JST'));
     if (item.sentAt) status.append(node('small', new Date(item.sentAt).toLocaleString('ja-JP', {timeZone:'Asia/Tokyo'}) + ' JST'));
     if (item.issues.length) status.append(node('small', item.issues.join('／'), 'issues'));
     const operation = node('td'), button = node('button', '確認'); button.className = 'secondary'; button.addEventListener('click', () => open(item)); operation.append(button);
@@ -46,9 +54,15 @@ async function load() {
 }
 function open(item) {
   if (sending) return;
-  test = false; current = item; clearPreview(); $('detail-message').textContent = '';
+  test = item.id === 'test'; current = item; clearPreview(); $('detail-message').textContent = '';
   $('application').replaceChildren(node('p', item.name + ' 様 ／ ' + (item.email || 'メールアドレスなし')), node('p', (item.start || '日時なし') + ' → ' + (item.end || '日時なし')));
   $('amount').value = item.lastAmount || item.amount || ''; $('amount').disabled = false;
+  $('reservation-confirmation').hidden = test;
+  $('reservation-status').textContent = item.reservationStatus === 'confirmed' ? '予約確定済みです。再登録は行いません。' : '未確定';
+  $('payment-confirm').checked = false;
+  $('payment-confirm').disabled = item.reservationStatus === 'confirmed' || item.issues.length > 0;
+  $('confirm-reservation').disabled = true;
+  $('confirm-reservation').textContent = item.reservationStatus === 'confirmed' ? '予約確定済み' : '入金確認・予約確定';
   $('preview').hidden = item.status === 'sent' || item.status === 'unknown'; $('preview').disabled = item.issues.length > 0;
   $('reconcile').hidden = item.status !== 'unknown'; $('mailbox').checked = false;
   $('raw').textContent = item.raw; $('history').replaceChildren();
@@ -86,6 +100,25 @@ async function resolve(result) {
   catch (e) { $('detail-message').textContent = e.message; }
   finally { $('found').disabled = $('not-found').disabled = false; }
 }
+async function confirmReservation() {
+  if (sending || !current || current.reservationStatus === 'confirmed' || !$('payment-confirm').checked) return;
+  sending = true; $('confirm-reservation').disabled = true; $('payment-confirm').disabled = true;
+  $('detail-message').textContent = 'カレンダーへ登録しています。結果を待ってください。';
+  try {
+    await api('confirmReservation', {applicationId:current.id, confirmed:true, paymentChecked:true});
+    $('reservation-status').textContent = '予約確定済みです。HPとGoogleカレンダーへの反映が完了しました。';
+    $('confirm-reservation').textContent = '予約確定済み';
+    $('detail-message').textContent = '予約確定しました。';
+    current.reservationStatus = 'confirmed';
+    await load();
+  } catch (e) {
+    $('detail-message').textContent = e.message;
+    $('payment-confirm').disabled = false;
+  } finally {
+    sending = false;
+    $('confirm-reservation').disabled = !current || current.reservationStatus === 'confirmed' || !$('payment-confirm').checked;
+  }
+}
 async function signedIn(identity) {
   user = identity; $('login').hidden = true; $('workspace').hidden = false;
   const logout = node('button', 'ログアウト', 'secondary'); logout.addEventListener('click', async () => { try { await api('logout', {}); location.reload(); } catch (e) { message(e.message); } });
@@ -114,6 +147,8 @@ $('amount').addEventListener('input', clearPreview); $('confirm').addEventListen
 $('preview').addEventListener('click', preview); $('send').addEventListener('click', send);
 $('reload').addEventListener('click', () => load().catch(e => message(e.message)));
 $('found').addEventListener('click', () => resolve('sent')); $('not-found').addEventListener('click', () => resolve('notSent'));
+$('payment-confirm').addEventListener('change', () => { $('confirm-reservation').disabled = sending || !$('payment-confirm').checked || current?.reservationStatus === 'confirmed'; });
+$('confirm-reservation').addEventListener('click', confirmReservation);
 $('test').addEventListener('click', async () => {
   if (sending) return;
   if (testAttempt?.status === 'unknown') {
