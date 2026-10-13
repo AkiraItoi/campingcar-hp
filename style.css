@@ -2814,9 +2814,8 @@ body {
 }
 
 /* 紹介コピーの下に、柔らかな書体のメッセージを添える */
-.hero .hero-tagline {
-  margin: 0;
-  padding: 0 8px 18px;
+.hero .hero-tagline,
+.free .free-sub {
   font-family: "Kaisei Tokumin", "Hiragino Mincho ProN", "Yu Mincho", serif;
   font-size: clamp(22px, 6.2vw, 32px);
   font-weight: 700;
@@ -2827,4 +2826,13 @@ body {
 }
 .hero-tagline span {
   display: inline-block;
+}
+
+/* 上下のメッセージは同じ書体・大きさ・赤。余白は配置ごとに設定する */
+.hero .hero-tagline {
+  margin: 0;
+  padding: 0 8px 18px;
+}
+.free .free-sub {
+  margin-top: 0;
 }
