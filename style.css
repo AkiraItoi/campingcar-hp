@@ -2639,7 +2639,7 @@ body {
   position: relative;
   display: block;
   width: var(--registration-person-size);
-  height: calc(var(--registration-person-size) * 120 / 108);
+  height: calc(var(--registration-person-size) * 128 / 108);
   flex: 0 0 var(--registration-person-size);
   overflow: hidden;
 }
@@ -2650,7 +2650,7 @@ body {
   max-width: none;
   height: auto;
   left: calc(var(--registration-person-size) * -337 / 590);
-  top: calc(var(--registration-person-size) * -414 / 590);
+  top: calc(var(--registration-person-size) * -394 / 590);
 }
 /* 元画像に含まれていた吹き出しの先端だけを隠し、人物を切り出す */
 .hero-copy-group .hero-registration-person::after {
