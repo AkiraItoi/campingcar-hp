@@ -1,5 +1,5 @@
 {
-  "functions": {"api/admin.js": {"maxDuration": 60}},
+  "functions": {"api/admin.js": {"maxDuration": 60}, "api/availability.js": {"maxDuration": 30}},
   "headers": [
     {"source": "/admin/(.*)", "headers": [
       {"key": "Cache-Control", "value": "no-store"},
