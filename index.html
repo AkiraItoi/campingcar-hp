@@ -576,12 +576,12 @@
     });
 }
 
-    // LINEボタン：正式URL未設定のため外部遷移はせず、準備中メッセージのみ表示する
+    // LINEボタン：正式URL未設定のため、押すたびに準備中メッセージを表示・非表示にする
     const snsLineBtn = document.getElementById('snsLineBtn');
     const snsLineStatus = document.getElementById('snsLineStatus');
     if (snsLineBtn && snsLineStatus) {
       snsLineBtn.addEventListener('click', () => {
-        snsLineStatus.textContent = '準備中';
+        snsLineStatus.textContent = snsLineStatus.textContent ? '' : '準備中';
       });
     }
 
