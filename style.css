@@ -2793,3 +2793,22 @@ body {
     letter-spacing: normal;
   }
 }
+
+/* トップページ：料金案内を自然に折り返し、コピー間の空白を詰める */
+#price .price-desc {
+  text-align: left;
+  margin-bottom: 8px;
+}
+#price .price-desc + .price-subtitle {
+  margin-top: 12px;
+}
+.free .free-sub {
+  margin-top: 0;
+}
+@media (max-width: 600px) {
+  #price .price-table-basic thead th:nth-child(2),
+  #price .price-table-basic thead th:nth-child(3),
+  #price .price-table-basic tbody td:last-child {
+    white-space: nowrap;
+  }
+}
