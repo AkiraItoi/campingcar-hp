@@ -51,19 +51,74 @@
   box-shadow: 0 6px 18px #4b342014;
 }
 
-.spots-card > a {
+.spots-card-gallery {
+  position: relative;
+  height: 205px;
+  overflow: hidden;
+  background: #eee5d9;
+}
+
+.spots-card-photo-link,
+.spots-card-photos {
+  display: block;
+  height: 100%;
+}
+
+.spots-card img {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spots-card img.is-active {
+  display: block;
+}
+
+.spots-gallery-button {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 0 0 3px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: #23180fbf;
+  font: inherit;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.spots-gallery-button.is-previous {
+  left: 10px;
+}
+
+.spots-gallery-button.is-next {
+  right: 10px;
+}
+
+.spots-gallery-count {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 9px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: #23180fbf;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.spots-card-content {
   display: block;
   height: 100%;
   color: inherit;
   text-decoration: none;
-}
-
-.spots-card img {
-  display: block;
-  width: 100%;
-  height: 205px;
-  object-fit: cover;
-  background: #eee5d9;
 }
 
 .spots-card-body {
@@ -103,7 +158,8 @@
   font-weight: 700;
 }
 
-.spots-card a:focus-visible {
+.spots-card a:focus-visible,
+.spots-gallery-button:focus-visible {
   outline: 3px solid #326f91;
   outline-offset: -3px;
 }
@@ -117,8 +173,13 @@
     flex-basis: min(82vw, 300px);
   }
 
-  .spots-card img {
+  .spots-card-gallery {
     height: 190px;
+  }
+
+  .spots-gallery-button {
+    width: 42px;
+    height: 42px;
   }
 }
 
