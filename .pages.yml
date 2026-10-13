@@ -1,0 +1,73 @@
+media:
+  input: img/spots
+  output: /img/spots
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp]
+  rename: false
+
+content:
+  - name: spots
+    label: おすすめスポット
+    type: file
+    path: data/spots.json
+    format: json
+    list: true
+    fields:
+      - name: title
+        label: 施設名
+        type: string
+        required: true
+        options:
+          maxlength: 60
+
+      - name: category
+        label: 区分
+        type: select
+        required: true
+        options:
+          values:
+            - name: stay
+              label: 車中泊スポット
+            - name: camp
+              label: キャンプ場
+            - name: play
+              label: 遊び場
+            - name: gourmet
+              label: 足で知った、本当のグルメ情報
+
+      - name: images
+        label: 写真（最大6枚）
+        type: image
+        required: true
+        description: 1枚目がカードの代表写真になります。
+        options:
+          multiple:
+            max: 6
+          unique: true
+          extensions: [jpg, jpeg, png, webp]
+          rename: false
+
+      - name: comment
+        label: 短いコメント
+        type: text
+        required: true
+        options:
+          maxlength: 140
+
+      - name: url
+        label: 施設の公式サイトURL
+        type: string
+        description: 下書き時は空欄でも保存できます。HP掲載前に入力してください。
+        pattern:
+          regex: "^https://.+"
+          message: "https://で始まる公式サイトURLを入力してください"
+
+      - name: private
+        label: プライベートキャンプ場
+        type: boolean
+        default: false
+
+      - name: published
+        label: HPに掲載する
+        type: boolean
+        default: false
