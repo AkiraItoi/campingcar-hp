@@ -2894,11 +2894,27 @@ body {
   font-size: 0.5em;
 }
 
-/* 実車の電源設備紹介 */
-.battery-detail { margin: 20px 0; padding: 16px; border: 1px solid #eadfd4; border-radius: 14px; background: #fffaf4; color: #5b3823; }
-.battery-detail h3 { margin: 0 0 8px; font-size: 18px; }
-.battery-detail p { margin: 8px 0; }
-.battery-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.battery-photo-grid img { display: block; width: 100%; height: auto; border-radius: 8px; }
-.battery-detail .battery-photo-note { font-size: 12px; line-height: 1.6; }
-.battery-detail a { color: #5b3823; font-size: 14px; text-decoration: underline; }
+/* 設備一覧の左側に、余白を取って電源設備を小さく添える */
+#safety-equipment {
+  display: grid;
+  grid-template-columns: minmax(0, 30%) minmax(0, 1fr);
+  column-gap: 20px;
+  align-items: start;
+}
+#safety-equipment > .eq-label { grid-column: 1 / -1; }
+#safety-equipment > .eq-items { grid-column: 2; grid-row: 2; min-width: 0; }
+#safety-equipment .eq-note .nb { white-space: normal; }
+#safety-equipment .battery-detail {
+  grid-column: 1; grid-row: 2;
+  width: 100%; max-width: 120px;
+  margin: 52px auto 24px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #f7f2ec;
+  text-align: center;
+}
+.battery-photo-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.battery-photo-grid img { display: block; width: 100%; height: auto; border-radius: 6px; }
+#safety-equipment .battery-detail p { margin: 12px 0 10px; font-size: 11px; line-height: 1.7; }
+#safety-equipment .battery-detail a { color: #f7f2ec; font-size: 11px; line-height: 1.7; text-decoration: underline; }
