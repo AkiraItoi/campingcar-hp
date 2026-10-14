@@ -2829,7 +2829,7 @@ body {
   display: inline-block;
 }
 
-/* 一番下の吹き出しに白手袋のタップイラストを添える */
+/* 一番上の吹き出しへ、写真側から指先を向ける */
 .hero-bubble-group {
   position: relative;
   display: flex;
@@ -2839,21 +2839,22 @@ body {
 }
 .hero .hero-tap-glove {
   position: absolute;
-  right: -10px;
-  bottom: -18px;
-  z-index: 2;
+  right: -8px;
+  top: -52px;
+  z-index: 3;
   display: block;
-  width: 42px;
-  height: 42px;
+  width: 64px;
+  height: 64px;
   max-width: none;
   object-fit: contain;
+  transform: rotate(-90deg);
   pointer-events: none;
 }
 @media (max-width: 600px) {
   .hero .hero-tap-glove {
-    width: 34px;
-    height: 34px;
-    right: -6px;
-    bottom: -15px;
+    width: 56px;
+    height: 56px;
+    right: -4px;
+    top: -46px;
   }
 }
