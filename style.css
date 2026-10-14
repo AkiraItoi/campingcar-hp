@@ -2893,3 +2893,12 @@ body {
 .hero-tagline-repeat small {
   font-size: 0.5em;
 }
+
+/* 実車の電源設備紹介 */
+.battery-detail { margin: 20px 0; padding: 16px; border: 1px solid #eadfd4; border-radius: 14px; background: #fffaf4; color: #5b3823; }
+.battery-detail h3 { margin: 0 0 8px; font-size: 18px; }
+.battery-detail p { margin: 8px 0; }
+.battery-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.battery-photo-grid img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.battery-detail .battery-photo-note { font-size: 12px; line-height: 1.6; }
+.battery-detail a { color: #5b3823; font-size: 14px; text-decoration: underline; }
