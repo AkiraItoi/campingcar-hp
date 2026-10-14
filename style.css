@@ -2881,3 +2881,15 @@ body {
 .free .free-sub {
   margin-top: 1.5em;
 }
+
+/* 追加した再利用のメッセージと小さな補足 */
+.hero-tagline .hero-tagline-line {
+  display: block;
+}
+.hero-tagline .hero-tagline-repeat {
+  font-size: clamp(15px, 5.2vw, 33px);
+  font-size: min(33px, 6cqw);
+}
+.hero-tagline-repeat small {
+  font-size: 0.5em;
+}
