@@ -2858,3 +2858,26 @@ body {
     top: -46px;
   }
 }
+
+/* 2つのメッセージ：Noto Sans JPの極太で、各欄に収まる最大サイズに近づける */
+.hero .hero-tagline,
+.free .free-sub {
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 7vw, 44px);
+  font-size: min(44px, 8cqw);
+  letter-spacing: 0;
+  line-height: 1.5;
+  color: #c0392b;
+  text-align: center;
+}
+.hero .hero-tagline {
+  padding-left: 0;
+  padding-right: 0;
+}
+.hero-tagline span {
+  white-space: nowrap;
+}
+.free .free-sub {
+  margin-top: 1.5em;
+}
