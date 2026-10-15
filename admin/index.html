@@ -7,6 +7,7 @@
 <section id="setup" hidden><h2>外部設定が必要です</h2><p>Googleログインと非公開の送信処理を接続後に利用できます。顧客情報は表示されません。</p><p>設定手順：リポジトリの <code>docs/reservation-admin-setup.md</code></p></section>
 <section id="workspace" hidden><div class="toolbar"><h2>予約申込み</h2><div><button id="test" class="secondary">テストメールを確認</button><button id="reload" class="secondary">再読込み</button></div></div>
 <p id="mode" class="notice" hidden>現在はテスト送信のみ有効です。実顧客への送信は停止しています。</p>
+<div class="inquiry-controls"><h3>△ 要問い合わせ期間</h3><p>指定した期間は予約確定済みの時間帯と区別して表示し、申込みを受け付けます。貸出可否は申込みごとに確認してください。</p><div class="inquiry-form"><label>開始日 <input id="inquiry-start" type="date"></label><label>終了日 <input id="inquiry-end" type="date"></label><button id="inquiry-add">期間を登録</button></div><ul id="inquiry-list" aria-live="polite"></ul></div>
 <div class="table-wrap"><table><thead><tr><th>申込日時・氏名</th><th>利用日時</th><th>概算料金</th><th>対応状況</th><th>操作</th></tr></thead><tbody id="rows"></tbody></table></div><p id="empty" hidden>予約申込みはありません。</p></section>
 <dialog id="detail"><form method="dialog"><button class="close secondary" aria-label="閉じる">閉じる</button></form><h2>申込みの確認</h2>
 <div id="application"></div><label for="amount">請求金額（円）</label><input id="amount" type="number" min="1" max="999999999" step="1" inputmode="numeric">
