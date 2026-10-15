@@ -8,6 +8,10 @@ const errors = {
   CUSTOMER_SEND_DISABLED:'現在はテスト送信のみ有効です。', INVALID_APPLICATION:'メール・日時・金額を取得できません。元の回答を確認してください。',
   PREVIEW_SUPERSEDED:'別の確認操作が行われました。本文をもう一度確認してください。', PREVIEW_EXPIRED:'確認から15分経過しました。本文をもう一度確認してください。',
   APPLICATION_CHANGED:'申込内容が変更されました。一覧を再読込みしてください。', ALREADY_SENT:'送信済みです。重複送信は行いません。',
+  INVALID_INQUIRY_RANGE:'開始日・終了日を確認してください。登録できるのは今日から190日以内です。',
+  INQUIRY_RANGE_CONFLICT:'登録済みの要問い合わせ期間と重なっています。既存期間を解除してから登録してください。',
+  INQUIRY_NOT_FOUND:'対象の要問い合わせ期間が見つかりません。再読込みしてください。',
+  INQUIRY_ACTION_RESULT_UNKNOWN:'操作結果が不明です。再読込みして期間が登録済みか確認してください。',
   BUSY:'別の処理が進行中です。少し待って一覧を再読込みしてください。', WAIT_FOR_SEND_COMPLETION:'処理開始から5分以上待ってください。',
   MAILBOX_CHECK_REQUIRED:'送信済みフォルダを確認してチェックを入れてください。', SENDER_NOT_CONFIGURED:'info@から送信できるGoogle設定が未完了です。',
   BACKEND_UNAVAILABLE:'送信処理に接続できません。外部設定・接続状況を確認してください。', BACKEND_ERROR:'処理を完了できませんでした。送信操作中なら再送せず、一覧の状態を確認してください。'
@@ -38,10 +42,12 @@ async function load() {
   $('test').textContent = testAttempt?.status === 'unknown' ? 'テスト送信の結果を確認' : testAttempt?.status === 'sent' ? 'テスト送信済み' : 'テストメールを確認';
   $('test').disabled = testAttempt?.status === 'sent';
   $('mode').hidden = customerEnabled; $('rows').replaceChildren(); $('empty').hidden = items.length > 0;
+  renderInquiryRanges(result.inquiries || []);
   for (const item of items) {
     const tr = node('tr');
     const identity = node('td', item.name); identity.append(node('small', item.submittedAt), node('small', item.email || 'メールアドレスなし'));
     const dates = node('td', item.start || '開始日時なし'); dates.append(node('small', '→ ' + (item.end || '返却日時なし')));
+    if (item.requiresInquiry) dates.append(node('small', '△ 要問い合わせ期間を含む'));
     const status = node('td'); status.append(node('span', labels[item.status] || item.status, 'status ' + item.status));
     status.append(node('small', item.reservationStatus === 'confirmed' ? '予約確定済み' : '未確定'));
     if (item.reservationConfirmedAt) status.append(node('small', new Date(item.reservationConfirmedAt).toLocaleString('ja-JP', {timeZone:'Asia/Tokyo'}) + ' JST'));
@@ -52,10 +58,37 @@ async function load() {
   }
   message('申込み ' + items.length + '件。利用日時は日本時間です。');
 }
+function dateLabel(value) { return new Date(value + 'T00:00:00+09:00').toLocaleDateString('ja-JP', {timeZone:'Asia/Tokyo', year:'numeric', month:'numeric', day:'numeric'}); }
+function renderInquiryRanges(ranges) {
+  const list = $('inquiry-list'); list.replaceChildren();
+  if (!ranges.length) { list.append(node('li', '登録中の期間はありません。')); return; }
+  for (const range of ranges) {
+    const row = node('li');
+    const lastDay = new Date(Date.parse(range.end + 'T00:00:00+09:00') - 86400000)
+      .toLocaleDateString('ja-JP', {timeZone:'Asia/Tokyo', year:'numeric', month:'numeric', day:'numeric'});
+    row.append(node('span', dateLabel(range.start) + ' 〜 ' + lastDay));
+    const button = node('button', '解除', 'secondary'); button.addEventListener('click', () => removeInquiry(range.id)); row.append(button); list.append(row);
+  }
+}
+async function addInquiry() {
+  const start = $('inquiry-start').value, end = $('inquiry-end').value;
+  if (!start || !end || end < start) { message('要問い合わせ期間の開始日と終了日を確認してください。'); return; }
+  $('inquiry-add').disabled = true;
+  try { await api('setInquiry', {start, end}); $('inquiry-start').value = ''; $('inquiry-end').value = ''; await load(); message('要問い合わせ期間を登録しました。公開カレンダーへの反映には最大1分かかります。'); }
+  catch (e) { message(errors[e.message] || e.message); }
+  finally { $('inquiry-add').disabled = false; }
+}
+async function removeInquiry(id) {
+  if (!id) return;
+  try { await api('removeInquiry', {id}); await load(); message('要問い合わせ期間を解除しました。公開カレンダーへの反映には最大1分かかります。'); }
+  catch (e) { message(errors[e.message] || e.message); }
+}
 function open(item) {
   if (sending) return;
   test = item.id === 'test'; current = item; clearPreview(); $('detail-message').textContent = '';
-  $('application').replaceChildren(node('p', item.name + ' 様 ／ ' + (item.email || 'メールアドレスなし')), node('p', (item.start || '日時なし') + ' → ' + (item.end || '日時なし')));
+  const applicationDetails = [node('p', item.name + ' 様 ／ ' + (item.email || 'メールアドレスなし')), node('p', (item.start || '日時なし') + ' → ' + (item.end || '日時なし'))];
+  if (item.requiresInquiry) applicationDetails.push(node('p', '△ 要問い合わせ期間を含みます。貸出可否を確認してから振込案内を送ってください。', 'issues'));
+  $('application').replaceChildren(...applicationDetails);
   $('amount').value = item.lastAmount || item.amount || ''; $('amount').disabled = false;
   $('reservation-confirmation').hidden = test;
   $('reservation-status').textContent = item.reservationStatus === 'confirmed' ? '予約確定済みです。再登録は行いません。' : '未確定';
@@ -146,6 +179,7 @@ async function init() {
 $('amount').addEventListener('input', clearPreview); $('confirm').addEventListener('change', refreshSend);
 $('preview').addEventListener('click', preview); $('send').addEventListener('click', send);
 $('reload').addEventListener('click', () => load().catch(e => message(e.message)));
+$('inquiry-add').addEventListener('click', addInquiry);
 $('found').addEventListener('click', () => resolve('sent')); $('not-found').addEventListener('click', () => resolve('notSent'));
 $('payment-confirm').addEventListener('change', () => { $('confirm-reservation').disabled = sending || !$('payment-confirm').checked || current?.reservationStatus === 'confirmed'; });
 $('confirm-reservation').addEventListener('click', confirmReservation);

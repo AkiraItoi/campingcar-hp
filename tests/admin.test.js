@@ -31,10 +31,13 @@ function backendHarness({email = true, enabled = true} = {}) {
   function calendarEvent(start,end,description='') {
     return {id:crypto.randomUUID(),start:new Date(start),end:new Date(end),description,title:'',visibility:null,
       getId(){return this.id;},getDescription(){return this.description;},getStartTime(){return this.start;},getEndTime(){return this.end;},
-      setVisibility(v){this.visibility=v;},};
+      isAllDayEvent(){return Boolean(this.allDay);},getAllDayStartDate(){return this.start;},getAllDayEndDate(){return this.end;},
+      deleteEvent(){state.events=state.events.filter(event=>event.id!==this.id);},setVisibility(v){this.visibility=v;}};
   }
   const calendar = {getEvents:(start,end) => state.events.filter(ev => ev.start < end && ev.end > start),
-    createEvent:(title,start,end,opts) => {const ev=calendarEvent(start,end,opts.description);ev.title=title;state.events.push(ev);return ev;}};
+    getEventById:id => state.events.find(ev=>ev.id===id)||null,
+    createEvent:(title,start,end,opts) => {const ev=calendarEvent(start,end,opts.description);ev.title=title;state.events.push(ev);return ev;},
+    createAllDayEvent:(title,start,end,opts) => {const ev=calendarEvent(start,end,opts.description);ev.title=title;ev.allDay=true;state.events.push(ev);return ev;}};
   const context = vm.createContext({Date, JSON, Number, String, Boolean, Error, console,
     PropertiesService:{getScriptProperties:() => ({getProperty:key => properties[key] || null})},
     Utilities:{DigestAlgorithm:{SHA_256:'sha256'}, Charset:{UTF_8:'utf8'}, getUuid:() => crypto.randomUUID(),
@@ -172,9 +175,34 @@ test('calendar event is recoverable if the confirmation audit write fails; publi
   const recovered=h.request('confirmReservation',{applicationId:item.id,confirmed:true,paymentChecked:true});
   assert.equal(recovered.ok,true); assert.equal(recovered.data.recoveredExistingEvent,true); assert.equal(h.state.events.length,1);
   const availabilityResult=h.request('availability'); assert.equal(availabilityResult.ok,true,JSON.stringify(availabilityResult));
-  const publicRows=availabilityResult.data; assert.ok(publicRows.length);
+  const publicRows=availabilityResult.data.bookings; assert.ok(publicRows.length);
   assert.deepEqual(Object.keys(publicRows[0]).sort(),['end','start']);
-  assert.equal(JSON.stringify(publicRows).includes('架空顧客'),false);
+  assert.deepEqual(availabilityResult.data.inquiries,[]);
+  assert.equal(JSON.stringify(availabilityResult.data).includes('架空顧客'),false);
+});
+test('inquiry periods appear publicly as △ ranges, remain selectable and can be removed by admin', () => {
+  const h=backendHarness();
+  const today=new Date(Date.now()+9*3600000); today.setUTCHours(0,0,0,0);
+  const day=n=>new Date(today.getTime()+n*86400000).toISOString().slice(0,10);
+  const added=h.request('setInquiry',{start:day(2),end:day(3)});
+  assert.equal(added.ok,true); assert.equal(added.data.start,day(2)); assert.equal(added.data.end,day(4));
+  const listed=h.request('list').data.inquiries; assert.equal(listed.length,1); assert.equal(listed[0].id,added.data.id);
+  const availability=h.request('availability').data;
+  assert.equal(availability.bookings.length,0); assert.equal(availability.inquiries.length,1);
+  assert.deepEqual(Object.keys(availability.inquiries[0]).sort(),['end','start']);
+  const item=h.request('list').data.applications[0]; assert.equal(item.requiresInquiry,false);
+  assert.equal(h.request('confirmReservation',{applicationId:item.id,confirmed:true,paymentChecked:true}).ok,true);
+  assert.equal(h.state.events.length,2);
+  assert.equal(h.request('removeInquiry',{id:added.data.id}).data.removed,true);
+  assert.deepEqual(h.request('availability').data.inquiries,[]);
+  assert.equal(h.state.events.length,1);
+});
+test('a one-day inquiry period is valid and marks overlapping requests for review', () => {
+  const h=backendHarness();
+  const added=h.request('setInquiry',{start:'2026-11-01',end:'2026-11-01'});
+  assert.equal(added.ok,true); assert.equal(added.data.end,'2026-11-02');
+  assert.equal(h.request('list').data.applications[0].requiresInquiry,true);
+  assert.equal(h.request('confirmReservation',{applicationId:h.request('list').data.applications[0].id,confirmed:true,paymentChecked:true}).ok,true);
 });
 test('session tampering, expiry and forged login are rejected', async () => {
   configure(); const payload={purpose:'session',email:'sunaid20220708@gmail.com',sub:'test-sub',csrf:'csrf',exp:Date.now()+60000};
@@ -211,10 +239,12 @@ test('backend network loss is result unknown for send and unavailable for reads'
   } finally {global.fetch=fetchOriginal;}
 });
 test('public availability endpoint is GET-only and whitelists private backend fields', async () => {
-  const original=S.publicAvailability; S.publicAvailability=async()=>[{start:'2026-11-01T01:00:00.000Z',end:'2026-11-02T01:00:00.000Z',name:'Private Name',email:'private@example.test'}];
+  const original=S.publicAvailability; S.publicAvailability=async()=>({bookings:[{start:'2026-11-01T01:00:00.000Z',end:'2026-11-02T01:00:00.000Z',name:'Private Name',email:'private@example.test'}],inquiries:[{start:'2026-11-03T00:00:00+09:00',end:'2026-11-04T00:00:00+09:00',id:'private-id'}]});
   try {
     const response=await availabilityHandler({method:'GET'},{headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(body){this.body=body;return this;}});
     assert.equal(response.code,200); assert.deepEqual(Object.keys(response.body.bookings[0]).sort(),['end','start']);
+    assert.deepEqual(Object.keys(response.body.inquiries[0]).sort(),['end','start']);
+    assert.equal(JSON.stringify(response.body).includes('private-id'),false);
     assert.equal(response.headers['Cache-Control'],'public, max-age=60, stale-while-revalidate=60');
     const rejected=await availabilityHandler({method:'POST'},{setHeader(){},status(code){this.code=code;return this;},json(body){this.body=body;return this;}});
     assert.equal(rejected.code,405);
@@ -228,10 +258,11 @@ test('public availability proxy signs a fixed read-only action and strips backen
     assert.equal(url,process.env.ADMIN_BACKEND_URL); assert.equal(body.action,'availability'); assert.deepEqual(body.data,{});
     assert.equal(body.actor,'sunaid20220708@gmail.com'); assert.equal(Math.abs(Date.now()-body.timestamp)<5000,true);
     assert.equal(crypto.createHmac('sha256',process.env.ADMIN_BACKEND_SECRET).update(envelope.payload).digest('hex'),envelope.signature);
-    return {ok:true,json:async()=>({ok:true,data:[{start:'2026-11-01T01:00:00.000Z',end:'2026-11-02T01:00:00.000Z',name:'Private Name',email:'private@example.test'}]})};
+    return {ok:true,json:async()=>({ok:true,data:{bookings:[{start:'2026-11-01T01:00:00.000Z',end:'2026-11-02T01:00:00.000Z',name:'Private Name',email:'private@example.test'}],inquiries:[{start:'2026-11-03T00:00:00+09:00',end:'2026-11-04T00:00:00+09:00',id:'private-id'}]}})};
   };
   try {
-    const values=await S.publicAvailability(); assert.deepEqual(Object.keys(values[0]).sort(),['end','start']);
+    const values=await S.publicAvailability(); assert.deepEqual(Object.keys(values.bookings[0]).sort(),['end','start']);
+    assert.deepEqual(Object.keys(values.inquiries[0]).sort(),['end','start']);
     assert.equal(JSON.stringify(values).includes('private@example.test'),false); assert.equal(captured.options.method,'POST');
   } finally {global.fetch=fetchOriginal;}
 });

@@ -3,6 +3,7 @@ var ALLOWED_ACTORS = ['sunaid20220708@gmail.com', 'info@izutrip.com'];
 var HISTORY_HEADERS = ['attemptId', 'applicationId', 'actor', 'envelope', 'status', 'preparedAt', 'sentAt', 'detail', 'resolvedAt', 'startedAt'];
 var CONFIRM_HEADERS = ['applicationId', 'eventId', 'marker', 'fingerprint', 'confirmedAt', 'confirmedBy', 'start', 'end', 'name'];
 var CONFIRM_SHEET = 'SUN_AID_予約確定履歴';
+var INQUIRY_MARKER = 'SUN_AID_AVAILABILITY:INQUIRY:';
 var BANK_LINK = 'https://campingcar-hp.vercel.app/reserve.html#bank-transfer';
 function fault(code, status) { var e = new Error(code); e.status = status || 400; throw e; }
 function props() { return PropertiesService.getScriptProperties(); }
@@ -161,11 +162,16 @@ function customerEnabled() { return props().getProperty('ENABLE_CUSTOMER_SEND') 
 function list() {
   var records = attempts();
   var confirmed = confirmations();
+  var inquiryRanges = inquiries();
   var testAttempt = latest(records, 'test');
-  return {customerSendEnabled:customerEnabled(), testAttempt:testAttempt ? {attemptId:testAttempt.id, status:state(testAttempt), sentAt:testAttempt.sentAt} : null, applications:applications().reverse().map(function(item) {
+  return {customerSendEnabled:customerEnabled(), inquiries:inquiryRanges.map(function(range) { return {id:range.id, start:range.start, end:range.end}; }), testAttempt:testAttempt ? {attemptId:testAttempt.id, status:state(testAttempt), sentAt:testAttempt.sentAt} : null, applications:applications().reverse().map(function(item) {
     var a = latest(records, item.id);
     item.status = state(a); item.sentAt = a ? a.sentAt : ''; item.attemptId = a ? a.id : '';
     var booking = confirmed.filter(function(r) { return r.applicationId === item.id; })[0];
+    var itemStart = parseDate(item.start), itemEnd = parseDate(item.end);
+    item.requiresInquiry = itemStart !== null && itemEnd !== null && inquiryRanges.some(function(range) {
+      return itemStart < new Date(range.end + 'T00:00:00+09:00').getTime() && itemEnd > new Date(range.start + 'T00:00:00+09:00').getTime();
+    });
     item.reservationStatus = booking ? 'confirmed' : 'unconfirmed';
     item.reservationConfirmedAt = booking ? booking.confirmedAt : '';
     item.lastAmount = a ? a.envelope.amount : null;
@@ -175,6 +181,46 @@ function list() {
     return item;
   })};
 }
+function dateOnly(value) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+  if (!m) return null;
+  var d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+  return d.toISOString().slice(0,10) === value ? d : null;
+}
+function inquiryList(calendar) {
+  var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+  var start = new Date(today + 'T00:00:00+09:00');
+  var end = new Date(start.getTime() + 191 * 86400000);
+  return calendar.getEvents(start, end).map(function(event) {
+    var description = String(event.getDescription() || '');
+    if (description.indexOf(INQUIRY_MARKER) !== 0 || !event.isAllDayEvent()) return null;
+    return {id:event.getId(), start:Utilities.formatDate(event.getAllDayStartDate(), 'Asia/Tokyo', 'yyyy-MM-dd'), end:Utilities.formatDate(event.getAllDayEndDate(), 'Asia/Tokyo', 'yyyy-MM-dd')};
+  }).filter(Boolean);
+}
+function inquiries() { return inquiryList(reservationCalendar()); }
+function setInquiry(data, actor) {
+  var start = dateOnly(data.start), end = dateOnly(data.end);
+  if (!start || !end || end < start) fault('INVALID_INQUIRY_RANGE');
+  var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+  var todayDate = dateOnly(today), max = new Date(todayDate.getTime() + 190 * 86400000);
+  if (start < todayDate || end >= max || end.getTime() - start.getTime() >= 190 * 86400000) fault('INVALID_INQUIRY_RANGE');
+  var calendar = reservationCalendar();
+  var endExclusive = new Date(end.getTime() + 86400000);
+  var existing = inquiryList(calendar);
+  var marker = INQUIRY_MARKER + Utilities.getUuid();
+  var calendarStart = new Date(start.getTime() - 9 * 3600000);
+  var calendarEnd = new Date(endExclusive.getTime() - 9 * 3600000);
+  if (existing.some(function(range) { return start.toISOString().slice(0,10) < range.end && endExclusive.toISOString().slice(0,10) > range.start; })) fault('INQUIRY_RANGE_CONFLICT', 409);
+  var event = calendar.createAllDayEvent('要問い合わせ', calendarStart, calendarEnd, {description:marker + '\n登録者：' + actor});
+  event.setVisibility(CalendarApp.Visibility.PRIVATE);
+    return {id:event.getId(), start:Utilities.formatDate(start, 'Asia/Tokyo', 'yyyy-MM-dd'), end:Utilities.formatDate(new Date(endExclusive.getTime()), 'Asia/Tokyo', 'yyyy-MM-dd')};
+}
+function removeInquiry(data) {
+  var event = reservationCalendar().getEventById(String(data.id || ''));
+  if (!event || !event.isAllDayEvent() || String(event.getDescription() || '').indexOf(INQUIRY_MARKER) !== 0) fault('INQUIRY_NOT_FOUND', 404);
+  event.deleteEvent();
+  return {removed:true};
+}
 function eventMarker(applicationId) { return 'SUN_AID_APPLICATION:' + hash(applicationId); }
 function reservationEvent(calendar, item, marker) {
   var startMs = parseDate(item.start), endMs = parseDate(item.end);
@@ -183,7 +229,7 @@ function reservationEvent(calendar, item, marker) {
   var nearby = calendar.getEvents(new Date(startMs - 86400000), new Date(endMs + 86400000));
   var existing = nearby.filter(function(event) { return String(event.getDescription() || '').indexOf(marker) >= 0; })[0];
   if (existing) return {event:existing, alreadyExists:true};
-  var overlap = nearby.filter(function(event) { return event.getStartTime().getTime() < endMs && event.getEndTime().getTime() > startMs; })[0];
+  var overlap = nearby.filter(function(event) { return String(event.getDescription() || '').indexOf(INQUIRY_MARKER) !== 0 && event.getStartTime().getTime() < endMs && event.getEndTime().getTime() > startMs; })[0];
   if (overlap) fault('RESERVATION_CONFLICT', 409);
   var description = [
     '予約内容',
@@ -223,9 +269,10 @@ function availability() {
   var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd').split('-').map(Number);
   var start = new Date(Date.UTC(today[0], today[1] - 1, today[2]) - 9 * 3600000);
   var end = new Date(start.getTime() + 190 * 86400000);
-  return calendar.getEvents(start, end).map(function(event) {
+  var events = calendar.getEvents(start, end);
+  return {bookings:events.filter(function(event) { return String(event.getDescription() || '').indexOf(INQUIRY_MARKER) !== 0; }).map(function(event) {
     return {start:event.getStartTime().toISOString(), end:event.getEndTime().toISOString()};
-  });
+  }), inquiries:inquiryList(calendar).map(function(range) { return {start:range.start + 'T00:00:00+09:00', end:range.end + 'T00:00:00+09:00'}; })};
 }
 function buildEnvelope(item, amount, test) {
   if (!Number.isSafeInteger(amount) || amount <= 0 || amount > 999999999) fault('INVALID_AMOUNT');
@@ -300,6 +347,8 @@ function resolveUnknown(data, actor) {
 function dispatch(action, data, actor) {
   if (action === 'list') return list();
   if (action === 'availability') return availability();
+  if (action === 'setInquiry') return setInquiry(data, actor);
+  if (action === 'removeInquiry') return removeInquiry(data);
   if (action === 'confirmReservation') return confirmReservation(data, actor);
   if (action === 'preview') return preview(data, actor, false);
   if (action === 'previewTest') return preview(data, actor, true);

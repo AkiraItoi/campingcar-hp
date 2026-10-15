@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
     if (action === 'logout') {
       res.setHeader('Set-Cookie', S.cookie(S.COOKIE, '', 0)); return res.status(200).json({ok:true});
     }
-    if (!['preview', 'send', 'resolveUnknown', 'previewTest', 'sendTest', 'confirmReservation'].includes(action)) S.fail('ACTION_REJECTED');
+    if (!['preview', 'send', 'resolveUnknown', 'previewTest', 'sendTest', 'confirmReservation', 'setInquiry', 'removeInquiry'].includes(action)) S.fail('ACTION_REJECTED');
     return res.status(200).json(await S.backend(action, req.body || {}, user));
   } catch (error) {
     // Never return provider errors, credentials or customer content to logs / unauthenticated callers.

@@ -189,6 +189,18 @@
       background: #fff1eb;
       box-shadow: inset 0 0 0 1px #c77b61;
     }
+    .reserve-page .reserve-day { position: relative; padding-bottom: 10px; }
+    .reserve-page .reserve-day-status-booked::after,
+    .reserve-page .reserve-day-status-inquiry::after,
+    .reserve-page .reserve-day-status-open::after {
+      position: absolute; right: 0; bottom: -1px; left: 0;
+      font-size: 10px; line-height: 10px; font-weight: 800;
+    }
+    .reserve-page .reserve-day-status-booked::after { content: "×"; color: #a23221; }
+    .reserve-page .reserve-day-status-inquiry::after { content: "△"; color: #9b611f; }
+    .reserve-page .reserve-day-status-open::after { content: "○"; color: #27704c; }
+    .reserve-page .reserve-availability-legend { margin: 8px 0 0; color: #5a4a3a; font-size: 13px; text-align: center; }
+    .reserve-page #reserveInquiryNotice { color: #8a5a16; font-weight: 700; }
   </style>
 </head>
 <body class="reserve-page">
@@ -218,6 +230,7 @@
 
         <div class="reserve-calendars" id="reserveCalendars"></div>
         </div>
+        <p class="reserve-availability-legend" aria-label="空き状況の表示">○ 空き　× 予約済みの時間帯あり　△ 要問い合わせ</p>
       </div>
 
       <div class="reserve-time-popup" id="reserveTimePopup" hidden>
@@ -238,6 +251,7 @@
         <button type="button" class="reserve-details-toggle reserve-options-btn" disabled>オプションを選ぶ（準備中）</button>
         <section class="reserve-booking-flow" aria-labelledby="reserveBankTransferTitle">
           <p id="reserveBankTransferTitle">お申込み後、振込案内メールをお送りします。案内後にお振込みください。入金確認で予約枠を確保・予約確定します（仮押さえなし）。振込手数料はお客様負担です。</p>
+          <p id="reserveInquiryNotice" hidden>△ 要問い合わせの日程を含みます。お申込み後に貸出可否を確認し、当社からご連絡します。</p>
         </section>
         <div class="reserve-confirm-box" id="reserveConfirmBox">
           <div class="reserve-confirm-check">
@@ -441,6 +455,7 @@
       }
       let reservationSummaryText = null;
       let availabilityRanges = [];
+      let inquiryRanges = [];
       let availabilityLoaded = false;
       let availabilityFailed = false;
       let view = 'selecting'; // 'selecting' | 'complete'
@@ -462,12 +477,16 @@
       function pointIsBooked(timeMs) {
         return availabilityRanges.some((range) => timeMs >= Date.parse(range.start) && timeMs < Date.parse(range.end));
       }
+      function overlapsInquiry(startMs, endMs) {
+        return inquiryRanges.some((range) => startMs < Date.parse(range.end) && endMs > Date.parse(range.start));
+      }
       async function loadAvailability() {
         try {
           const response = await fetch('/api/availability', { cache: 'no-store' });
           const data = await response.json();
-          if (!response.ok || !Array.isArray(data.bookings)) throw new Error('availability unavailable');
+          if (!response.ok || !Array.isArray(data.bookings) || !Array.isArray(data.inquiries)) throw new Error('availability unavailable');
           availabilityRanges = data.bookings.filter((r) => Number.isFinite(Date.parse(r.start)) && Number.isFinite(Date.parse(r.end)) && Date.parse(r.end) > Date.parse(r.start));
+          inquiryRanges = data.inquiries.filter((r) => Number.isFinite(Date.parse(r.start)) && Number.isFinite(Date.parse(r.end)) && Date.parse(r.end) > Date.parse(r.start));
           availabilityLoaded = true;
           availabilityFailed = false;
           clearDateError();
@@ -530,10 +549,19 @@
           const dayStart = Date.UTC(year, month, d) - 9 * 60 * 60 * 1000;
           const dayEnd = dayStart + 24 * 60 * 60 * 1000;
           const dayHasBooking = availabilityRanges.some((range) => dayStart < Date.parse(range.end) && dayEnd > Date.parse(range.start));
+          const dayHasInquiry = overlapsInquiry(dayStart, dayEnd);
           if (dayHasBooking) {
             btn.classList.add('reserve-day-has-booking');
             btn.title = 'この日は予約済みの時間帯があります';
+            btn.classList.add('reserve-day-status-booked');
             btn.setAttribute('aria-label', d + '日、予約済みの時間帯あり');
+          } else if (dayHasInquiry) {
+            btn.classList.add('reserve-day-status-inquiry');
+            btn.title = 'この日は要問い合わせです';
+            btn.setAttribute('aria-label', d + '日、要問い合わせ');
+          } else {
+            btn.classList.add('reserve-day-status-open');
+            btn.setAttribute('aria-label', d + '日、空き');
           }
 
           const isPast = cellDate < today;
@@ -763,6 +791,8 @@
           view = 'selecting';
         }
         updateView();
+        const inquiryNotice = document.getElementById('reserveInquiryNotice');
+        inquiryNotice.hidden = !(startDate && endDate && overlapsInquiry(reservationMillis(startDate), reservationMillis(endDate)));
       }
 
       // 表示用：ボタンに出す短い日時（例 11/10 10:00）
