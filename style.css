@@ -2895,19 +2895,12 @@ body {
 }
 
 /* 設備一覧の左側に、余白を取って電源設備を小さく添える */
-#safety-equipment {
-  display: grid;
-  grid-template-columns: minmax(0, 30%) minmax(0, 1fr);
-  column-gap: 20px;
-  align-items: start;
-}
-#safety-equipment > .eq-label { grid-column: 1 / -1; }
-#safety-equipment > .eq-items { grid-column: 2; grid-row: 2; min-width: 0; }
-#safety-equipment .eq-note .nb { white-space: normal; }
+#safety-equipment { position: relative; }
 #safety-equipment .battery-detail {
-  grid-column: 1; grid-row: 2;
-  width: 100%; max-width: 120px;
-  margin: 52px auto 16px;
+  position: absolute;
+  top: 110px; left: 0;
+  width: 28%; max-width: 120px;
+  margin: 0;
   padding: 0;
   background: transparent;
   border: 0;
