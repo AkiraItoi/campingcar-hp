@@ -2894,23 +2894,20 @@ body {
   font-size: 0.5em;
 }
 
-/* 既存の設備文字を、配置を変えずに下線付きリンクにする */
+/* 設備文字は元のまま、既存ボタンと同じ外部リンクアイコンを添える */
 .eq-items .battery-product-link {
-  position: relative;
   color: inherit;
   font: inherit;
-  text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
 }
-
-/* 矢印は文字幅を取らず、既存の改行を維持する */
-.eq-items .battery-product-link::after {
-  content: "↗";
+.battery-link-tail { position: relative; }
+.eq-items .battery-link-icon {
   position: absolute;
   right: -0.9em;
-  bottom: 0.15em;
-  font-size: 0.65em;
-  line-height: 1;
-  text-decoration: none;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.7em;
+  height: 0.7em;
+  color: inherit;
+  pointer-events: none;
 }
