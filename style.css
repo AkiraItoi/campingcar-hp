@@ -2894,20 +2894,11 @@ body {
   font-size: 0.5em;
 }
 
-/* 設備一覧の左側に、余白を取って電源設備を小さく添える */
-#safety-equipment { position: relative; }
-#safety-equipment .battery-detail {
-  position: absolute;
-  top: 110px; left: 0;
-  width: 28%; max-width: 120px;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  border: 0;
-  color: #f7f2ec;
-  text-align: center;
+/* 既存の設備文字を、配置を変えずに下線付きリンクにする */
+.eq-items .battery-product-link {
+  color: inherit;
+  font: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
-.battery-photo-grid { display: grid; grid-template-columns: 1fr; width: calc((100% - 8px) / 2); margin: 0 auto; }
-.battery-photo-grid img { display: block; width: 100%; height: auto; border-radius: 6px; }
-#safety-equipment .battery-detail p { margin: 8px 0; font-size: 10px; line-height: 1.5; }
-#safety-equipment .battery-detail a { color: #f7f2ec; font-size: 11px; line-height: 1.7; text-decoration: underline; }
