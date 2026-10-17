@@ -2893,3 +2893,21 @@ body {
 .hero-tagline-repeat small {
   font-size: 0.5em;
 }
+
+/* 設備文字は元のまま、既存ボタンと同じ外部リンクアイコンを添える */
+.eq-items .battery-product-link {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+.battery-link-tail { position: relative; }
+.eq-items .battery-link-icon {
+  position: absolute;
+  right: -0.9em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.7em;
+  height: 0.7em;
+  color: inherit;
+  pointer-events: none;
+}
