@@ -848,14 +848,12 @@
 
         let amountBeforeRounding = calculatedAmount;
         let minimumApplied = false;
-        let minimumCharge = null;
-        if (usageHours < 24) {
-          // 返却時刻は含めず、実際の利用時間内で最も高い単価を最低24時間料金に使う。
-          minimumCharge = highestHourlyRate * 24;
-          if (minimumCharge > calculatedAmount) {
-            amountBeforeRounding = minimumCharge;
-            minimumApplied = true;
-          }
+        // 利用時間数にかかわらず、利用時間内の最高単価×24時間を最低料金にする。
+        // 返却時刻そのものは利用時間に含めない。
+        const minimumCharge = highestHourlyRate * 24;
+        if (minimumCharge > calculatedAmount) {
+          amountBeforeRounding = minimumCharge;
+          minimumApplied = true;
         }
 
         const total = Math.floor(amountBeforeRounding / FINAL_ROUND_DOWN_UNIT) * FINAL_ROUND_DOWN_UNIT;
