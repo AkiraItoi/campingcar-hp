@@ -48,6 +48,31 @@ const cases = [
   ['土日48時間の既存計算', '2026-11-07T00:00:00', '2026-11-09T00:00:00', 45000]
 ];
 
+// 内閣府「国民の祝日について」の2026/2027年公表一覧を独立した期待値にする。
+// https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html （2026-10-17照合）
+const officialHolidays = {
+  2026: ['1-1', '1-12', '2-11', '2-23', '3-20', '4-29', '5-3', '5-4', '5-5', '5-6', '7-20', '8-11', '9-21', '9-22', '9-23', '10-12', '11-3', '11-23'],
+  2027: ['1-1', '1-11', '2-11', '2-23', '3-21', '3-22', '4-29', '5-3', '5-4', '5-5', '7-19', '8-11', '9-20', '9-23', '10-11', '11-3', '11-23']
+};
+
+test('内閣府公表の全35祝休日と一致し、730日間で誤判定がない', () => {
+  const context = vm.createContext({});
+  vm.runInContext(pricing + '\nthis.isHoliday = isJapaneseHoliday; this.isSpecial = isWeekendOrHoliday;', context);
+  let holidays = 0;
+  let days = 0;
+  for (let date = new Date(2026, 0, 1); date.getFullYear() <= 2027; date.setDate(date.getDate() + 1)) {
+    const key = (date.getMonth() + 1) + '-' + date.getDate();
+    const expected = officialHolidays[date.getFullYear()].includes(key);
+    const label = date.getFullYear() + '-' + key;
+    assert.equal(context.isHoliday(date), expected, label);
+    assert.equal(context.isSpecial(date), expected || date.getDay() === 0 || date.getDay() === 6, label);
+    if (expected) holidays++;
+    days++;
+  }
+  assert.equal(holidays, 35);
+  assert.equal(days, 730);
+});
+
 for (const [name, start, end, expected] of cases) {
   test(name, () => {
     const { total, context } = calculate(start, end);
