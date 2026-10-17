@@ -808,6 +808,7 @@
         let seasonHours = 0;
         let specialHours = 0;
         let calculatedAmount = 0;
+        let highestHourlyRate = 0;
         let regularWeekdayHours = 0;
         let regularHolidayHours = 0;
         let seasonWeekdayHours = 0;
@@ -817,6 +818,7 @@
           const hourStart = new Date(startDate.getTime() + i * 60 * 60 * 1000);
           const season = isSeasonDate(hourStart);
           const special = isWeekendOrHoliday(hourStart);
+          highestHourlyRate = Math.max(highestHourlyRate, hourlyRateForDate(hourStart));
 
           if (season) {
             seasonHours++;
@@ -848,7 +850,8 @@
         let minimumApplied = false;
         let minimumCharge = null;
         if (usageHours < 24) {
-          minimumCharge = hourlyRateForDate(startDate) * 24;
+          // 返却時刻は含めず、実際の利用時間内で最も高い単価を最低24時間料金に使う。
+          minimumCharge = highestHourlyRate * 24;
           if (minimumCharge > calculatedAmount) {
             amountBeforeRounding = minimumCharge;
             minimumApplied = true;
@@ -882,7 +885,7 @@
           regularHolidayLine +
           seasonWeekdayLine +
           seasonHolidayLine +
-          '<p class="reserve-result-detail"><strong>最低料金の適用：</strong>' + (minimumApplied ? 'あり（利用開始日の24時間料金を適用）' : 'なし') + '</p>' +
+          '<p class="reserve-result-detail"><strong>最低料金の適用：</strong>' + (minimumApplied ? 'あり（利用時間内の最高単価で24時間料金を適用）' : 'なし') + '</p>' +
           (minimumApplied
             ? '<p class="reserve-result-detail"><strong>24時間最低料金との差額：</strong>' + (minimumCharge - calculatedAmount).toLocaleString('ja-JP') + '円（実計算額 ' + calculatedAmount.toLocaleString('ja-JP') + '円 → 最低料金 ' + minimumCharge.toLocaleString('ja-JP') + '円）</p>'
             : '') +
@@ -1119,3 +1122,4 @@
   </script>
 </body>
 </html>
+
