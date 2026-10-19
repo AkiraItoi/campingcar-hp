@@ -874,7 +874,7 @@
           : '';
 
         resultEl.innerHTML =
-          '<p class="reserve-result-label">概算料金</p>' +
+          '<p class="reserve-result-label">車両の概算料金</p>' +
           '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>' +
           '<p class="reserve-result-detail"><strong>利用時間：</strong>' + formatHoursAsDaysAndHours(usageHours) + '（通常期 ' + formatHoursAsDaysAndHours(regularHours) + ' / 人気期 ' + formatHoursAsDaysAndHours(seasonHours) + '）</p>' +
           '<p class="reserve-result-detail"><strong>土日祝加算：</strong>' + (specialHours > 0 ? '対象 ' + formatHoursAsDaysAndHours(specialHours) + '（該当時間帯を25%加算して計算）' : 'なし') + '</p>' +
@@ -893,7 +893,7 @@
 
         // 完了表示の見出しに概算料金を表示する（#reserveResultの内容・構造は変更しない。表示用の複製）
         priceHeadlineEl.innerHTML =
-          '<p class="reserve-result-label">概算料金</p>' +
+          '<p class="reserve-result-label">車両の概算料金</p>' +
           '<p class="reserve-result-price">' + total.toLocaleString('ja-JP') + '円</p>';
 
         // 予約リクエストフォームへ渡す文章：画面表示中の料金内訳をそのまま利用する（計算のやり直しはしない）
@@ -903,7 +903,7 @@
           '出発日時：' + formatSelected(startDate),
           '返却日時：' + formatSelected(endDate),
           '利用日数と時間：' + formatHoursAsDaysAndHours(usageHours),
-          '概算料金：' + total.toLocaleString('ja-JP') + '円',
+          '車両の概算料金：' + total.toLocaleString('ja-JP') + '円',
           'アンケート協力割の適用状況：予定返金額 ' + surveyRefund.toLocaleString('ja-JP') + '円 / 返金後の実質負担額 ' + netAfterRefund.toLocaleString('ja-JP') + '円',
           '',
           '【画面表示の料金内訳】'
