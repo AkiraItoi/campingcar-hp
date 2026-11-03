@@ -145,23 +145,31 @@ function applications() {
   if (sheet.getLastRow() > 2000) fault('RESPONSES_TOO_LARGE', 503);
   var rows = sheet.getDataRange().getValues();
   var headers = rows.shift().map(function(h) { return String(h).trim(); });
-  function column(name) { return headers.indexOf(name); }
-  ['タイムスタンプ','お問い合わせ種別','お名前','予約またはお問い合わせ内容'].forEach(function(name) { if (column(name) < 0) fault('RESPONSE_SCHEMA_MISMATCH', 503); });
+  function columns(names) { return headers.map(function(name, index) { return names.includes(name) ? index : -1; }).filter(function(index) { return index >= 0; }); }
+  function column(name) { var found = columns([name]); return found.length === 1 ? found[0] : -1; }
+  ['タイムスタンプ','お問い合わせ種別','お名前'].forEach(function(name) { if (column(name) < 0) fault('RESPONSE_SCHEMA_MISMATCH', 503); });
+  var contentHeader = props().getProperty('RESERVATION_HEADER');
+  var contentColumns = columns(contentHeader ? [contentHeader] : ['予約希望詳細またはお問い合わせ内容', '予約またはお問い合わせ内容']);
+  if (contentColumns.length !== 1) fault('RESPONSE_SCHEMA_MISMATCH', 503);
   var emailHeader = props().getProperty('EMAIL_HEADER') || 'メールアドレス';
-  var emailCol = column(emailHeader);
-  var result = rows.filter(function(row) { return row[column('お問い合わせ種別')] === '予約希望'; }).map(function(row) {
+  var emailColumns = columns([emailHeader]);
+  var reservationTypes = ['予約希望', '予約希望（すでにHPで期日を入力された方）'];
+  var result = rows.filter(function(row) { return reservationTypes.includes(String(row[column('お問い合わせ種別')] || '').trim()); }).map(function(row) {
     var timestamp = row[column('タイムスタンプ')];
     var validTimestamp = timestamp instanceof Date && Number.isFinite(timestamp.getTime());
-    var raw = String(row[column('予約またはお問い合わせ内容')] || '');
+    var raw = String(row[contentColumns[0]] || '');
     var parsed = parseReservation(raw);
-    var email = emailCol < 0 ? '' : String(row[emailCol] || '').trim();
+    // Duplicate form-email headers are common. Accept one unique nonempty address only.
+    var addresses = emailColumns.map(function(index) { return String(row[index] || '').trim(); }).filter(Boolean);
+    addresses = addresses.filter(function(value, index) { return addresses.indexOf(value) === index; });
+    var email = addresses.length === 1 ? addresses[0] : '';
     var fingerprint = hash(JSON.stringify(row));
     // Timestamp is immutable application identity. Collisions block both records rather than risk duplicate billing.
     var id = validTimestamp ? hash(timestamp.toISOString()) : hash('invalid:' + fingerprint);
     var name = cleanLine(row[column('お名前')]);
     return {id:id, fingerprint:fingerprint, submittedAtIso:validTimestamp ? timestamp.toISOString() : null, submittedAt:validTimestamp ? Utilities.formatDate(timestamp, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm:ss') : cleanLine(timestamp),
       name:name, email:email, start:parsed.start, end:parsed.end, amount:parsed.amount, raw:raw,
-      issues:[!validTimestamp && '申込日時が不正', !name && '氏名なし', !emailValid(email) && 'メールアドレスなし・不正', !parsed.valid && '日時・概算料金を読み取れません'].filter(Boolean)};
+      issues:[!validTimestamp && '申込日時が不正', !name && '氏名なし', addresses.length > 1 && 'メールアドレス列の値が不一致：個別確認が必要', !emailValid(email) && 'メールアドレスなし・不正', !parsed.valid && '日時・概算料金を読み取れません'].filter(Boolean)};
   });
   result.forEach(function(item) { if (result.filter(function(other) { return other.id === item.id; }).length > 1) item.issues.push('申込日時の重複：個別確認が必要'); });
   return result;

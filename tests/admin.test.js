@@ -397,3 +397,53 @@ test('form-trigger input from another spreadsheet cannot start automatic mail', 
   assert.throws(()=>h.context.onReservationFormSubmit({source:{getId:()=> 'wrong'},range:{getSheet:()=>({getSheetId:()=>405558677})}}),/INVALID_FORM_EVENT/);
   assert.equal(h.state.calls,0);
 });
+test('the actual reservation-detail header is accepted alongside the legacy schema', () => {
+  const h=backendHarness();
+  h.responseRows[0][3]='予約希望詳細またはお問い合わせ内容';
+  h.responseRows[1][3]=summary.replace('概算料金：','車両の概算料金：');
+  const item=h.request('list').data.applications[0];
+  assert.equal(item.amount,22500); assert.deepEqual(item.issues,[]);
+});
+test('the actual form reservation choice is included while general inquiries stay excluded', () => {
+  const h=backendHarness();
+  h.responseRows[1][1]='予約希望（すでにHPで期日を入力された方）';
+  const inquiry=h.responseRows[1].slice(); inquiry[0]=new Date('2026-10-12T10:00:00Z'); inquiry[1]='お問い合わせ'; h.responseRows.push(inquiry);
+  const items=h.request('list').data.applications;
+  assert.equal(items.length,1); assert.equal(items[0].email,'fiction@example.test');
+  h.responseRows[1][3]='自由記載の予約希望';
+  const invalid=h.request('list').data.applications[0];
+  assert.ok(invalid.issues.includes('日時・概算料金を読み取れません'));
+  assert.equal(h.request('preview',{applicationId:invalid.id,amount:22500}).error,'INVALID_APPLICATION');
+});
+test('multiple matching detail columns are rejected instead of picking the first', () => {
+  const h=backendHarness();
+  h.responseRows[0].push('予約希望詳細またはお問い合わせ内容'); h.responseRows[1].push(summary);
+  assert.equal(h.request('list').error,'RESPONSE_SCHEMA_MISMATCH');
+  h.properties.RESERVATION_HEADER='予約希望詳細またはお問い合わせ内容';
+  assert.equal(h.request('list').ok,true);
+});
+test('duplicate identical email values are accepted without modifying form responses', () => {
+  const h=backendHarness();
+  h.responseRows[0].push('メールアドレス'); h.responseRows[1].push(' fiction@example.test ');
+  const before=JSON.stringify(h.responseRows);
+  const item=h.request('list').data.applications[0];
+  assert.equal(item.email,'fiction@example.test'); assert.deepEqual(item.issues,[]);
+  assert.equal(JSON.stringify(h.responseRows),before);
+});
+test('a blank first email column cannot hide a populated second email column', () => {
+  const h=backendHarness();
+  h.responseRows[0].push('メールアドレス'); h.responseRows[1][4]=''; h.responseRows[1].push('fiction@example.test');
+  const item=h.request('list').data.applications[0];
+  assert.equal(item.email,'fiction@example.test'); assert.deepEqual(item.issues,[]);
+});
+test('conflicting duplicate emails block guidance, public pending and final confirmation', () => {
+  const h=backendHarness();
+  h.responseRows[0].push('メールアドレス'); h.responseRows[1].push('different@example.test');
+  const item=h.request('list').data.applications[0];
+  assert.equal(item.email,''); assert.ok(item.issues.includes('メールアドレス列の値が不一致：個別確認が必要'));
+  assert.equal(h.request('preview',{applicationId:item.id,amount:22500}).error,'INVALID_APPLICATION');
+  assert.equal(confirm(h,item).error,'INVALID_APPLICATION');
+  h.properties.ENABLE_AUTO_GUIDANCE='true';
+  assert.equal(h.context.runAutomaticGuidance().sent,0); assert.equal(h.state.calls,0);
+  assert.deepEqual(h.request('availability').data.pending,[]);
+});
