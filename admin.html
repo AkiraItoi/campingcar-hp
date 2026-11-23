@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>管理者ログイン | SUN AID</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;color:#253140;background:#f5f7fa}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
+    main{background:#fff;width:min(100%,420px);padding:32px;border:1px solid #dde3eb;border-radius:16px;box-shadow:0 6px 25px #10203012}
+    h1{font-size:1.5rem;margin:0 0 8px}.sub{color:#586579;font-size:.9rem;margin:0 0 28px}
+    label{display:block;font-weight:600;margin:16px 0 6px}
+    input{width:100%;padding:12px;border:1px solid #b5bece;border-radius:8px;font:inherit}
+    button{width:100%;padding:13px;margin-top:22px;border:0;border-radius:8px;color:#fff;background:#263e68;font:inherit;font-weight:700;cursor:pointer}
+    button:disabled{opacity:.5;cursor:not-allowed}.error{color:#9f2525;min-height:1.3em;font-size:.9rem}
+    a{color:#263e68}#dashboard[hidden],#login[hidden]{display:none}
+    .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.metrics>div{background:#f5f7fa;padding:16px;border-radius:8px}
+    .metrics strong{display:block;font-size:1.4rem}.metrics span{font-size:.85rem;color:#586579}
+  </style>
+</head>
+<body>
+<main>
+  <section id="login">
+    <h1>SUN AID 管理者ログイン</h1>
+    <p class="sub">許可された管理者のみアクセスできます。</p>
+    <form id="loginForm">
+      <label for="email">メールアドレス</label><input id="email" type="email" autocomplete="username" required>
+      <label for="password">パスワード</label><input id="password" type="password" autocomplete="current-password" required>
+      <button type="submit" id="submit">ログイン</button>
+      <p class="error" id="error" role="alert" aria-live="polite"></p>
+    </form>
+  </section>
+  <section id="dashboard" hidden>
+    <h1>SUN AID 管理者ページ</h1>
+    <p class="sub">集客レポート（データ連携準備中）</p>
+    <div class="metrics">
+      <div><strong>—</strong><span>HP訪問者</span></div>
+      <div><strong>—</strong><span>予約フォームへ移動</span></div>
+      <div><strong>—</strong><span>予約申込</span></div>
+      <div><strong>—</strong><span>予約確定</span></div>
+    </div>
+    <button id="logout" type="button">ログアウト</button>
+  </section>
+  <p><a href="./">ホームページに戻る</a></p>
+</main>
+<script>
+const login=document.getElementById('login'),dashboard=document.getElementById('dashboard');
+const error=document.getElementById('error'),submit=document.getElementById('submit');
+async function request(method,body){
+  const res=await fetch('/api/admin/auth',{method,credentials:'same-origin',cache:'no-store',
+    headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+  return {ok:res.ok,data:await res.json().catch(()=>({}))};
+}
+function show(authorized){login.hidden=authorized;dashboard.hidden=!authorized;}
+request('GET').then(r=>show(r.ok&&r.data.authenticated===true)).catch(()=>show(false));
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();error.textContent='';submit.disabled=true;
+  try{
+    const r=await request('POST',{email:document.getElementById('email').value,password:document.getElementById('password').value});
+    document.getElementById('password').value='';
+    if(!r.ok||!r.data.authenticated){error.textContent='ログインできません。メールアドレスとパスワード、または設定をご確認ください。';return;}
+    show(true);
+  }catch{error.textContent='通信に失敗しました。時間をおいて再度お試しください。';}
+  finally{submit.disabled=false;}
+});
+document.getElementById('logout').addEventListener('click',async()=>{
+  try{await request('DELETE');}finally{show(false);}
+});
+</script>
+</body>
+</html>
