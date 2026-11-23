@@ -968,6 +968,11 @@
         }
         reserveConfirmBox.classList.remove('is-emphasized');
         reserveConfirmError.classList.remove('is-emphasized');
+        // GA4: record an outbound transition to Google Forms, not a completed submission.
+        // Do not send personal details, dates, or reservation summary to analytics.
+        if (typeof gtag === 'function') {
+          gtag('event', 'reservation_form_open', { transport_type: 'beacon' });
+        }
         const formUrl = RESERVATION_FORM_BASE_URL + '&' + RESERVATION_FORM_ENTRY_ID + '=' + encodeURIComponent(reservationSummaryText);
         // iPhone/Safariでもポップアップ判定で遮断されないよう、通常のリンク遷移を使う。
         // 予約URLはこのクリックの間だけhrefに設定し、遷移が始まった直後に必ず元へ戻す。
